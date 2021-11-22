@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Павел Быков](https://up.htmlacademy.ru/ecmascript/16/user/1571549).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Корякин](https://htmlacademy.ru/profile/alexeycorr).
 
 ---
 
