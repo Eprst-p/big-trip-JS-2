@@ -5,7 +5,8 @@
   "description": "Проект «Большое путешествие» от HTML Academy",
   "scripts": {
     "eslint": "eslint src/",
-    "test": "npm run eslint"
+    "test": "npm run eslint",
+    "build": "webpack --mode development"
   },
   "devDependencies": {
     "eslint": "7.32.0",
@@ -13,5 +14,10 @@
   },
   "engines": {
     "node": "16"
+  },
+  "dependencies": {
+    "webpack": "5.62.1",
+    "webpack-cli": "4.9.1",
+    "webpack-dev-server": "4.4.0"
   }
 }
