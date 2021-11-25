@@ -15,12 +15,12 @@ const divForFiltersElement = headerElement.querySelector('.trip-controls__filter
 renderTemplate(divForNavElement, createMenuTemplate(), RenderPositions.BEFOREEND);
 renderTemplate(divForFiltersElement, createFiltersTemplate(), RenderPositions.BEFOREEND);
 
-const mainElement = document.querySelector('.page-main');
+const contentSectionElement = document.querySelector('.trip-events');
 
-renderTemplate(mainElement, createSortTemplate(), RenderPositions.BEFOREEND);
-renderTemplate(mainElement, createUlTemplate(), RenderPositions.BEFOREEND);
+renderTemplate(contentSectionElement, createSortTemplate(), RenderPositions.BEFOREEND);
+renderTemplate(contentSectionElement, createUlTemplate(), RenderPositions.BEFOREEND);
 
-const ulList = mainElement.querySelector('.trip-events__list');
+const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 for (let i = 0; i < POINTS_COUNT; i++) {
   renderTemplate(ulList, createLiTemplate(), RenderPositions.BEFOREEND); //li-шки будут одинаковые, я так понял, что пока требуется просто их создать как шаблон
