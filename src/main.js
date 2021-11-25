@@ -4,7 +4,6 @@ import {createFiltersTemplate} from './view/filters-view.js';
 import {createSortTemplate} from './view/sort-view.js';
 import {createUlTemplate} from './view/container-for-points-view.js';
 import {createLiTemplate} from './view/rout-points-view.js';
-import {createFormEditTemplate} from './view/point-edit-view.js';
 import {createFormAddTemplate} from './view/add-new-point-view.js';
 
 const POINTS_COUNT = 3;
@@ -29,6 +28,5 @@ for (let i = 0; i < POINTS_COUNT; i++) {
 
 const listElements = ulList.querySelectorAll('.trip-events__item');
 
-renderTemplate(listElements[0], createFormEditTemplate(), RenderPositions.BEFOREEND); //пока просто в первый элемент вставляется, без перерисовки самого li
-renderTemplate(listElements[1], createFormAddTemplate(), RenderPositions.BEFOREEND); //а этот во второй элемент
+renderTemplate(listElements[1], createFormAddTemplate(), RenderPositions.BEFOREEND);
 
