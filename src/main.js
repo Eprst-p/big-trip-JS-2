@@ -1,8 +1,9 @@
-import {RenderPositions, renderTemplate} from './render.js';
+import {RenderPositions, renderTemplate} from './utils/render.js';
 import {createMenuTemplate} from './view/menu-view.js';
 import {createFiltersTemplate} from './view/filters-view.js';
 import {createSortTemplate} from './view/sort-view.js';
-import {createUlTemplate, createLiTemplate} from './view/rout-points-view.js';
+import {createUlTemplate} from './view/container-for-points-view.js';
+import {createLiTemplate} from './view/rout-points-view.js';
 import {createFormEditTemplate} from './view/point-edit-view.js';
 import {createFormAddTemplate} from './view/add-new-point-view.js';
 
