@@ -26,5 +26,7 @@
   "engines": {
     "node": "16"
   },
-  "dependencies": {}
+  "dependencies": {
+    "dayjs": "1.10.7"
+  }
 }
