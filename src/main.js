@@ -3,8 +3,8 @@ import {createMenuTemplate} from './view/menu-view.js';
 import {createFiltersTemplate} from './view/filters-view.js';
 import {createSortTemplate} from './view/sort-view.js';
 import {createUlTemplate} from './view/container-for-points-view.js';
-import {createLiTemplate} from './view/rout-points-view.js';
-import {createFormAddTemplate} from './view/add-new-point-view.js';
+import {createLiTemplate} from './view/rout-point-view.js';
+import {createFormAddTemplate} from './view/form-view.js';
 
 const POINTS_COUNT = 3;
 
