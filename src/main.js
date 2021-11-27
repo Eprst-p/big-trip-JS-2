@@ -5,8 +5,12 @@ import {createSortTemplate} from './view/sort-view.js';
 import {createUlTemplate} from './view/container-for-points-view.js';
 import {createLiTemplate} from './view/rout-point-view.js';
 import {createFormAddTemplate} from './view/form-view.js';
+import {generatePoint} from './mock/gen-point-data.js';
 
-const POINTS_COUNT = 3;
+
+const POINTS_COUNT = 15;
+
+const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
 const headerElement = document.querySelector('.page-header');
 const divForNavElement = headerElement.querySelector('.trip-controls__navigation');
@@ -23,7 +27,7 @@ renderTemplate(contentSectionElement, createUlTemplate(), RenderPositions.BEFORE
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 for (let i = 0; i < POINTS_COUNT; i++) {
-  renderTemplate(ulList, createLiTemplate(), RenderPositions.BEFOREEND); //li-шки будут одинаковые, я так понял, что пока требуется просто их создать как шаблон
+  renderTemplate(ulList, createLiTemplate(points[i]), RenderPositions.BEFOREEND);
 }
 
 const listElements = ulList.querySelectorAll('.trip-events__item');

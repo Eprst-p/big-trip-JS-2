@@ -2,18 +2,11 @@ import dayjs from 'dayjs';
 import {POINT_TYPES, CITIES, OFFER_NAMES, PRICES} from './data-sources.js';
 import {getRandomPositiveNumber, getRandomElement} from '../utils/random-gen.js';
 
-
-//point-type
-const pointType = getRandomElement(POINT_TYPES);
-
-//cities
-const city = getRandomElement(CITIES);
-
 //offers
 const createOffer = () => ({
   _name: getRandomElement(OFFER_NAMES),
   currency: '&plus;&euro;&nbsp',
-  get price() {
+  get offerPrice() {
     return PRICES[OFFER_NAMES.findIndex((element) => element === this._name)];
   },
 });
@@ -24,12 +17,12 @@ const generateOffers = () => {
   const usedOffers = [];
   for (let i = 0; i < offersAmount; i++) {
     let currentObject = createOffer();
-    let offer = `${currentObject._name} ${currentObject.currency} ${currentObject.price}`;
-    while (usedOffers.join('').includes(currentObject._name)) { //слепляем массив в одну строку и ищем
-      currentObject = createOffer();
-      offer = `${currentObject._name} ${currentObject.currency} ${currentObject.price}`;
-    }
-    usedOffers.push(offer);
+    usedOffers.forEach((element) => {
+      while (element._name === currentObject._name) { //кривая проверка
+        currentObject = createOffer();
+      }
+    });
+    usedOffers.push(currentObject);
   }
   return usedOffers;
 };
@@ -40,10 +33,23 @@ const generateDate = () => {
   return dayjs().add(dateDifference, 'day').toDate();
 };
 
-//favorite
-const isFavorite = Boolean(getRandomPositiveNumber(0, 1));
-
 //price
-const generatePrice = () => Math.ceil(getRandomPositiveNumber(2, 80))*10;
+const generatePrice = () =>Math.ceil(getRandomPositiveNumber(2, 80))*10;
 
 //time
+
+//а вот и сам объект point
+const generatePoint = () => ({
+  date: generateDate(),
+  _type: getRandomElement(POINT_TYPES),
+  get typeImg() {
+    return `img/icons/${this._type.toLowerCase()}.png`;
+  },
+  city: getRandomElement(CITIES),
+  time: '#',
+  price: generatePrice(),
+  offers: generateOffers(),
+  favorite: Boolean(getRandomPositiveNumber(0, 1))
+});
+
+export {generatePoint};

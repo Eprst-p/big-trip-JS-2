@@ -1,11 +1,31 @@
-const createLiTemplate = () => (
-  `<li class="trip-events__item">
+import dayjs from 'dayjs';
+
+const createLiTemplate = (pointObject) => {
+  const {date, _type, typeImg, city, time, price, offers, favorite} = pointObject;
+
+  const shortDate = dayjs(date).format('D MMM');
+
+  const renderOffer = (name, currency, offerPrice) =>
+    `<li class="event__offer">
+      <span class="event__offer-title">${name}</span>
+      ${currency};
+      <span class="event__offer-price">${offerPrice}</span>
+    </li>`;
+
+  let allOffers = '';
+
+  offers.forEach((currentOffer) => {
+    allOffers += renderOffer(currentOffer._name, currentOffer.currency, currentOffer.offerPrice);
+  });
+
+
+  return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">MAR 18</time>
+      <time class="event__date" datetime="${date}">${shortDate}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="${typeImg}" alt="Event type icon">
       </div>
-      <h3 class="event__title">Taxi Amsterdam</h3>
+      <h3 class="event__title">${_type} ${city}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
@@ -15,15 +35,11 @@ const createLiTemplate = () => (
         <p class="event__duration">30M</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">20</span>
+        &euro;&nbsp;<span class="event__price-value">${price}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        <li class="event__offer">
-          <span class="event__offer-title">Order Uber</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">20</span>
-        </li>
+        ${allOffers}
       </ul>
       <button class="event__favorite-btn event__favorite-btn--active" type="button">
         <span class="visually-hidden">Add to favorite</span>
@@ -35,8 +51,8 @@ const createLiTemplate = () => (
         <span class="visually-hidden">Open event</span>
       </button>
     </div>
-  </li>`
-);
+  </li>`;
+};
 
 
 export {createLiTemplate};

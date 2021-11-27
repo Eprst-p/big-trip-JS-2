@@ -3,7 +3,6 @@
   "version": "16.0.0",
   "private": true,
   "description": "Проект «Большое путешествие» от HTML Academy",
-  "type": "module",
   "scripts": {
     "eslint": "eslint src/",
     "test": "npm run eslint",

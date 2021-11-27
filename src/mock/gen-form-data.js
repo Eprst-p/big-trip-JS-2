@@ -30,5 +30,5 @@ const createPictures = () => {
     const currentPictureUrl = `http://picsum.photos/248/152?r=${Math.random()}`;
     picturesAmount.push(currentPictureUrl);
   }
-  return picturesAmount;
+  return pictureUrls;
 };
