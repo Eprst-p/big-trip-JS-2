@@ -30,9 +30,9 @@ const generateOffers = () => {
 };
 
 //date
-const generateDate = () => {
-  const dateDifference = getRandomPositiveNumber(1, 15);
-  return dayjs().add(dateDifference, 'day');
+const generateDate = (lastDate) => {
+  const dateDifference = getRandomPositiveNumber(1, 4);
+  return dayjs(lastDate).add(dateDifference, 'day');
 };
 
 //price
@@ -51,15 +51,18 @@ const generateEndTime = (startHour) => {
   return dayjs(startHour).add(randomHoursToAdd, 'hour').add(randomMinutesToAdd, 'minute');
 };
 
-//а вот и сам объект point
+//сам объект point
+let newDate = dayjs();
+
 const generatePoint = () => {
-  const randomDate = generateDate();
-  const startTime = generateStartTime(randomDate);
+  const nextDate = generateDate(newDate);
+  const startTime = generateStartTime(nextDate);
   const endTime = generateEndTime(startTime);
   const duration = endTime - startTime; //почему то берутся откуда то лишние 3 часа
   //const duration = endTime.diff(startTime); //в таком формате аналогично
+  newDate = endTime;
   return {
-    date: randomDate,
+    date: nextDate,
     _type: getRandomElement(POINT_TYPES),
     get typeImg() {
       return `img/icons/${this._type.toLowerCase()}.png`;
