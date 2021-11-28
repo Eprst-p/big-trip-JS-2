@@ -7,12 +7,13 @@ const createLiTemplate = (pointObject) => {
 
   const shortDate = dayjs(date).format('D MMM');
 
-  const renderOffer = (name, currency, offerPrice) =>
+  const renderOffer = (name, currency, offerPrice) => (
     `<li class="event__offer">
       <span class="event__offer-title">${name}</span>
       ${currency};
       <span class="event__offer-price">${offerPrice}</span>
-    </li>`;
+    </li>`
+  );
 
   let allOffers = '';
   offers.forEach((currentOffer) => {

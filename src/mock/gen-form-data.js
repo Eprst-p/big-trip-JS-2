@@ -28,12 +28,12 @@ const createPictures = () => {
   const pictureUrls = [];
   for (let i = 0; i < picturesAmount; i++) {
     const currentPictureUrl = `http://picsum.photos/248/152?r=${Math.random()}`;
-    picturesAmount.push(currentPictureUrl);
+    pictureUrls.push(currentPictureUrl);
   }
   return pictureUrls;
 };
 
-//сам объект формы
+//сам объект формы - пока неясно, нужен ли он
 const generateForm = () => {
   const smthg = '';
   return {
@@ -52,3 +52,5 @@ const generateForm = () => {
     pictures: createPictures(),
   };
 };
+
+export {generateDestinationsText, createPictures};

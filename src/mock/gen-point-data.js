@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import {POINT_TYPES, CITIES, OFFER_NAMES, PRICES} from './data-sources.js';
 import {getRandomPositiveNumber, getRandomElement} from '../utils/random-gen.js';
+import {generateDestinationsText, createPictures} from './gen-form-data.js';
+
 
 //offers
 const createOffer = () => ({
@@ -69,7 +71,9 @@ const generatePoint = () => {
     },
     price: generatePrice(),
     offers: generateOffers(),
-    favorite: Boolean(getRandomPositiveNumber(0, 1))
+    favorite: Boolean(getRandomPositiveNumber(0, 1)),
+    destination: generateDestinationsText(),
+    pictures: createPictures(),
   };
 };
 

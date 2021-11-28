@@ -45,12 +45,12 @@ const createTypeListTemplate = () => (
   </div>`
 );
 
-const createTypeAndCityTextTemplate = () => (
+const createTypeAndCityTextTemplate = (_type, city) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
-      Flight
+      ${_type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
       <option value="Amsterdam"></option>
       <option value="Geneva"></option>
@@ -69,13 +69,13 @@ const createTimeTemplate = () => (
   </div>`
 );
 
-const createPriceTemplate = () => (
+const createPriceTemplate = (price) => (
   `<div class="event__field-group  event__field-group--price">
     <label class="event__label" for="event-price-1">
       <span class="visually-hidden">Price</span>
       &euro;
     </label>
-    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
   </div>`
 );
 
@@ -126,25 +126,36 @@ const createOffersTemplate = () => (
   </div>`
 );
 
-const createDestinationAndPicturesTEmplate = () => (
-  `<p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+const createDestinationAndPicturesTEmplate = (destination, pictures) => {
 
+  const renderPictures = (pictureUrl) => (
+    `<img class="event__photo" src="${pictureUrl}" alt="Event photo">`
+  );
+
+  let allPictures = '';
+  pictures.forEach((currentPictureUrl) => {
+    allPictures += renderPictures(currentPictureUrl);
+  });
+
+  return (
+    `<p class="event__destination-description">${destination}</p>
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+        ${allPictures}
       </div>
     </div>`
 );
+};
 
 
 //основной темплейт
-const createFormTemplate = () => {
-  const sts='';
+const createFormTemplate = (pointObject) => {
+  const {date, _type, typeImg, city, time, price, offers, destination, pictures} = pointObject;
 
+  //план:
+  //проходим форычем по офферам (массив объектов из  offers)
+  //както сравниваем
+  //добавляем/удаляем  checked
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -152,7 +163,7 @@ const createFormTemplate = () => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="${typeImg}" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -163,9 +174,9 @@ const createFormTemplate = () => {
             </fieldset>
           </div>
         </div>
-        ${createTypeAndCityTextTemplate()}
+        ${createTypeAndCityTextTemplate(_type, city)}
         ${createTimeTemplate()}
-        ${createPriceTemplate()}
+        ${createPriceTemplate(price)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
         <button class="event__rollup-btn" type="button">
@@ -183,7 +194,7 @@ const createFormTemplate = () => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          ${createDestinationAndPicturesTEmplate()}
+          ${createDestinationAndPicturesTEmplate(destination, pictures)}
         </section>
       </section>
     </form>`
