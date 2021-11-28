@@ -11,6 +11,7 @@ const createOffer = () => ({
   get offerPrice() {
     return PRICES[OFFER_NAMES.findIndex((element) => element === this._name)];
   },
+
 });
 
 const generateOffers = () => {

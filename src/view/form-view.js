@@ -1,3 +1,6 @@
+import {OFFER_NAMES, PRICES} from '../mock/data-sources.js';
+
+
 const createTypeListTemplate = () => (
   `<div class="event__type-item">
     <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
@@ -79,52 +82,36 @@ const createPriceTemplate = (price) => (
   </div>`
 );
 
-const createOffersTemplate = () => (
-  `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-    <label class="event__offer-label" for="event-offer-luggage-1">
-      <span class="event__offer-title">Add luggage</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">30</span>
-    </label>
-  </div>
+const createOffersTemplate = (offers) => {
 
-  <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-    <label class="event__offer-label" for="event-offer-comfort-1">
-      <span class="event__offer-title">Switch to comfort class</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">100</span>
-    </label>
-  </div>
+  const checkChosenOffer = (index) => {
+    let check = '';
+    offers.forEach((currentOffer) => {
+      if (currentOffer._name === OFFER_NAMES[index]) {
+        check = 'checked';
+      }
+    });
+    return check;
+  };
 
-  <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-    <label class="event__offer-label" for="event-offer-meal-1">
-      <span class="event__offer-title">Add meal</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">15</span>
-    </label>
-  </div>
+  let readyTemplate = '';
+  const names = ['luggage', 'comfort', 'meal', 'seats', 'train'];
+  for (let i = 0; i < 5; i++) {
+    const renderTemplate = () => (
+      `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${names[i]}-1" type="checkbox" name="event-offer-${names[i]}" ${checkChosenOffer(i)}>
+        <label class="event__offer-label" for="event-offer-${names[i]}-1">
+          <span class="event__offer-title">${OFFER_NAMES[i]}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${PRICES[i]}</span>
+        </label>
+      </div>`
+    );
+    readyTemplate += renderTemplate();
+  }
 
-  <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-    <label class="event__offer-label" for="event-offer-seats-1">
-      <span class="event__offer-title">Choose seats</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">5</span>
-    </label>
-  </div>
-
-  <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-    <label class="event__offer-label" for="event-offer-train-1">
-      <span class="event__offer-title">Travel by train</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">40</span>
-    </label>
-  </div>`
-);
+  return readyTemplate;
+};
 
 const createDestinationAndPicturesTEmplate = (destination, pictures) => {
 
@@ -151,11 +138,6 @@ const createDestinationAndPicturesTEmplate = (destination, pictures) => {
 //основной темплейт
 const createFormTemplate = (pointObject) => {
   const {date, _type, typeImg, city, time, price, offers, destination, pictures} = pointObject;
-
-  //план:
-  //проходим форычем по офферам (массив объектов из  offers)
-  //както сравниваем
-  //добавляем/удаляем  checked
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -188,7 +170,7 @@ const createFormTemplate = (pointObject) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersTemplate()}
+            ${createOffersTemplate(offers)}
           </div>
         </section>
 

@@ -19,4 +19,5 @@ const OFFER_NAMES = ['Add luggage', 'Switch to comfort class', 'Add meal', 'Choo
 
 const PRICES = ['30', '100', '15', '5', '40']; //четко соответсвует по порядку именам офферов
 
+
 export {DESTINATIONS, POINT_TYPES, CITIES, OFFER_NAMES, PRICES};
