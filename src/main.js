@@ -4,7 +4,7 @@ import {createFiltersTemplate} from './view/filters-view.js';
 import {createSortTemplate} from './view/sort-view.js';
 import {createUlTemplate} from './view/container-for-points-view.js';
 import {createLiTemplate} from './view/rout-point-view.js';
-import {createFormAddTemplate} from './view/form-view.js';
+import {createFormTemplate} from './view/form-view.js';
 import {generatePoint} from './mock/gen-point-data.js';
 
 
@@ -32,7 +32,7 @@ for (let i = 0; i < POINTS_COUNT; i++) {
 
 //const listElements = ulList.querySelectorAll('.trip-events__item');//пока ну нужен вроде бы список точек
 
-renderTemplate(ulList, createFormAddTemplate(), RenderPositions.AFTERBEGIN);//форма новой точки маршрута
-renderTemplate(ulList, createFormAddTemplate(), RenderPositions.AFTERBEGIN);//форма редактирования
+renderTemplate(ulList, createFormTemplate(), RenderPositions.AFTERBEGIN);//форма новой точки маршрута
+renderTemplate(ulList, createFormTemplate(), RenderPositions.AFTERBEGIN);//форма редактирования
 
 
