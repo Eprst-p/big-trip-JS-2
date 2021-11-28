@@ -8,7 +8,7 @@ import {createFormAddTemplate} from './view/form-view.js';
 import {generatePoint} from './mock/gen-point-data.js';
 
 
-const POINTS_COUNT = 15;
+const POINTS_COUNT = 20;
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
@@ -30,7 +30,9 @@ for (let i = 0; i < POINTS_COUNT; i++) {
   renderTemplate(ulList, createLiTemplate(points[i]), RenderPositions.BEFOREEND);
 }
 
-const listElements = ulList.querySelectorAll('.trip-events__item');
+//const listElements = ulList.querySelectorAll('.trip-events__item');//пока ну нужен вроде бы список точек
 
-renderTemplate(listElements[1], createFormAddTemplate(), RenderPositions.BEFOREEND);
+renderTemplate(ulList, createFormAddTemplate(), RenderPositions.AFTERBEGIN);//форма новой точки маршрута
+renderTemplate(ulList, createFormAddTemplate(), RenderPositions.AFTERBEGIN);//форма редактирования
+
 
