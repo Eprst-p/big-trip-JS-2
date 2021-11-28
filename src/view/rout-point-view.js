@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 const createLiTemplate = (pointObject) => {
   const {date, _type, typeImg, city, time, price, offers, favorite} = pointObject;
 
+  const {startTime, endTime, durationTime} = time;
+
   const shortDate = dayjs(date).format('D MMM');
 
   const renderOffer = (name, currency, offerPrice) =>
@@ -13,12 +15,19 @@ const createLiTemplate = (pointObject) => {
     </li>`;
 
   let allOffers = '';
-
   offers.forEach((currentOffer) => {
     allOffers += renderOffer(currentOffer._name, currentOffer.currency, currentOffer.offerPrice);
   });
 
+  let favoriteActive = '';
+  const isFavorite = () => {
+    if (favorite) {
+      favoriteActive = 'event__favorite-btn--active';
+    }
+    return favoriteActive;
+  };
 
+  //дата в time - непонятно какую тут нужно
   return `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${date}">${shortDate}</time>
@@ -28,11 +37,11 @@ const createLiTemplate = (pointObject) => {
       <h3 class="event__title">${_type} ${city}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+          <time class="event__start-time" datetime="2019-03-18T10:30">${startTime}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+          <time class="event__end-time" datetime="2019-03-18T11:00">${endTime}</time>
         </p>
-        <p class="event__duration">30M</p>
+        <p class="event__duration">${durationTime}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>
@@ -41,7 +50,7 @@ const createLiTemplate = (pointObject) => {
       <ul class="event__selected-offers">
         ${allOffers}
       </ul>
-      <button class="event__favorite-btn event__favorite-btn--active" type="button">
+      <button class="event__favorite-btn ${isFavorite()}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
