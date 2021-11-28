@@ -30,10 +30,10 @@ for (let i = 0; i < POINTS_COUNT; i++) {
   renderTemplate(ulList, createLiTemplate(points[i]), RenderPositions.BEFOREEND);
 }
 
-//const listElements = ulList.querySelectorAll('.trip-events__item');//пока ну нужен вроде бы список точек
+const listElements = ulList.querySelectorAll('.trip-events__item');
 
 
-//renderTemplate(ulList, createFormTemplate(), RenderPositions.AFTERBEGIN);//форма новой точки маршрута
-renderTemplate(ulList, createFormTemplate(points[0]), RenderPositions.AFTERBEGIN);//форма редактирования, рисует с первой точки маршрута
+renderTemplate(listElements[1], createFormTemplate(), RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
+renderTemplate(ulList, createFormTemplate(points[0]), RenderPositions.AFTERBEGIN);//форма редактирования, рисует по данным с первой точки маршрута
 
 

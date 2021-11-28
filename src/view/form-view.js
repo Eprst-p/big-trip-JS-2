@@ -3,7 +3,6 @@ import flatpickr from 'flatpickr';//пока не используется
 import dayjs from 'dayjs';
 
 
-
 const createTypeListTemplate = () => {
 
   let readyTypeList = '';
@@ -118,8 +117,21 @@ const createDestinationAndPicturesTEmplate = (destination, pictures) => {
 
 
 //основной темплейт
-const createFormTemplate = (pointObject) => {
-  const {_type, typeImg, city, time, price, offers, destination, pictures} = pointObject;
+const createFormTemplate = (pointObject = {}) => {
+  const {
+    _type = POINT_TYPES[0],
+    typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
+    city = 'Undercity',
+    time = {
+      startTime: dayjs(),
+      endTime: dayjs(),
+      durationTime: ''
+    },
+    price = '300$',
+    offers = [],
+    destination = '',
+    pictures = []
+  } = pointObject;
   const {startTime, endTime} = time;
 
   return (

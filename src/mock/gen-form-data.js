@@ -33,24 +33,4 @@ const createPictures = () => {
   return pictureUrls;
 };
 
-//сам объект формы - пока неясно, нужен ли он
-const generateForm = () => {
-  const smthg = '';
-  return {
-    _type: '#',
-    get typeImg() {
-      return `img/icons/${this._type.toLowerCase()}.png`;
-    },
-    city: '#',
-    time: {
-      startTime: '#',
-      endTime: '#',
-    },
-    price: '#',
-    offers:'#',
-    destination: generateDestinationsText(),
-    pictures: createPictures(),
-  };
-};
-
 export {generateDestinationsText, createPictures};
