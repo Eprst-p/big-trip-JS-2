@@ -5,6 +5,10 @@ const createLiTemplate = (pointObject) => {
 
   const {startTime, endTime, durationTime} = time;
 
+  const editedStartTime = dayjs(startTime).format('HH:mm');
+  const editedEndTime = dayjs(endTime).format('HH:mm');
+  const editedDuration = dayjs(durationTime).format('HH:mm');
+
   const shortDate = dayjs(date).format('D MMM');
 
   const renderOffer = (name, currency, offerPrice) => (
@@ -38,11 +42,11 @@ const createLiTemplate = (pointObject) => {
         <h3 class="event__title">${_type} ${city}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${startTime}</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${editedStartTime}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${endTime}</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${editedEndTime}</time>
           </p>
-          <p class="event__duration">${durationTime}</p>
+          <p class="event__duration">${editedDuration}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>

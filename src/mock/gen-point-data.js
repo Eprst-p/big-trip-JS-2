@@ -66,9 +66,9 @@ const generatePoint = () => {
     },
     city: getRandomElement(CITIES),
     time: {
-      startTime: dayjs(startTime).format('HH:mm'),
-      endTime: dayjs(endTime).format('HH:mm'),
-      durationTime: dayjs(duration).format('HH:mm')
+      startTime: dayjs(startTime),
+      endTime: dayjs(endTime),
+      durationTime: dayjs(duration)
     },
     price: generatePrice(),
     offers: generateOffers(),

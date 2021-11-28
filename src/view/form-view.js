@@ -1,4 +1,7 @@
 import {OFFER_NAMES, PRICES, POINT_TYPES} from '../mock/data-sources.js';
+import flatpickr from 'flatpickr';//пока не используется
+import dayjs from 'dayjs';
+
 
 
 const createTypeListTemplate = () => {
@@ -35,15 +38,21 @@ const createTypeAndCityTextTemplate = (_type, city) => (
   </div>`
 );
 
-const createTimeTemplate = () => (
-  `<div class="event__field-group  event__field-group--time">
+const createTimeTemplate = (startTime, endTime) => {
+  const editedStartTime = dayjs(startTime).format('DD MM YY HH:mm'); //немного не тот формат, но принцип моков выполняется
+  const editedEndTime = dayjs(endTime).format('DD MM YY HH:mm');
+
+  return (
+    `<div class="event__field-group  event__field-group--time">
     <label class="visually-hidden" for="event-start-time-1">From</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}">
     &mdash;
     <label class="visually-hidden" for="event-end-time-1">To</label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}">
   </div>`
-);
+  );
+};
+
 
 const createPriceTemplate = (price) => (
   `<div class="event__field-group  event__field-group--price">
@@ -104,13 +113,14 @@ const createDestinationAndPicturesTEmplate = (destination, pictures) => {
         ${allPictures}
       </div>
     </div>`
-);
+  );
 };
 
 
 //основной темплейт
 const createFormTemplate = (pointObject) => {
-  const {date, _type, typeImg, city, time, price, offers, destination, pictures} = pointObject;
+  const {_type, typeImg, city, time, price, offers, destination, pictures} = pointObject;
+  const {startTime, endTime} = time;
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -130,7 +140,7 @@ const createFormTemplate = (pointObject) => {
           </div>
         </div>
         ${createTypeAndCityTextTemplate(_type, city)}
-        ${createTimeTemplate()}
+        ${createTimeTemplate(startTime, endTime)}
         ${createPriceTemplate(price)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
