@@ -5,10 +5,10 @@ import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} f
 
 //offers
 const createOffer = () => ({
-  _name: getRandomElement(OFFER_NAMES),
+  tittle: getRandomElement(OFFER_NAMES),
   currency: '&plus;&euro;&nbsp',
   get offerPrice() {
-    return PRICES[OFFER_NAMES.findIndex((element) => element === this._name)];
+    return PRICES[OFFER_NAMES.findIndex((element) => element === this.tittle)];
   },
 
 });
@@ -19,7 +19,7 @@ const generateOffers = () => {
   for (let i = 0; i < offersAmount; i++) {
     let currentObject = createOffer();
     usedOffers.forEach((element) => {
-      while (element._name === currentObject._name) { //кривая проверка, но вроде пока это не принципиально
+      while (element.tittle === currentObject.tittle) { //кривая проверка, но вроде пока это не принципиально
         currentObject = createOffer();
       }
     });
@@ -70,26 +70,24 @@ const generatePoint = () => {
   const nextDate = generateRandomDate(newDate);
   const startTime = generateStartTime(nextDate);
   const endTime = generateEndTime(startTime);
+  newDate = endTime;
   const duration = endTime - startTime; //почему то берутся откуда то лишние 3 часа
   //const duration = endTime.diff(startTime); //в таком формате аналогично
-  newDate = endTime;
   return {
-    date: nextDate,
-    _type: getRandomElement(POINT_TYPES),
+    basePrice: generatePrice(),
+    dateFrom: formDateValue(startTime),
+    dateTo: formDateValue(endTime),
+    duration: formDateValue(duration),
+    destination: generateDestinationsText(),
+    id: '0',//пока пускай все id = 0
+    isFavorite: Boolean(getRandomPositiveNumber(0, 1)),
+    offers: generateOffers(),
+    type: getRandomElement(POINT_TYPES),
     get typeImg() {
-      return `img/icons/${this._type.toLowerCase()}.png`;
+      return `img/icons/${this.type.toLowerCase()}.png`;
     },
     city: getRandomElement(CITIES),
-    time: {
-      startTime: formDateValue(startTime),
-      endTime: formDateValue(endTime),
-      durationTime: formDateValue(duration)
-    },
-    price: generatePrice(),
-    offers: generateOffers(),
-    favorite: Boolean(getRandomPositiveNumber(0, 1)),
-    destination: generateDestinationsText(),
-    pictures: createPictures(),
+    pictures: createPictures()
   };
 };
 

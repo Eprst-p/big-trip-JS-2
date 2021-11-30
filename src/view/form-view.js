@@ -1,6 +1,6 @@
 import {OFFER_NAMES, PRICES, POINT_TYPES} from '../mock/data-sources.js';
 import flatpickr from 'flatpickr';//пока не используется
-import dayjs from 'dayjs';
+import {formDateValue} from '../utils/time-and-date.js';
 
 
 const createTypeListTemplate = () => {
@@ -23,10 +23,10 @@ const createTypeListTemplate = () => {
   return readyTypeList;
 };
 
-const createTypeAndCityTextTemplate = (_type, city) => (
+const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
-      ${_type}
+      ${type}
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
@@ -38,8 +38,8 @@ const createTypeAndCityTextTemplate = (_type, city) => (
 );
 
 const createTimeTemplate = (startTime, endTime) => {
-  const editedStartTime = dayjs(startTime).format('DD MM YY HH:mm'); //немного не тот формат, но принцип моков выполняется
-  const editedEndTime = dayjs(endTime).format('DD MM YY HH:mm');
+  const editedStartTime = formDateValue(startTime).format('DD MM YY HH:mm'); //немного не тот формат, но принцип моков выполняется
+  const editedEndTime = formDateValue(endTime).format('DD MM YY HH:mm');
 
   return (
     `<div class="event__field-group  event__field-group--time">
@@ -68,7 +68,7 @@ const createOffersTemplate = (offers) => {
   const checkChosenOffer = (index) => {
     let check = '';
     offers.forEach((currentOffer) => {
-      if (currentOffer._name === OFFER_NAMES[index]) {
+      if (currentOffer.tittle === OFFER_NAMES[index]) {
         check = 'checked';
       }
     });
@@ -118,21 +118,18 @@ const createDestinationAndPicturesTEmplate = (destination, pictures) => {
 
 //основной темплейт
 const createFormTemplate = (pointObject = {}) => {
+
   const {
-    _type = POINT_TYPES[0],
+    basePrice = '300$',
+    dateFrom = formDateValue(),
+    dateTo = formDateValue(),
+    destination = '',
+    offers = [],
+    type = POINT_TYPES[0],
     typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
     city = 'Undercity',
-    time = {
-      startTime: dayjs(),
-      endTime: dayjs(),
-      durationTime: ''
-    },
-    price = '300$',
-    offers = [],
-    destination = '',
     pictures = []
   } = pointObject;
-  const {startTime, endTime} = time;
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -151,9 +148,9 @@ const createFormTemplate = (pointObject = {}) => {
             </fieldset>
           </div>
         </div>
-        ${createTypeAndCityTextTemplate(_type, city)}
-        ${createTimeTemplate(startTime, endTime)}
-        ${createPriceTemplate(price)}
+        ${createTypeAndCityTextTemplate(type, city)}
+        ${createTimeTemplate(dateFrom, dateTo)}
+        ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
         <button class="event__rollup-btn" type="button">
@@ -179,3 +176,4 @@ const createFormTemplate = (pointObject = {}) => {
 };
 
 export {createFormTemplate};
+
