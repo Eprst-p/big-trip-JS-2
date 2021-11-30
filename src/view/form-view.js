@@ -3,26 +3,6 @@ import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue} from '../utils/time-and-date.js';
 
 
-const createTypeListTemplate = () => {
-
-  let readyTypeList = '';
-  const renderType = (type) => {
-    const lowerType = type.toLowerCase();
-    return (
-      `<div class="event__type-item">
-        <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}">
-        <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${type}</label>
-      </div>`
-    );
-  };
-
-  POINT_TYPES.forEach((currentType) => {
-    readyTypeList += renderType(currentType);
-  });
-
-  return readyTypeList;
-};
-
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
@@ -43,12 +23,12 @@ const createTimeTemplate = (startTime, endTime) => {
 
   return (
     `<div class="event__field-group  event__field-group--time">
-    <label class="visually-hidden" for="event-start-time-1">From</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}">
-    &mdash;
-    <label class="visually-hidden" for="event-end-time-1">To</label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}">
-  </div>`
+      <label class="visually-hidden" for="event-start-time-1">From</label>
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}">
+      &mdash;
+      <label class="visually-hidden" for="event-end-time-1">To</label>
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}">
+    </div>`
   );
 };
 
@@ -75,46 +55,19 @@ const createOffersTemplate = (offers) => {
     return check;
   };
 
-  let readyTemplate = '';
   const names = ['luggage', 'comfort', 'meal', 'seats', 'train'];
-  for (let i = 0; i < 5; i++) {
-    const renderTemplate = () => (
-      `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${names[i]}-1" type="checkbox" name="event-offer-${names[i]}" ${checkChosenOffer(i)}>
-        <label class="event__offer-label" for="event-offer-${names[i]}-1">
-          <span class="event__offer-title">${OFFER_NAMES[i]}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${PRICES[i]}</span>
-        </label>
-      </div>`
-    );
-    readyTemplate += renderTemplate();
-  }
-
-  return readyTemplate;
-};
-
-const createDestinationAndPicturesTEmplate = (destination, pictures) => {
-
-  const renderPictures = (pictureUrl) => (
-    `<img class="event__photo" src="${pictureUrl}" alt="Event photo">`
-  );
-
-  let allPictures = '';
-  pictures.forEach((currentPictureUrl) => {
-    allPictures += renderPictures(currentPictureUrl);
-  });
 
   return (
-    `<p class="event__destination-description">${destination}</p>
-    <div class="event__photos-container">
-      <div class="event__photos-tape">
-        ${allPictures}
-      </div>
-    </div>`
+    names.map((offerName, index) => `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerName}-1" type="checkbox" name="event-offer-${offerName}" ${checkChosenOffer(index)}>
+      <label class="event__offer-label" for="event-offer-${offerName}-1">
+        <span class="event__offer-title">${OFFER_NAMES[index]}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${PRICES[index]}</span>
+      </label>
+    </div>`)
   );
 };
-
 
 //основной темплейт
 const createFormTemplate = (pointObject = {}) => {
@@ -144,7 +97,10 @@ const createFormTemplate = (pointObject = {}) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${createTypeListTemplate()}
+              ${POINT_TYPES.map((currentType) => `<div class="event__type-item">
+              <input id="event-type-${currentType.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType.toLowerCase()}">
+              <label class="event__type-label  event__type-label--${currentType.toLowerCase()}" for="event-type-${currentType.toLowerCase()}-1">${currentType}</label>
+            </div>`).join('')}
             </fieldset>
           </div>
         </div>
@@ -168,7 +124,12 @@ const createFormTemplate = (pointObject = {}) => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          ${createDestinationAndPicturesTEmplate(destination, pictures)}
+          <p class="event__destination-description">${destination}</p>
+          <div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${pictures.map((currentPictureUrl) => `<img class="event__photo" src="${currentPictureUrl}" alt="Event photo">`).join('')}
+            </div>
+          </div>
         </section>
       </section>
     </form>`

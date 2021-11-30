@@ -9,19 +9,6 @@ const createLiTemplate = (pointObject) => {
 
   const shortDate = formDateValue(dateFrom).format('D MMM');
 
-  const renderOffer = (tittle, currency, offerPrice) => (
-    `<li class="event__offer">
-      <span class="event__offer-title">${tittle}</span>
-      ${currency};
-      <span class="event__offer-price">${offerPrice}</span>
-    </li>`
-  );
-
-  let allOffers = '';
-  offers.forEach((currentOffer) => {
-    allOffers += renderOffer(currentOffer.tittle, currentOffer.currency, currentOffer.offerPrice);
-  });
-
   const addFavoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
 
   return (
@@ -45,7 +32,11 @@ const createLiTemplate = (pointObject) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${allOffers}
+          ${offers.map((currentOffer) => `<li class="event__offer">
+          <span class="event__offer-title">${currentOffer.tittle}</span>
+          ${currentOffer.currency};
+          <span class="event__offer-price">${currentOffer.offerPrice}</span>
+        </li>`).join('')}
         </ul>
         <button class="event__favorite-btn ${addFavoriteClass}" type="button">
           <span class="visually-hidden">Add to favorite</span>
