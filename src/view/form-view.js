@@ -70,7 +70,7 @@ const createOffersTemplate = (offers) => {
 };
 
 //основной темплейт
-const createFormTemplate = (pointObject = {}) => {
+const createFormTemplate = (formType, pointObject = {}) => {
 
   const {
     basePrice = '300$',
@@ -83,6 +83,12 @@ const createFormTemplate = (pointObject = {}) => {
     city = 'Undercity',
     pictures = []
   } = pointObject;
+
+  const showRollBtn = (formType === 'editForm') ?
+    `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>` :
+    '';
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -109,9 +115,7 @@ const createFormTemplate = (pointObject = {}) => {
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${showRollBtn}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
