@@ -71,13 +71,10 @@ const generatePoint = () => {
   const startTime = generateStartTime(nextDate);
   const endTime = generateEndTime(startTime);
   newDate = endTime;
-  const duration = endTime - startTime; //почему то берутся откуда то лишние 3 часа
-  //const duration = endTime.diff(startTime); //в таком формате аналогично
   return {
     basePrice: generatePrice(),
-    dateFrom: formDateValue(startTime),
-    dateTo: formDateValue(endTime),
-    duration: formDateValue(duration),
+    dateFrom: startTime,
+    dateTo: endTime,
     destination: generateDestinationsText(),
     id: '0',//пока пускай все id = 0
     isFavorite: Boolean(getRandomPositiveNumber(0, 1)),

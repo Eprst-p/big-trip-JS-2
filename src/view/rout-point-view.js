@@ -1,10 +1,11 @@
 import {formDateValue} from '../utils/time-and-date.js';
 
 const createLiTemplate = (pointObject) => {
-  const {type, typeImg, city, dateFrom, dateTo, duration, basePrice, offers, isFavorite} = pointObject;
+  const {type, typeImg, city, dateFrom, dateTo, basePrice, offers, isFavorite} = pointObject;
 
   const editedStartTime = formDateValue(dateFrom).format('HH:mm');
   const editedEndTime = formDateValue(dateTo).format('HH:mm');
+  const duration = dateTo - dateFrom;
   const editedDuration = formDateValue(duration).format('HH:mm');
 
   const shortDate = formDateValue(dateFrom).format('D MMM');
