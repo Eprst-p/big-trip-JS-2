@@ -22,4 +22,8 @@ const generateEndTime = (startHour) => {
   return dayjs(startHour).add(randomHoursToAdd, 'hour').add(randomMinutesToAdd, 'minute');
 };
 
-export {formDateValue, generateRandomDate, generateStartTime, generateEndTime};
+const getDateInFormat = (date, format) => formDateValue(date).format(format);
+
+const getDuration = (endTime, startTime) => formDateValue(endTime - startTime).format('HH:mm');
+
+export {formDateValue, generateRandomDate, generateStartTime, generateEndTime, getDateInFormat, getDuration};

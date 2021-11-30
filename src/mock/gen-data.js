@@ -1,4 +1,6 @@
-import {DESTINATIONS, POINT_TYPES, CITIES, OFFER_NAMES, PRICES} from './data-sources.js';
+import {DESTINATIONS, CITIES,} from './data-sources.js';
+import {POINT_TYPES, OFFER_NAMES, PRICES} from '../utils/constants.js';
+
 import {getRandomPositiveNumber, getRandomElement} from '../utils/common.js';
 import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} from '../utils/time-and-date.js';
 

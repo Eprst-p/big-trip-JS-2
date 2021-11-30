@@ -1,6 +1,6 @@
-import {OFFER_NAMES, PRICES, POINT_TYPES} from '../mock/data-sources.js';
+import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
-import {formDateValue} from '../utils/time-and-date.js';
+import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 
 
 const createTypeAndCityTextTemplate = (type, city) => (
@@ -18,8 +18,8 @@ const createTypeAndCityTextTemplate = (type, city) => (
 );
 
 const createTimeTemplate = (startTime, endTime) => {
-  const editedStartTime = formDateValue(startTime).format('DD MM YY HH:mm'); //немного не тот формат, но принцип моков выполняется
-  const editedEndTime = formDateValue(endTime).format('DD MM YY HH:mm');
+  const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');//немного не тот формат, но принцип моков выполняется
+  const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
 
   return (
     `<div class="event__field-group  event__field-group--time">
@@ -65,7 +65,7 @@ const createOffersTemplate = (offers) => {
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${PRICES[index]}</span>
       </label>
-    </div>`)
+    </div>`).join('')
   );
 };
 
