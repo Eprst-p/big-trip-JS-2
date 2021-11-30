@@ -5,7 +5,7 @@ import {createSortTemplate} from './view/sort-view.js';
 import {createUlTemplate} from './view/container-for-points-view.js';
 import {createLiTemplate} from './view/rout-point-view.js';
 import {createFormTemplate} from './view/form-view.js';
-import {generatePoint} from './mock/gen-point-data.js';
+import {generatePoint} from './mock/gen-data.js';
 
 
 const POINTS_COUNT = 20;

@@ -1,7 +1,6 @@
-import dayjs from 'dayjs';
-import {POINT_TYPES, CITIES, OFFER_NAMES, PRICES} from './data-sources.js';
-import {getRandomPositiveNumber, getRandomElement} from '../utils/random-gen.js';
-import {generateDestinationsText, createPictures} from './gen-form-data.js';
+import {DESTINATIONS, POINT_TYPES, CITIES, OFFER_NAMES, PRICES} from './data-sources.js';
+import {getRandomPositiveNumber, getRandomElement} from '../utils/common.js';
+import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} from '../utils/time-and-date.js';
 
 
 //offers
@@ -29,33 +28,46 @@ const generateOffers = () => {
   return usedOffers;
 };
 
-//date
-const generateDate = (lastDate) => {
-  const dateDifference = getRandomPositiveNumber(1, 4);
-  return dayjs(lastDate).add(dateDifference, 'day');
-};
-
 //price
 const generatePrice = () => Math.ceil(getRandomPositiveNumber(2, 80))*10;
 
-//time
-const generateStartTime = (date) => {
-  const randomStartHour = getRandomPositiveNumber(1, 8);
-  return dayjs(date).add(randomStartHour, 'hour');
+//destionations
+const findDestinationSentence = (usedDestinations) => {
+  let sentence = getRandomElement(DESTINATIONS);
+  while (usedDestinations.includes(sentence)) { //проверка на уникальность
+    sentence = getRandomElement(DESTINATIONS);
+  }
+  usedDestinations.push(sentence);
+  return sentence;
 };
 
-const generateEndTime = (startHour) => {
-  //const randomDaysToAdd = getRandomPositiveNumber(0, 4); //пока еще с часами не разобрался до конца
-  const randomHoursToAdd = getRandomPositiveNumber(0, 8);
-  const randomMinutesToAdd = getRandomPositiveNumber(0, 3)*10;
-  return dayjs(startHour).add(randomHoursToAdd, 'hour').add(randomMinutesToAdd, 'minute');
+const generateDestinationsText = () => {
+  const sentencesAmount = getRandomPositiveNumber(1, 5);
+  const usedDestinations = [];
+  let destinationText = '';
+  for (let i = 0; i < sentencesAmount; i++) {
+    destinationText += `${findDestinationSentence(usedDestinations)} `;
+  }
+  return destinationText;
 };
+
+//pictures
+const createPictures = () => {
+  const picturesAmount = getRandomPositiveNumber(1, 7);
+  const pictureUrls = [];
+  for (let i = 0; i < picturesAmount; i++) {
+    const currentPictureUrl = `http://picsum.photos/248/152?r=${Math.random()}`;
+    pictureUrls.push(currentPictureUrl);
+  }
+  return pictureUrls;
+};
+
 
 //сам объект point
-let newDate = dayjs();
+let newDate = formDateValue();
 
 const generatePoint = () => {
-  const nextDate = generateDate(newDate);
+  const nextDate = generateRandomDate(newDate);
   const startTime = generateStartTime(nextDate);
   const endTime = generateEndTime(startTime);
   const duration = endTime - startTime; //почему то берутся откуда то лишние 3 часа
@@ -69,9 +81,9 @@ const generatePoint = () => {
     },
     city: getRandomElement(CITIES),
     time: {
-      startTime: dayjs(startTime),
-      endTime: dayjs(endTime),
-      durationTime: dayjs(duration)
+      startTime: formDateValue(startTime),
+      endTime: formDateValue(endTime),
+      durationTime: formDateValue(duration)
     },
     price: generatePrice(),
     offers: generateOffers(),
