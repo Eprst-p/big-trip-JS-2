@@ -1,3 +1,4 @@
+import {createElementMarkup} from '../utils/render.js';
 
 const createTipInfoTemplate = (allPoints) => {
 
@@ -51,4 +52,30 @@ const createTipInfoTemplate = (allPoints) => {
 
 };
 
-export {createTipInfoTemplate};
+class TripInfoView {
+  #element = null;
+  #allPoints = null;
+
+  constructor(allPoints) {
+    this.#allPoints = allPoints;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElementMarkup(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createTipInfoTemplate(this.#allPoints);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+
+export {TripInfoView};

@@ -1,11 +1,11 @@
-import {RenderPositions, renderTemplate, renderElement} from './utils/render.js';
+import {RenderPositions, renderElement} from './utils/render.js';
 import {MenuView} from './view/menu-view.js';
 import {FiltersView} from './view/filters-view.js';
 import {SortView} from './view/sort-view.js';
 import {UlContainerView} from './view/container-for-points-view.js';
-import {createLiTemplate} from './view/rout-point-view.js';
-import {createFormTemplate} from './view/form-view.js';
-import {createTipInfoTemplate} from './view/trip-info-view.js';
+import {PointView} from './view/rout-point-view.js';
+import {FormView} from './view/form-view.js';
+import {TripInfoView} from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
 
 
@@ -18,7 +18,7 @@ const tripMainElement = headerElement.querySelector('.trip-main');
 const divForNavElement = headerElement.querySelector('.trip-controls__navigation');
 const divForFiltersElement = headerElement.querySelector('.trip-controls__filters');
 
-renderTemplate(tripMainElement, createTipInfoTemplate(points), RenderPositions.AFTERBEGIN);
+renderElement(tripMainElement, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
 renderElement(divForNavElement, new MenuView().element, RenderPositions.BEFOREEND);
 
 renderElement(divForFiltersElement, new FiltersView().element, RenderPositions.BEFOREEND);
@@ -31,13 +31,13 @@ renderElement(contentSectionElement, new UlContainerView().element, RenderPositi
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 for (let i = 0; i < POINTS_COUNT; i++) {
-  renderTemplate(ulList, createLiTemplate(points[i]), RenderPositions.BEFOREEND);
+  renderElement(ulList, new PointView(points[i]).element, RenderPositions.BEFOREEND);
 }
 
 const listElements = ulList.querySelectorAll('.trip-events__item');
 
 
-renderTemplate(listElements[1], createFormTemplate(), RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
-renderTemplate(ulList, createFormTemplate('editForm', points[0]), RenderPositions.AFTERBEGIN);//форма редактирования, рисует по данным с первой точки маршрута
+renderElement(listElements[1], new FormView().element, RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
+renderElement(ulList, new FormView('editForm', points[0]).element, RenderPositions.AFTERBEGIN);//форма редактирования, рисует по данным с первой точки маршрута
 
 

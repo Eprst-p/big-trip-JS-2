@@ -1,6 +1,7 @@
 import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
+import {createElementMarkup} from '../utils/render.js';
 
 
 const createTypeAndCityTextTemplate = (type, city) => (
@@ -140,5 +141,34 @@ const createFormTemplate = (formType, pointObject = {}) => {
   );
 };
 
-export {createFormTemplate};
+class FormView {
+  #element = null;
+  #formType = null;
+  #pointObject = null;
+
+  constructor(formType, pointObject) {
+    this.#formType = formType;
+    this.#pointObject = pointObject;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElementMarkup(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createFormTemplate(this.#formType, this.#pointObject);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+
+export {FormView};
+
 
