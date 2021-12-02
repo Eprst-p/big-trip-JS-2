@@ -28,16 +28,46 @@ const contentSectionElement = document.querySelector('.trip-events');
 renderElement(contentSectionElement, new SortView().element, RenderPositions.BEFOREEND);
 renderElement(contentSectionElement, new UlContainerView().element, RenderPositions.BEFOREEND);
 
+
+const renderPoint = (container, pointObject) => {
+  const pointElement = new PointView(pointObject);
+  const pointEditForm = new FormView('editForm', pointObject);
+
+  const replacePointToForm = () => {
+    container.replaceChild(pointEditForm.element, pointElement.element);
+  };
+
+  const replaceFormToPoint = () => {
+    container.replaceChild(pointElement.element, pointEditForm.element);
+  };
+
+  const pointArrow = pointElement.element.querySelector('.event__rollup-btn');
+  const formArrow = pointEditForm.element.querySelector('.event__rollup-btn');//закрываем через стрелочку, не очень понял, как это сделать через форму и submit, как просят, нужно добавлять батону тип submit по идее
+  //const formTag = pointEditForm.element.closest('form');
+
+
+  pointArrow.addEventListener('click', () => {
+    replacePointToForm();
+  });
+
+  formArrow.addEventListener('click', () => {
+    replaceFormToPoint();
+  });
+
+  renderElement(container, pointElement.element, RenderPositions.BEFOREEND);
+
+};
+
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 for (let i = 0; i < POINTS_COUNT; i++) {
-  renderElement(ulList, new PointView(points[i]).element, RenderPositions.BEFOREEND);
+  renderPoint(ulList, points[i]);
 }
 
-const listElements = ulList.querySelectorAll('.trip-events__item');
+//const listElements = ulList.querySelectorAll('.trip-events__item'); //вроде не нужен пока
 
 
-renderElement(listElements[1], new FormView().element, RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
-renderElement(ulList, new FormView('editForm', points[0]).element, RenderPositions.AFTERBEGIN);//форма редактирования, рисует по данным с первой точки маршрута
+//пример для добавления формы, чтоб не забыть
+//renderElement(listElements[1], new FormView().element, RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
 
 
