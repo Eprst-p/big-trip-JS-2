@@ -1,25 +1,24 @@
 import {RenderPositions, renderElement} from './utils/render.js';
-import {MenuView} from './view/menu-view.js';
-import {NoPointsView} from './view/no-points-view.js';
-import {FiltersView} from './view/filters-view.js';
-import {SortView} from './view/sort-view.js';
-import {UlContainerView} from './view/container-for-points-view.js';
-import {PointView} from './view/rout-point-view.js';
-import {FormView} from './view/form-view.js';
-import {TripInfoView} from './view/trip-info-view.js';
+import MenuView from './view/menu-view.js';
+import NoPointsView from './view/no-points-view.js';
+import FiltersView from './view/filters-view.js';
+import SortView from './view/sort-view.js';
+import ContainerForPointsView from './view/container-for-points-view.js';
+import PointView from './view/point-view.js';
+import FormView from './view/form-view.js';
+import TripInfoView from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
-
 
 const POINTS_COUNT = 20;
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
-const headerElement = document.querySelector('.page-header');
-const tripMainElement = headerElement.querySelector('.trip-main');
-const divForNavElement = headerElement.querySelector('.trip-controls__navigation');
-const divForFiltersElement = headerElement.querySelector('.trip-controls__filters');
+const headerContainer = document.querySelector('.page-header');
+const tripInfoContainer = headerContainer.querySelector('.trip-main');
+const menuContainer = headerContainer.querySelector('.trip-controls__navigation');
+const filtersContainer = headerContainer.querySelector('.trip-controls__filters');
 
-renderElement(divForNavElement, new MenuView().element, RenderPositions.BEFOREEND);
+renderElement(menuContainer, new MenuView().element, RenderPositions.BEFOREEND);
 
 const filtersElement = new FiltersView().element;
 
@@ -57,12 +56,12 @@ const onFilterChange = (evt) => {
 filtersElement.addEventListener('change', onFilterChange);
 */
 
-renderElement(divForFiltersElement, filtersElement, RenderPositions.BEFOREEND);
+renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
 
 const contentSectionElement = document.querySelector('.trip-events');
 
 renderElement(contentSectionElement, new SortView().element, RenderPositions.BEFOREEND);
-renderElement(contentSectionElement, new UlContainerView().element, RenderPositions.BEFOREEND);
+renderElement(contentSectionElement, new ContainerForPointsView().element, RenderPositions.BEFOREEND);
 
 
 const renderPoint = (container, pointObject) => {
@@ -113,7 +112,7 @@ const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 
 if (POINTS_COUNT > 0) {
-  renderElement(tripMainElement, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
+  renderElement(tripInfoContainer, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
 
   for (let i = 0; i < POINTS_COUNT; i++) {
     renderPoint(ulList, points[i]);
@@ -130,5 +129,4 @@ if (POINTS_COUNT === 0) { //пока тоолько такое сообщени�
 
 //пример для добавления формы, чтоб не забыть
 //renderElement(listElements[1], new FormView().element, RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
-
 

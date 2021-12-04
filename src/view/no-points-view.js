@@ -38,4 +38,4 @@ class NoPointsView {
 }
 
 
-export {NoPointsView};
+export default NoPointsView;

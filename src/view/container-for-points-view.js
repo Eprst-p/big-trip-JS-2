@@ -1,12 +1,11 @@
 import {createElementMarkup} from '../utils/render.js';
 
-
 const createUlTemplate = () => (
   `<ul class="trip-events__list">
     </ul>`
 );
 
-class UlContainerView {
+class ContainerForPointsView {
   #element = null;
 
   get element() {
@@ -26,5 +25,4 @@ class UlContainerView {
   }
 }
 
-
-export {UlContainerView};
+export default ContainerForPointsView;

@@ -41,4 +41,4 @@ class FiltersView {
   }
 }
 
-export {FiltersView};
+export default FiltersView;

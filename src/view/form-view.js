@@ -3,7 +3,6 @@ import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import {createElementMarkup} from '../utils/render.js';
 
-
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
@@ -169,6 +168,4 @@ class FormView {
 }
 
 
-export {FormView};
-
-
+export default FormView;

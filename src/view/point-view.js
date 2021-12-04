@@ -77,5 +77,4 @@ class PointView {
   }
 }
 
-
-export {PointView};
+export default PointView;

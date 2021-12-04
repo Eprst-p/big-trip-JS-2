@@ -50,4 +50,4 @@ class SortView {
 }
 
 
-export {SortView};
+export default SortView;

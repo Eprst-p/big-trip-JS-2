@@ -77,5 +77,4 @@ class TripInfoView {
   }
 }
 
-
-export {TripInfoView};
+export default TripInfoView;
