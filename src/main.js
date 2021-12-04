@@ -9,7 +9,7 @@ import FormView from './view/form-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
 
-const POINTS_COUNT = 20;
+const POINTS_COUNT = 0;
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
@@ -119,8 +119,8 @@ if (POINTS_COUNT > 0) {
   }
 }
 
-if (POINTS_COUNT === 0) { //пока тоолько такое сообщение
-  renderElement(ulList, new NoPointsView('everything').element, RenderPositions.AFTERBEGIN);
+if (POINTS_COUNT === 0) { //пока только одно сообщение, без проверок
+  renderElement(ulList, new NoPointsView().element, RenderPositions.AFTERBEGIN);
 }
 
 

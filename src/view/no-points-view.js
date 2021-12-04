@@ -7,35 +7,26 @@ const createNoPointsTemplate = (message) => (
 class NoPointsView {
   #element = null;
   #message = null;
-
-  constructor(checkedFilterValue) {
-    if (checkedFilterValue === 'everything') {
-      this.#message = 'Click New Event to create your first point';
-    }
-    if (checkedFilterValue === 'future') {
-      this.#message = 'There are no future events now';
-    }
-    if (checkedFilterValue === 'past') {
-      this.#message = 'There are no past events now';
-    }
-  }
+  #noPointsMessages = {
+    everything: 'Click New Event to create your first point',
+    future: 'There are no future events now',
+    past: 'There are no past events now'
+  };
 
   get element() {
     if (!this.#element) {
       this.#element = createElementMarkup(this.template);
     }
-
     return this.#element;
   }
 
   get template() {
-    return createNoPointsTemplate(this.#message);
+    return createNoPointsTemplate(this.#noPointsMessages.everything); //пока только одно сообщение, без проверки фильтров
   }
 
   removeElement() {
     this.#element = null;
   }
 }
-
 
 export default NoPointsView;
