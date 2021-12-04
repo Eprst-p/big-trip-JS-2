@@ -85,44 +85,14 @@ if (POINTS_COUNT > 0) {
   }
 }
 
-const noPointsMessages = {
-  everything: 'Click New Event to create your first point',
-  future: 'There are no future events now',
-  past: 'There are no past events now'
-};
-
 if (POINTS_COUNT === 0) { //просто дефолтное отображение при первой загрузке
-  renderElement(ulList, new NoPointsView(noPointsMessages.everything).element, RenderPositions.AFTERBEGIN);
+  renderElement(ulList, new NoPointsView('everything').element, RenderPositions.AFTERBEGIN);
 }
 
 // блок с логикой сменой фильтров
 const onFilterChange = (evt) => {
-
-  const filterClickArea = evt.target.closest('.trip-filters__filter');
-  const checkFilterId = (filterId) => filterClickArea.querySelector(filterId);
-
-
-  if (checkFilterId('#filter-everything')) {
-    //тут  должен быть полный список точек маршрута
-    if (POINTS_COUNT === 0) {
-      ulList.innerHTML = '';
-      renderElement(ulList, new NoPointsView(noPointsMessages.everything).element, RenderPositions.AFTERBEGIN);
-    }
-  }
-  if (checkFilterId('#filter-future')) {
-    //тут  должен быть точки после текущей даты
-    if (POINTS_COUNT === 0) {
-      ulList.innerHTML = '';
-      renderElement(ulList, new NoPointsView(noPointsMessages.future).element, RenderPositions.AFTERBEGIN);
-    }
-  }
-  if (checkFilterId('#filter-past')) {
-    //тут  должен быть точки до текущей даты
-    if (POINTS_COUNT === 0) {
-      ulList.innerHTML = '';
-      renderElement(ulList, new NoPointsView(noPointsMessages.past).element, RenderPositions.AFTERBEGIN);
-    }
-  }
+  ulList.innerHTML = '';
+  renderElement(ulList, new NoPointsView(evt.target.value).element, RenderPositions.AFTERBEGIN);
 };
 
 filtersElement.addEventListener('change', onFilterChange);
