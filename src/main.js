@@ -42,20 +42,35 @@ const renderPoint = (container, pointObject) => {
   };
 
   const pointArrow = pointElement.element.querySelector('.event__rollup-btn');
-  const formArrow = pointEditForm.element.querySelector('.event__rollup-btn');//закрываем через стрелочку, не очень понял, как это сделать через форму и submit, как просят, нужно добавлять батону тип submit по идее
-  //const formTag = pointEditForm.element.closest('form');
+  const formArrow = pointEditForm.element.querySelector('.event__rollup-btn');
+  const formTag = pointEditForm.element.closest('form');
 
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
 
   pointArrow.addEventListener('click', () => {
     replacePointToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  formTag.addEventListener('submit', (evt) => { //нужно добавлять позже батону тип submit по идее, чтобы работало
+    evt.preventDefault();
+    replaceFormToPoint();
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 
   formArrow.addEventListener('click', () => {
     replaceFormToPoint();
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 
   renderElement(container, pointElement.element, RenderPositions.BEFOREEND);
-
 };
 
 const ulList = contentSectionElement.querySelector('.trip-events__list');
