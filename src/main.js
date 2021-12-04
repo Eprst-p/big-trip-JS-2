@@ -1,5 +1,6 @@
 import {RenderPositions, renderElement} from './utils/render.js';
 import {MenuView} from './view/menu-view.js';
+import {NoPointsView} from './view/no-points-view.js';
 import {FiltersView} from './view/filters-view.js';
 import {SortView} from './view/sort-view.js';
 import {UlContainerView} from './view/container-for-points-view.js';
@@ -18,10 +19,45 @@ const tripMainElement = headerElement.querySelector('.trip-main');
 const divForNavElement = headerElement.querySelector('.trip-controls__navigation');
 const divForFiltersElement = headerElement.querySelector('.trip-controls__filters');
 
-renderElement(tripMainElement, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
 renderElement(divForNavElement, new MenuView().element, RenderPositions.BEFOREEND);
 
-renderElement(divForFiltersElement, new FiltersView().element, RenderPositions.BEFOREEND);
+const filtersElement = new FiltersView().element;
+
+/* блок с логикой сменой фильтров - пока не работает
+let filterValue = '';
+const onFilterChange = (evt) => {
+  if (evt.target.closest('#filter-everything')) {
+    //полный список точек маршрута
+    filterValue = 'everything';
+    if (POINTS_COUNT === 0) {
+      //renderElement(ulList, new NoPointsView(filterValue).element, RenderPositions.AFTERBEGIN);
+      console.log('every');
+    }
+  }
+  if (evt.target.closest('#filter-future')) {
+    //точки после текущей даты
+    filterValue = 'future';
+    if (POINTS_COUNT === 0) {
+      //renderElement(ulList, new NoPointsView(filterValue).element, RenderPositions.AFTERBEGIN);
+      console.log('future');
+
+    }
+  }
+  if (evt.target.closest('#filter-past')) {
+    //точки до текущей даты
+    filterValue = 'past';
+  }
+  if (POINTS_COUNT === 0) {
+    //renderElement(ulList, new NoPointsView(filterValue).element, RenderPositions.AFTERBEGIN);
+    console.log('past');
+
+  }
+};
+
+filtersElement.addEventListener('change', onFilterChange);
+*/
+
+renderElement(divForFiltersElement, filtersElement, RenderPositions.BEFOREEND);
 
 const contentSectionElement = document.querySelector('.trip-events');
 
@@ -75,9 +111,19 @@ const renderPoint = (container, pointObject) => {
 
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
-for (let i = 0; i < POINTS_COUNT; i++) {
-  renderPoint(ulList, points[i]);
+
+if (POINTS_COUNT > 0) {
+  renderElement(tripMainElement, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
+
+  for (let i = 0; i < POINTS_COUNT; i++) {
+    renderPoint(ulList, points[i]);
+  }
 }
+
+if (POINTS_COUNT === 0) { //пока тоолько такое сообщение
+  renderElement(ulList, new NoPointsView('everything').element, RenderPositions.AFTERBEGIN);
+}
+
 
 //const listElements = ulList.querySelectorAll('.trip-events__item'); //вроде не нужен пока
 
