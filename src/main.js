@@ -9,7 +9,7 @@ import FormView from './view/form-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
 
-const POINTS_COUNT = 20;
+const POINTS_COUNT = 0;
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
@@ -21,40 +21,6 @@ const filtersContainer = headerContainer.querySelector('.trip-controls__filters'
 renderElement(menuContainer, new MenuView().element, RenderPositions.BEFOREEND);
 
 const filtersElement = new FiltersView().element;
-
-/* блок с логикой сменой фильтров - пока не работает
-let filterValue = '';
-const onFilterChange = (evt) => {
-  if (evt.target.closest('#filter-everything')) {
-    //полный список точек маршрута
-    filterValue = 'everything';
-    if (POINTS_COUNT === 0) {
-      //renderElement(ulList, new NoPointsView(filterValue).element, RenderPositions.AFTERBEGIN);
-      console.log('every');
-    }
-  }
-  if (evt.target.closest('#filter-future')) {
-    //точки после текущей даты
-    filterValue = 'future';
-    if (POINTS_COUNT === 0) {
-      //renderElement(ulList, new NoPointsView(filterValue).element, RenderPositions.AFTERBEGIN);
-      console.log('future');
-
-    }
-  }
-  if (evt.target.closest('#filter-past')) {
-    //точки до текущей даты
-    filterValue = 'past';
-  }
-  if (POINTS_COUNT === 0) {
-    //renderElement(ulList, new NoPointsView(filterValue).element, RenderPositions.AFTERBEGIN);
-    console.log('past');
-
-  }
-};
-
-filtersElement.addEventListener('change', onFilterChange);
-*/
 
 renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
 
@@ -119,9 +85,47 @@ if (POINTS_COUNT > 0) {
   }
 }
 
-if (POINTS_COUNT === 0) { //пока только одно сообщение, без проверок
-  renderElement(ulList, new NoPointsView().element, RenderPositions.AFTERBEGIN);
+const noPointsMessages = {
+  everything: 'Click New Event to create your first point',
+  future: 'There are no future events now',
+  past: 'There are no past events now'
+};
+
+if (POINTS_COUNT === 0) { //просто дефолтное отображение при первой загрузке
+  renderElement(ulList, new NoPointsView(noPointsMessages.everything).element, RenderPositions.AFTERBEGIN);
 }
+
+// блок с логикой сменой фильтров
+const onFilterChange = (evt) => {
+
+  const filterClickArea = evt.target.closest('.trip-filters__filter');
+  const checkFilterId = (filterId) => filterClickArea.querySelector(filterId);
+
+
+  if (checkFilterId('#filter-everything')) {
+    //тут  должен быть полный список точек маршрута
+    if (POINTS_COUNT === 0) {
+      ulList.innerHTML = '';
+      renderElement(ulList, new NoPointsView(noPointsMessages.everything).element, RenderPositions.AFTERBEGIN);
+    }
+  }
+  if (checkFilterId('#filter-future')) {
+    //тут  должен быть точки после текущей даты
+    if (POINTS_COUNT === 0) {
+      ulList.innerHTML = '';
+      renderElement(ulList, new NoPointsView(noPointsMessages.future).element, RenderPositions.AFTERBEGIN);
+    }
+  }
+  if (checkFilterId('#filter-past')) {
+    //тут  должен быть точки до текущей даты
+    if (POINTS_COUNT === 0) {
+      ulList.innerHTML = '';
+      renderElement(ulList, new NoPointsView(noPointsMessages.past).element, RenderPositions.AFTERBEGIN);
+    }
+  }
+};
+
+filtersElement.addEventListener('change', onFilterChange);
 
 
 //const listElements = ulList.querySelectorAll('.trip-events__item'); //вроде не нужен пока
