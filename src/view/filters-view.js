@@ -1,3 +1,5 @@
+import {createElementMarkup} from '../utils/render.js';
+
 const createFiltersTemplate = () => (
   `<form class="trip-filters" action="#" method="get">
     <div class="trip-filters__filter">
@@ -19,4 +21,24 @@ const createFiltersTemplate = () => (
   </form>`
 );
 
-export {createFiltersTemplate};
+class FiltersView {
+  #element = null;
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElementMarkup(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createFiltersTemplate();
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+export default FiltersView;

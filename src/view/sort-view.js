@@ -1,3 +1,5 @@
+import {createElementMarkup} from '../utils/render.js';
+
 const createSortTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
@@ -27,4 +29,25 @@ const createSortTemplate = () => (
   </form>`
 );
 
-export {createSortTemplate};
+class SortView {
+  #element = null;
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElementMarkup(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSortTemplate();
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+
+export default SortView;

@@ -6,4 +6,5 @@ const getRandomPositiveNumber = (a, b) => {
 
 const getRandomElement = (array) => array[getRandomPositiveNumber(0, array.length-1)];
 
+
 export {getRandomPositiveNumber, getRandomElement};
