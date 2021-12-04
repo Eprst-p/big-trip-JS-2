@@ -4,14 +4,19 @@ const createNoPointsTemplate = (message) => (
   `<p class="trip-events__msg">${message}</p>`
 );
 
+const noPointsMessages = {
+  everything: 'Click New Event to create your first point',
+  future: 'There are no future events now',
+  past: 'There are no past events now'
+};
+
 class NoPointsView {
   #element = null;
-  #message = null;
-  #noPointsMessages = {
-    everything: 'Click New Event to create your first point',
-    future: 'There are no future events now',
-    past: 'There are no past events now'
-  };
+  #filterValue = null;
+
+  constructor(filterValue) {
+    this.#filterValue = filterValue;
+  }
 
   get element() {
     if (!this.#element) {
@@ -21,7 +26,7 @@ class NoPointsView {
   }
 
   get template() {
-    return createNoPointsTemplate(this.#noPointsMessages.everything); //пока только одно сообщение, без проверки фильтров
+    return createNoPointsTemplate(noPointsMessages[this.#filterValue]);
   }
 
   removeElement() {
