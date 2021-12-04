@@ -70,7 +70,7 @@ const createOffersTemplate = (offers) => {
 };
 
 //основной темплейт
-const createFormTemplate = (formType, pointObject = {}) => {
+const createFormTemplate = (formType, pointData = {}) => {
 
   const {
     basePrice = '300$',
@@ -82,7 +82,7 @@ const createFormTemplate = (formType, pointObject = {}) => {
     typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
     city = 'Undercity',
     pictures = []
-  } = pointObject;
+  } = pointData;
 
   const showRollBtn = (formType === 'editForm') ?
     `<button class="event__rollup-btn" type="button">
@@ -143,23 +143,22 @@ const createFormTemplate = (formType, pointObject = {}) => {
 class FormView {
   #element = null;
   #formType = null;
-  #pointObject = null;
+  #pointData = null;
 
-  constructor(formType, pointObject) {
+  constructor(formType, pointData) {
     this.#formType = formType;
-    this.#pointObject = pointObject;
+    this.#pointData = pointData;
   }
 
   get element() {
     if (!this.#element) {
       this.#element = createElementMarkup(this.template);
     }
-
     return this.#element;
   }
 
   get template() {
-    return createFormTemplate(this.#formType, this.#pointObject);
+    return createFormTemplate(this.#formType, this.#pointData);
   }
 
   removeElement() {

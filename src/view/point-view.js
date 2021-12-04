@@ -1,8 +1,8 @@
 import {formDateValue, getDateInFormat, getDuration} from '../utils/time-and-date.js';
 import {createElementMarkup} from '../utils/render.js';
 
-const createLiTemplate = (pointObject) => {
-  const {type, typeImg, city, dateFrom, dateTo, basePrice, offers, isFavorite} = pointObject;
+const createLiTemplate = (pointData) => {
+  const {type, typeImg, city, dateFrom, dateTo, basePrice, offers, isFavorite} = pointData;
 
   const editedStartTime = getDateInFormat(dateFrom, 'HH:mm');
   const editedEndTime = getDateInFormat(dateTo, 'HH:mm');
@@ -54,10 +54,10 @@ const createLiTemplate = (pointObject) => {
 
 class PointView {
   #element = null;
-  #pointObject = null;
+  #pointData = null;
 
-  constructor(pointObject) {
-    this.#pointObject = pointObject;
+  constructor(pointData) {
+    this.#pointData = pointData;
   }
 
   get element() {
@@ -69,7 +69,7 @@ class PointView {
   }
 
   get template() {
-    return createLiTemplate(this.#pointObject);
+    return createLiTemplate(this.#pointData);
   }
 
   removeElement() {

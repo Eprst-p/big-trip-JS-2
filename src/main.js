@@ -64,9 +64,9 @@ renderElement(contentSectionElement, new SortView().element, RenderPositions.BEF
 renderElement(contentSectionElement, new ContainerForPointsView().element, RenderPositions.BEFOREEND);
 
 
-const renderPoint = (container, pointObject) => {
-  const pointElement = new PointView(pointObject);
-  const pointEditForm = new FormView('editForm', pointObject);
+const renderPoint = (container, pointData) => {
+  const pointElement = new PointView(pointData);
+  const pointEditForm = new FormView('editForm', pointData);
 
   const replacePointToForm = () => {
     container.replaceChild(pointEditForm.element, pointElement.element);
