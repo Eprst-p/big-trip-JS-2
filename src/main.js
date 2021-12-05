@@ -9,7 +9,7 @@ import FormView from './view/form-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 20;
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 

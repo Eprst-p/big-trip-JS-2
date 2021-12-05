@@ -1,27 +1,14 @@
-import {createElementMarkup} from '../utils/render.js';
+import AbstractView from './abstract-view.js';
+
 
 const createUlTemplate = () => (
   `<ul class="trip-events__list">
     </ul>`
 );
 
-class ContainerForPointsView {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElementMarkup(this.template);
-    }
-
-    return this.#element;
-  }
-
+class ContainerForPointsView extends AbstractView  {
   get template() {
     return createUlTemplate();
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
 
