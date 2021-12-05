@@ -45,8 +45,19 @@ if (POINTS_COUNT === 0) { //просто дефолтное отображени
 
 // блок с логикой сменой фильтров
 const onFilterChange = (evt) => {
-  ulList.innerHTML = '';
-  renderElement(ulList, new NoPointsView(evt.target.value).element, RenderPositions.AFTERBEGIN);
+  if (POINTS_COUNT === 0) {
+    ulList.innerHTML = '';
+    renderElement(ulList, new NoPointsView(evt.target.value).element, RenderPositions.AFTERBEGIN);
+  }
+  if (evt.target.value === 'everything') {
+    //отображение всех точек
+  }
+  if (evt.target.value === 'future') {
+    //отображение точек после теккущей даты
+  }
+  if (evt.target.value === 'past') {
+    //отображение точек до текущей даты
+  }
 };
 
 filtersElement.addEventListener('change', onFilterChange);
