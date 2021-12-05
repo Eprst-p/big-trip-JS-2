@@ -1,5 +1,6 @@
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
+import AbstractView from '../view/abstract-view.js';
 
 const RenderPositions = {
   BEFOREBEGIN: 'beforebegin',
@@ -32,43 +33,61 @@ const createElementMarkup = (template) => {
   return newElement.firstChild;
 };
 
+const replace = (container, newElement, oldElement) => {
+  if (newElement === null || oldElement === null) {
+    throw new Error('Can\'t replace unexisting elements');
+  }
+
+  const newChild = newElement instanceof AbstractView ? newElement.element : newElement;
+  const oldChild = oldElement instanceof AbstractView ? oldElement.element : oldElement;
+
+  container.replaceChild(newChild, oldChild);
+};
+
+//отрисовка точки
 const renderPoint = (container, pointData) => {
   const pointElement = new PointView(pointData);
   const pointEditForm = new FormView('editForm', pointData);
 
-  const replacePointToForm = () => {
-    container.replaceChild(pointEditForm.element, pointElement.element);
-  };
-
-  const replaceFormToPoint = () => {
-    container.replaceChild(pointElement.element, pointEditForm.element);
-  };
-
   const onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      replaceFormToPoint();
+      replace(container, pointElement, pointEditForm);
       document.removeEventListener('keydown', onEscKeyDown);
     }
   };
 
   pointElement.setOnPointArrowClick(() => {
-    replacePointToForm();
+    replace(container, pointEditForm, pointElement);
     document.addEventListener('keydown', onEscKeyDown);
   });
 
 
   pointEditForm.setOnFormSubmit(() => {
-    replaceFormToPoint();
+    replace(container, pointElement, pointEditForm);
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
   pointEditForm.setOnFormArrowClick(() => {
-    replaceFormToPoint();
+    replace(container, pointElement, pointEditForm);
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
   renderElement(container, pointElement.element, RenderPositions.BEFOREEND);
 };
 
-export {RenderPositions, renderElement, createElementMarkup, renderPoint};
+//функция для вызова методов удаления
+const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
+  if (!(component instanceof AbstractView)) {
+    throw new Error('Can remove only components');
+  }
+
+  component.element.remove();
+  component.removeElement();
+};
+
+export {RenderPositions, renderElement, createElementMarkup, renderPoint, remove};
