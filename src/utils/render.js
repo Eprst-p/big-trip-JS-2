@@ -10,18 +10,21 @@ const RenderPositions = {
 };
 
 const renderElement = (container, element, place) => {
+  const parent = container instanceof AbstractView ? container.element : container;
+  const child = element instanceof AbstractView ? element.element : element;
+
   switch (place) {
     case RenderPositions.BEFOREBEGIN:
-      container.before(element);
+      parent.before(child);
       break;
     case RenderPositions.AFTERBEGIN:
-      container.prepend(element);
+      parent.prepend(child);
       break;
     case RenderPositions.BEFOREEND:
-      container.append(element);
+      parent.append(child);
       break;
     case RenderPositions.AFTEREND:
-      container.after(element);
+      parent.after(child);
       break;
   }
 };
@@ -73,7 +76,7 @@ const renderPoint = (container, pointData) => {
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  renderElement(container, pointElement.element, RenderPositions.BEFOREEND);
+  renderElement(container, pointElement, RenderPositions.BEFOREEND);
 };
 
 //функция для вызова методов удаления

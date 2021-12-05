@@ -16,7 +16,7 @@ const tripInfoContainer = headerContainer.querySelector('.trip-main');
 const menuContainer = headerContainer.querySelector('.trip-controls__navigation');
 const filtersContainer = headerContainer.querySelector('.trip-controls__filters');
 
-renderElement(menuContainer, new MenuView().element, RenderPositions.BEFOREEND);
+renderElement(menuContainer, new MenuView(), RenderPositions.BEFOREEND);
 
 const filtersElement = new FiltersView().element;
 
@@ -24,15 +24,15 @@ renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
 
 const contentSectionElement = document.querySelector('.trip-events');
 
-renderElement(contentSectionElement, new SortView().element, RenderPositions.BEFOREEND);
-renderElement(contentSectionElement, new ContainerForPointsView().element, RenderPositions.BEFOREEND);
+renderElement(contentSectionElement, new SortView(), RenderPositions.BEFOREEND);
+renderElement(contentSectionElement, new ContainerForPointsView(), RenderPositions.BEFOREEND);
 
 
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 
 if (POINTS_COUNT > 0) {
-  renderElement(tripInfoContainer, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
+  renderElement(tripInfoContainer, new TripInfoView(points), RenderPositions.AFTERBEGIN);
 
   for (let i = 0; i < POINTS_COUNT; i++) {
     renderPoint(ulList, points[i]);
@@ -40,14 +40,14 @@ if (POINTS_COUNT > 0) {
 }
 
 if (POINTS_COUNT === 0) { //просто дефолтное отображение при первой загрузке
-  renderElement(ulList, new NoPointsView('everything').element, RenderPositions.AFTERBEGIN);
+  renderElement(ulList, new NoPointsView('everything'), RenderPositions.AFTERBEGIN);
 }
 
 // блок с логикой сменой фильтров
 const onFilterChange = (evt) => {
   if (POINTS_COUNT === 0) {
     ulList.innerHTML = '';
-    renderElement(ulList, new NoPointsView(evt.target.value).element, RenderPositions.AFTERBEGIN);
+    renderElement(ulList, new NoPointsView(evt.target.value), RenderPositions.AFTERBEGIN);
   }
   if (evt.target.value === 'everything') {
     //отображение всех точек
