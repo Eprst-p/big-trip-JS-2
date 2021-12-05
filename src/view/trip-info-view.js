@@ -1,4 +1,4 @@
-import {createElementMarkup} from '../utils/render.js';
+import AbstractView from './abstract-view.js';
 
 const createTipInfoTemplate = (allPoints) => {
 
@@ -49,31 +49,18 @@ const createTipInfoTemplate = (allPoints) => {
       </p>
     </section>`
   );
-
 };
 
-class TripInfoView {
-  #element = null;
+class TripInfoView extends AbstractView {
   #allPoints = null;
 
   constructor(allPoints) {
+    super();
     this.#allPoints = allPoints;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElementMarkup(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createTipInfoTemplate(this.#allPoints);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
 

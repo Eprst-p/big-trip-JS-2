@@ -1,5 +1,5 @@
 import {formDateValue, getDateInFormat, getDuration} from '../utils/time-and-date.js';
-import {createElementMarkup} from '../utils/render.js';
+import AbstractView from './abstract-view.js';
 
 const createLiTemplate = (pointData) => {
   const {type, typeImg, city, dateFrom, dateTo, basePrice, offers, isFavorite} = pointData;
@@ -52,28 +52,26 @@ const createLiTemplate = (pointData) => {
   );
 };
 
-class PointView {
-  #element = null;
+class PointView extends AbstractView {
   #pointData = null;
 
   constructor(pointData) {
+    super();
     this.#pointData = pointData;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElementMarkup(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createLiTemplate(this.#pointData);
   }
 
-  removeElement() {
-    this.#element = null;
+  setOnPointArrowClick = (callback) => {
+    this._callback.arrowClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onArrowClick);
+  }
+
+  #onArrowClick = (evt) => {
+    evt.preventDefault();
+    this._callback.arrowClick();
   }
 }
 

@@ -1,4 +1,4 @@
-import {createElementMarkup} from '../utils/render.js';
+import AbstractView from './abstract-view.js';
 
 const createNoPointsTemplate = (message) => (
   `<p class="trip-events__msg">${message}</p>`
@@ -10,27 +10,16 @@ const noPointsMessages = {
   past: 'There are no past events now'
 };
 
-class NoPointsView {
-  #element = null;
+class NoPointsView extends AbstractView {
   #filterValue = null;
 
   constructor(filterValue) {
+    super();
     this.#filterValue = filterValue;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElementMarkup(this.template);
-    }
-    return this.#element;
   }
 
   get template() {
     return createNoPointsTemplate(noPointsMessages[this.#filterValue]);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
 

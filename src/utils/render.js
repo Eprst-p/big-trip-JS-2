@@ -1,3 +1,6 @@
+import PointView from '../view/point-view.js';
+import FormView from '../view/form-view.js';
+
 const RenderPositions = {
   BEFOREBEGIN: 'beforebegin',
   AFTERBEGIN: 'afterbegin',
@@ -29,4 +32,43 @@ const createElementMarkup = (template) => {
   return newElement.firstChild;
 };
 
-export {RenderPositions, renderElement, createElementMarkup};
+const renderPoint = (container, pointData) => {
+  const pointElement = new PointView(pointData);
+  const pointEditForm = new FormView('editForm', pointData);
+
+  const replacePointToForm = () => {
+    container.replaceChild(pointEditForm.element, pointElement.element);
+  };
+
+  const replaceFormToPoint = () => {
+    container.replaceChild(pointElement.element, pointEditForm.element);
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  pointElement.setOnPointArrowClick(() => {
+    replacePointToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+
+  pointEditForm.setOnFormSubmit(() => {
+    replaceFormToPoint();
+    document.removeEventListener('keydown', onEscKeyDown);
+  });
+
+  pointEditForm.setOnFormArrowClick(() => {
+    replaceFormToPoint();
+    document.removeEventListener('keydown', onEscKeyDown);
+  });
+
+  renderElement(container, pointElement.element, RenderPositions.BEFOREEND);
+};
+
+export {RenderPositions, renderElement, createElementMarkup, renderPoint};
