@@ -1,5 +1,3 @@
-import PointView from '../view/point-view.js';
-import FormView from '../view/form-view.js';
 import AbstractView from '../view/abstract-view.js';
 
 const RenderPositions = {
@@ -36,6 +34,7 @@ const createElementMarkup = (template) => {
   return newElement.firstChild;
 };
 
+//замена элемента
 const replace = (container, newElement, oldElement) => {
   if (newElement === null || oldElement === null) {
     throw new Error('Can\'t replace unexisting elements');
@@ -45,38 +44,6 @@ const replace = (container, newElement, oldElement) => {
   const oldChild = oldElement instanceof AbstractView ? oldElement.element : oldElement;
 
   container.replaceChild(newChild, oldChild);
-};
-
-//отрисовка точки
-const renderPoint = (container, pointData) => {
-  const pointElement = new PointView(pointData);
-  const pointEditForm = new FormView('editForm', pointData);
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      replace(container, pointElement, pointEditForm);
-      document.removeEventListener('keydown', onEscKeyDown);
-    }
-  };
-
-  pointElement.setOnPointArrowClick(() => {
-    replace(container, pointEditForm, pointElement);
-    document.addEventListener('keydown', onEscKeyDown);
-  });
-
-
-  pointEditForm.setOnFormSubmit(() => {
-    replace(container, pointElement, pointEditForm);
-    document.removeEventListener('keydown', onEscKeyDown);
-  });
-
-  pointEditForm.setOnFormArrowClick(() => {
-    replace(container, pointElement, pointEditForm);
-    document.removeEventListener('keydown', onEscKeyDown);
-  });
-
-  renderElement(container, pointElement, RenderPositions.BEFOREEND);
 };
 
 //функция для вызова методов удаления
@@ -93,4 +60,4 @@ const remove = (component) => {
   component.removeElement();
 };
 
-export {RenderPositions, renderElement, createElementMarkup, renderPoint, remove};
+export {RenderPositions, renderElement, createElementMarkup, replace, remove};
