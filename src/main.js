@@ -1,15 +1,15 @@
-import {RenderPositions, renderElement} from './utils/render.js';
+import {RenderPositions, renderElement, replace} from './utils/render.js';
+import PointView from './view/point-view.js';
+import FormView from './view/form-view.js';
 import MenuView from './view/menu-view.js';
 import NoPointsView from './view/no-points-view.js';
 import FiltersView from './view/filters-view.js';
 import SortView from './view/sort-view.js';
-import ContainerForPointsView from './view/container-for-points-view.js';
-import PointView from './view/point-view.js';
-import FormView from './view/form-view.js';
+import EventsList from './view/events-list.js';
 import TripInfoView from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 20;
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
@@ -18,7 +18,7 @@ const tripInfoContainer = headerContainer.querySelector('.trip-main');
 const menuContainer = headerContainer.querySelector('.trip-controls__navigation');
 const filtersContainer = headerContainer.querySelector('.trip-controls__filters');
 
-renderElement(menuContainer, new MenuView().element, RenderPositions.BEFOREEND);
+renderElement(menuContainer, new MenuView(), RenderPositions.BEFOREEND);
 
 const filtersElement = new FiltersView().element;
 
@@ -26,59 +26,44 @@ renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
 
 const contentSectionElement = document.querySelector('.trip-events');
 
-renderElement(contentSectionElement, new SortView().element, RenderPositions.BEFOREEND);
-renderElement(contentSectionElement, new ContainerForPointsView().element, RenderPositions.BEFOREEND);
+renderElement(contentSectionElement, new SortView(), RenderPositions.BEFOREEND);
+renderElement(contentSectionElement, new EventsList(), RenderPositions.BEFOREEND);
 
-
+//отрисовка точки
 const renderPoint = (container, pointData) => {
   const pointElement = new PointView(pointData);
   const pointEditForm = new FormView('editForm', pointData);
 
-  const replacePointToForm = () => {
-    container.replaceChild(pointEditForm.element, pointElement.element);
-  };
-
-  const replaceFormToPoint = () => {
-    container.replaceChild(pointElement.element, pointEditForm.element);
-  };
-
-  const pointArrow = pointElement.element.querySelector('.event__rollup-btn');
-  const formArrow = pointEditForm.element.querySelector('.event__rollup-btn');
-  const formTag = pointEditForm.element.closest('form');
-
-
   const onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      replaceFormToPoint();
+      replace(container, pointElement, pointEditForm);
       document.removeEventListener('keydown', onEscKeyDown);
     }
   };
 
-  pointArrow.addEventListener('click', () => {
-    replacePointToForm();
+  pointElement.setOnPointArrowClick(() => {
+    replace(container, pointEditForm, pointElement);
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  formTag.addEventListener('submit', (evt) => { //нужно добавлять позже батону тип submit по идее, чтобы работало
-    evt.preventDefault();
-    replaceFormToPoint();
+  pointEditForm.setOnFormSubmit(() => {
+    replace(container, pointElement, pointEditForm);
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  formArrow.addEventListener('click', () => {
-    replaceFormToPoint();
+  pointEditForm.setOnFormArrowClick(() => {
+    replace(container, pointElement, pointEditForm);
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  renderElement(container, pointElement.element, RenderPositions.BEFOREEND);
+  renderElement(container, pointElement, RenderPositions.BEFOREEND);
 };
 
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
-
 if (POINTS_COUNT > 0) {
-  renderElement(tripInfoContainer, new TripInfoView(points).element, RenderPositions.AFTERBEGIN);
+  renderElement(tripInfoContainer, new TripInfoView(points), RenderPositions.AFTERBEGIN);
 
   for (let i = 0; i < POINTS_COUNT; i++) {
     renderPoint(ulList, points[i]);
@@ -86,13 +71,24 @@ if (POINTS_COUNT > 0) {
 }
 
 if (POINTS_COUNT === 0) { //просто дефолтное отображение при первой загрузке
-  renderElement(ulList, new NoPointsView('everything').element, RenderPositions.AFTERBEGIN);
+  renderElement(ulList, new NoPointsView('everything'), RenderPositions.AFTERBEGIN);
 }
 
 // блок с логикой сменой фильтров
 const onFilterChange = (evt) => {
-  ulList.innerHTML = '';
-  renderElement(ulList, new NoPointsView(evt.target.value).element, RenderPositions.AFTERBEGIN);
+  if (POINTS_COUNT === 0) {
+    ulList.innerHTML = '';
+    renderElement(ulList, new NoPointsView(evt.target.value), RenderPositions.AFTERBEGIN);
+  }
+  if (evt.target.value === 'everything') {
+    //отображение всех точек
+  }
+  if (evt.target.value === 'future') {
+    //отображение точек после теккущей даты
+  }
+  if (evt.target.value === 'past') {
+    //отображение точек до текущей даты
+  }
 };
 
 filtersElement.addEventListener('change', onFilterChange);

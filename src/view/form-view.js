@@ -1,7 +1,7 @@
 import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
-import {createElementMarkup} from '../utils/render.js';
+import AbstractView from './abstract-view.js';
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -140,29 +140,38 @@ const createFormTemplate = (formType, pointData = {}) => {
   );
 };
 
-class FormView {
-  #element = null;
+class FormView extends AbstractView {
   #formType = null;
   #pointData = null;
 
   constructor(formType, pointData) {
+    super();
     this.#formType = formType;
     this.#pointData = pointData;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElementMarkup(this.template);
-    }
-    return this.#element;
   }
 
   get template() {
     return createFormTemplate(this.#formType, this.#pointData);
   }
 
-  removeElement() {
-    this.#element = null;
+  setOnFormSubmit = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
+  }
+
+  #onFormSubmit = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setOnFormArrowClick = (callback) => {
+    this._callback.formArrowClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
+  }
+
+  #onFormArrowClick = (evt) => {
+    evt.preventDefault();
+    this._callback.formArrowClick();
   }
 }
 
