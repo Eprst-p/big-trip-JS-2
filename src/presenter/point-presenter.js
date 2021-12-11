@@ -1,4 +1,4 @@
-import {RenderPositions, renderElement, replace} from '../utils/render.js';
+import {RenderPositions, renderElement, replace, remove} from '../utils/render.js';
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
 
@@ -17,6 +17,9 @@ class PointPresenter {
   init = (pointData) => {
     this.#pointData = pointData;
 
+    const prevPointElement = this.#pointElement;
+    const prevPointEditForm = this.#pointEditForm;
+
     this.#pointElement = new PointView(this.#pointData);
     this.#pointEditForm = new FormView('editForm', this.#pointData);
 
@@ -24,7 +27,25 @@ class PointPresenter {
     this.#formSubmit();
     this.#formArrowClick();
 
-    renderElement(this.#pointContainer, this.#pointElement, RenderPositions.BEFOREEND);
+    if (prevPointElement === null || prevPointEditForm === null) {
+      renderElement(this.#pointContainer, this.#pointElement, RenderPositions.BEFOREEND);
+    }
+
+    if (this.#pointContainer.contains(prevPointElement)) {
+      replace(this.#pointElement, prevPointElement);
+    }
+
+    if (this.#pointContainer.contains(prevPointEditForm)) {
+      replace(this.#pointEditForm, prevPointEditForm);
+    }
+
+    remove(prevPointElement);
+    remove(prevPointEditForm);
+  }
+
+  destroy = () => {
+    remove(this.#pointContainer);
+    remove(this.#pointEditForm);
   }
 
   #onEscKeyDown = (evt) => {
