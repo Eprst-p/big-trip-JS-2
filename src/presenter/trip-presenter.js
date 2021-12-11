@@ -1,12 +1,10 @@
-import {RenderPositions, renderElement, replace} from '../utils/render.js';
-import PointView from '../view/point-view.js';
-import FormView from '../view/form-view.js';
+import {RenderPositions, renderElement} from '../utils/render.js';
 import MenuView from '../view/menu-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
-import EventsList from '../view/events-list.js';
 import TripInfoView from '../view/trip-info-view.js';
+import PointPresenter from './point-presenter.js';
 
 const POINTS_COUNT = 20;
 
@@ -22,7 +20,6 @@ class TripPresenter {
   #filtersComponent = new FiltersView();
 
   #sortComponent = new SortView();
-  #eventsListComponent = new EventsList();
 
   #pointsCount = POINTS_COUNT;
 
@@ -58,35 +55,9 @@ class TripPresenter {
     renderElement(this.#listSection, this.#sortComponent, RenderPositions.AFTERBEGIN);
   }
 
-  //отрисовка точки
   #renderPoint = (container, pointData) => {
-    const pointElement = new PointView(pointData);
-    const pointEditForm = new FormView('editForm', pointData);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replace(container, pointElement, pointEditForm);
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    pointElement.setOnPointArrowClick(() => {
-      replace(container, pointEditForm, pointElement);
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    pointEditForm.setOnFormSubmit(() => {
-      replace(container, pointElement, pointEditForm);
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    pointEditForm.setOnFormArrowClick(() => {
-      replace(container, pointElement, pointEditForm);
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    renderElement(container, pointElement, RenderPositions.BEFOREEND);
+    const pointPresenter = new PointPresenter(container);
+    pointPresenter.init(pointData);
   }
 
   #renderTripInfo = (allPoints) => {
