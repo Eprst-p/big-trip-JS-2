@@ -2,7 +2,7 @@ import {createElementMarkup} from '../utils/render.js';
 
 class AbstractView {
   #element = null;
-  _callback = {};
+  _callbacksStorage = {};
 
   constructor() {
     if (new.target === AbstractView) {
