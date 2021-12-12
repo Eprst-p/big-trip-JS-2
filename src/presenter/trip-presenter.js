@@ -59,7 +59,7 @@ class TripPresenter {
   }
 
   #renderPoint = (container, pointData) => {
-    const pointPresenter = new PointPresenter(container);
+    const pointPresenter = new PointPresenter(container, this.#onPointChange);
     pointPresenter.init(pointData);
     this.#pointPresenter.set(pointData.id, pointPresenter);
   }
@@ -91,6 +91,7 @@ class TripPresenter {
     this.#pointPresenter.clear();
   }
 
+  //метод, который будет передаваться, а потом и вызываться в маленьком презентере точки, при обновлении данных
   #onPointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);

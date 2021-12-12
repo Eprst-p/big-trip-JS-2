@@ -4,14 +4,16 @@ import FormView from '../view/form-view.js';
 
 class PointPresenter {
   #pointContainer = null;
+  #changeData = null;
 
   #pointElement = null;
   #pointEditForm = null;
 
   #pointData = null;
 
-  constructor (container) {
+  constructor (container, changeData) {
     this.#pointContainer = container;
+    this.#changeData = changeData;
   }
 
   init = (pointData) => {
@@ -26,11 +28,13 @@ class PointPresenter {
     this.#pointArrowClick();
     this.#formSubmit();
     this.#formArrowClick();
+    this.#favoriteStarClick();
+
 
     if (prevPointElement === null || prevPointEditForm === null) {
       renderElement(this.#pointContainer, this.#pointElement, RenderPositions.BEFOREEND);
     }
-
+    /*закомменчено - т.к иначе будет ошибка еще на этапе отрисовки
     if (this.#pointContainer.contains(prevPointElement)) {
       replace(this.#pointElement, prevPointElement);
     }
@@ -38,6 +42,8 @@ class PointPresenter {
     if (this.#pointContainer.contains(prevPointEditForm)) {
       replace(this.#pointEditForm, prevPointEditForm);
     }
+    */
+
 
     remove(prevPointElement);
     remove(prevPointEditForm);
@@ -74,6 +80,14 @@ class PointPresenter {
     this.#pointEditForm.setOnFormArrowClick(() => {
       replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
       document.removeEventListener('keydown', this.#onEscKeyDown);
+    });
+  }
+
+  //тут происходит установка обработчика и вызов чендждаты при нажатии
+  //чендж дата - это по сути метод #onPointChange из большого презентера, только с передачей параметра в виде нового измененного объекта
+  #favoriteStarClick = () => {
+    this.#pointElement.setOnFavoriteStarClick(() => {
+      this.#changeData({...this.#pointData, isFavorite: !this.#pointData.isFavorite});
     });
   }
 }

@@ -73,6 +73,16 @@ class PointView extends AbstractView {
     evt.preventDefault();
     this._callbacksStorage.arrowClick();
   }
+
+  setOnFavoriteStarClick = (callback) => {
+    this._callbacksStorage.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#onfavoriteStarClick);
+  }
+
+  #onfavoriteStarClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.favoriteClick();
+  }
 }
 
 export default PointView;
