@@ -25,6 +25,8 @@ class TripPresenter {
 
   #points = [];
 
+  #pointPresenter = new Map();
+
   constructor(tripInfo, menu, filters, listSection, eventsContainer) {
     this.#tripInfoContainer = tripInfo;
     this.#menuContainer = menu;
@@ -58,6 +60,7 @@ class TripPresenter {
   #renderPoint = (container, pointData) => {
     const pointPresenter = new PointPresenter(container);
     pointPresenter.init(pointData);
+    this.#pointPresenter.set(pointData.id, pointPresenter);
   }
 
   #renderTripInfo = (allPoints) => {
@@ -80,6 +83,11 @@ class TripPresenter {
     if (this.#pointsCount === 0) { //просто дефолтное отображение при первой загрузке
       this.#renderNoPoints('everything');
     }
+  }
+
+  #clearPointList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   }
 
 }

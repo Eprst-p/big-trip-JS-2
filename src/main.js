@@ -24,7 +24,7 @@ renderElement(contentSectionElement, new EventsList(), RenderPositions.BEFOREEND
 
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
-/* - НЕ СДЕЛАНО!!!!!!!!!!!!!
+/*
 // блок с логикой сменой фильтров
 const onFilterChange = (evt) => {
   if (POINTS_COUNT === 0) {
