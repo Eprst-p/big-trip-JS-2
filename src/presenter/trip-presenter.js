@@ -1,4 +1,5 @@
 import {RenderPositions, renderElement} from '../utils/render.js';
+import {updateItem} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import FiltersView from '../view/filters-view.js';
@@ -88,6 +89,11 @@ class TripPresenter {
   #clearPointList = () => {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
+  }
+
+  #onPointChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 
 }

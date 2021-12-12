@@ -6,5 +6,19 @@ const getRandomPositiveNumber = (a, b) => {
 
 const getRandomElement = (array) => array[getRandomPositiveNumber(0, array.length-1)];
 
+const updateItem = (array, updatedItem) => {
+  const index = array.findIndex((item) => item.id === updatedItem.id);
 
-export {getRandomPositiveNumber, getRandomElement};
+  if (index === -1) {
+    return array;
+  }
+
+  return [
+    ...array.slice(0, index),
+    updatedItem,
+    ...array.slice(index + 1),
+  ];
+};
+
+
+export {getRandomPositiveNumber, getRandomElement, updateItem};
