@@ -25,25 +25,24 @@ class PointPresenter {
     this.#pointElement = new PointView(this.#pointData);
     this.#pointEditForm = new FormView('editForm', this.#pointData);
 
-    this.#pointArrowClick();
-    this.#formSubmit();
-    this.#formArrowClick();
-    this.#favoriteStarClick();
-
+    this.#pointEditForm.setOnFormSubmit(this.#formSubmit);
+    this.#pointElement.setOnPointArrowClick(this.#pointArrowClick);
+    this.#pointEditForm.setOnFormArrowClick(this.#formArrowClick);
+    this.#pointElement.setOnFavoriteStarClick(this.#favoriteStarClick);
 
     if (prevPointElement === null || prevPointEditForm === null) {
       renderElement(this.#pointContainer, this.#pointElement, RenderPositions.BEFOREEND);
-    }
-    /*закомменчено - т.к иначе будет ошибка еще на этапе отрисовки
-    if (this.#pointContainer.contains(prevPointElement)) {
-      replace(this.#pointElement, prevPointElement);
+      return;
     }
 
-    if (this.#pointContainer.contains(prevPointEditForm)) {
-      replace(this.#pointEditForm, prevPointEditForm);
+    //закомменчено - т.к иначе будет ошибка еще на этапе отрисовки
+    if (this.#pointContainer.contains(prevPointElement.element)) {
+      replace(this.#pointContainer, this.#pointElement, prevPointElement);
     }
-    */
 
+    if (this.#pointContainer.contains(prevPointEditForm.element)) {
+      replace(this.#pointContainer, this.#pointEditForm, prevPointEditForm);
+    }
 
     remove(prevPointElement);
     remove(prevPointEditForm);
@@ -63,32 +62,24 @@ class PointPresenter {
   };
 
   #pointArrowClick = () => {
-    this.#pointElement.setOnPointArrowClick(() => {
-      replace(this.#pointContainer, this.#pointEditForm, this.#pointElement);
-      document.addEventListener('keydown', this.#onEscKeyDown);
-    });
+    replace(this.#pointContainer, this.#pointEditForm, this.#pointElement);
+    document.addEventListener('keydown', this.#onEscKeyDown);
   }
 
   #formSubmit = () => {
-    this.#pointEditForm.setOnFormSubmit(() => {
-      replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-    });
+    replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
   #formArrowClick = () => {
-    this.#pointEditForm.setOnFormArrowClick(() => {
-      replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-    });
+    replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
   //тут происходит установка обработчика и вызов чендждаты при нажатии
   //чендж дата - это по сути метод #onPointChange из большого презентера, только с передачей параметра в виде нового измененного объекта
   #favoriteStarClick = () => {
-    this.#pointElement.setOnFavoriteStarClick(() => {
-      this.#changeData({...this.#pointData, isFavorite: !this.#pointData.isFavorite});
-    });
+    this.#changeData({...this.#pointData, isFavorite: !this.#pointData.isFavorite});
   }
 }
 

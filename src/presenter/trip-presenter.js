@@ -13,19 +13,15 @@ class TripPresenter {
   #tripInfoContainer = null;
   #menuContainer = null;
   #filtersContainer = null;
-
   #listSection = null;
   #ulContainer = null;
 
   #menuComponent = new MenuView();
   #filtersComponent = new FiltersView();
-
   #sortComponent = new SortView();
 
   #pointsCount = POINTS_COUNT;
-
   #points = [];
-
   #pointPresenter = new Map();
 
   constructor(tripInfo, menu, filters, listSection, eventsContainer) {
@@ -44,7 +40,6 @@ class TripPresenter {
     this.#renderSort();
     this.#renderResultPointList();
   }
-
 
   #renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
@@ -73,16 +68,14 @@ class TripPresenter {
   }
 
   #renderResultPointList = () => {
-    if (this.#pointsCount > 0) {
+    if (this.#pointsCount === 0) {
+      this.#renderNoPoints('everything');//просто дефолтное отображение при первой загрузке
+    } else {
       this.#renderTripInfo(this.#points);
 
       for (let i = 0; i < this.#pointsCount; i++) {
         this.#renderPoint(this.#ulContainer, this.#points[i]);
       }
-    }
-
-    if (this.#pointsCount === 0) { //просто дефолтное отображение при первой загрузке
-      this.#renderNoPoints('everything');
     }
   }
 
@@ -96,7 +89,6 @@ class TripPresenter {
     this.#points = updateItem(this.#points, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
-
 }
 
 export default TripPresenter;
