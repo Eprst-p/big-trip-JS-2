@@ -1,6 +1,6 @@
 import {DESTINATIONS, CITIES,} from './data-sources.js';
 import {POINT_TYPES, OFFER_NAMES, PRICES} from '../utils/constants.js';
-
+import {nanoid} from 'nanoid';
 import {getRandomPositiveNumber, getRandomElement} from '../utils/common.js';
 import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} from '../utils/time-and-date.js';
 
@@ -78,7 +78,7 @@ const generatePoint = () => {
     dateFrom: startTime,
     dateTo: endTime,
     destination: generateDestinationsText(),
-    id: '0',//пока пускай все id = 0
+    id: nanoid(),
     isFavorite: Boolean(getRandomPositiveNumber(0, 1)),
     offers: generateOffers(),
     type: getRandomElement(POINT_TYPES),

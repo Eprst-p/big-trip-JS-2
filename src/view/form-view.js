@@ -155,23 +155,23 @@ class FormView extends AbstractView {
   }
 
   setOnFormSubmit = (callback) => {
-    this._callback.formSubmit = callback;
+    this._callbacksStorage.formSubmit = callback;
     this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
   }
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callbacksStorage.formSubmit();
   }
 
   setOnFormArrowClick = (callback) => {
-    this._callback.formArrowClick = callback;
+    this._callbacksStorage.formArrowClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
   }
 
   #onFormArrowClick = (evt) => {
     evt.preventDefault();
-    this._callback.formArrowClick();
+    this._callbacksStorage.formArrowClick();
   }
 }
 

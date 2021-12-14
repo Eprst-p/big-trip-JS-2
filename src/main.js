@@ -1,13 +1,7 @@
-import {RenderPositions, renderElement, replace} from './utils/render.js';
-import PointView from './view/point-view.js';
-import FormView from './view/form-view.js';
-import MenuView from './view/menu-view.js';
-import NoPointsView from './view/no-points-view.js';
-import FiltersView from './view/filters-view.js';
-import SortView from './view/sort-view.js';
+import {RenderPositions, renderElement} from './utils/render.js';
 import EventsList from './view/events-list.js';
-import TripInfoView from './view/trip-info-view.js';
 import {generatePoint} from './mock/gen-data.js';
+import TripPresenter from './presenter/trip-presenter.js';
 
 const POINTS_COUNT = 20;
 
@@ -17,63 +11,19 @@ const headerContainer = document.querySelector('.page-header');
 const tripInfoContainer = headerContainer.querySelector('.trip-main');
 const menuContainer = headerContainer.querySelector('.trip-controls__navigation');
 const filtersContainer = headerContainer.querySelector('.trip-controls__filters');
-
-renderElement(menuContainer, new MenuView(), RenderPositions.BEFOREEND);
-
+/*
 const filtersElement = new FiltersView().element;
 
 renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
-
+*/
 const contentSectionElement = document.querySelector('.trip-events');
 
-renderElement(contentSectionElement, new SortView(), RenderPositions.BEFOREEND);
-renderElement(contentSectionElement, new EventsList(), RenderPositions.BEFOREEND);
 
-//отрисовка точки
-const renderPoint = (container, pointData) => {
-  const pointElement = new PointView(pointData);
-  const pointEditForm = new FormView('editForm', pointData);
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      replace(container, pointElement, pointEditForm);
-      document.removeEventListener('keydown', onEscKeyDown);
-    }
-  };
-
-  pointElement.setOnPointArrowClick(() => {
-    replace(container, pointEditForm, pointElement);
-    document.addEventListener('keydown', onEscKeyDown);
-  });
-
-  pointEditForm.setOnFormSubmit(() => {
-    replace(container, pointElement, pointEditForm);
-    document.removeEventListener('keydown', onEscKeyDown);
-  });
-
-  pointEditForm.setOnFormArrowClick(() => {
-    replace(container, pointElement, pointEditForm);
-    document.removeEventListener('keydown', onEscKeyDown);
-  });
-
-  renderElement(container, pointElement, RenderPositions.BEFOREEND);
-};
+renderElement(contentSectionElement, new EventsList(), RenderPositions.BEFOREEND); //здесь, т.к иначе ul не успевает создаться и передаться в класс как аргумент -> нет контейнера и ниче не работает
 
 const ulList = contentSectionElement.querySelector('.trip-events__list');
 
-if (POINTS_COUNT > 0) {
-  renderElement(tripInfoContainer, new TripInfoView(points), RenderPositions.AFTERBEGIN);
-
-  for (let i = 0; i < POINTS_COUNT; i++) {
-    renderPoint(ulList, points[i]);
-  }
-}
-
-if (POINTS_COUNT === 0) { //просто дефолтное отображение при первой загрузке
-  renderElement(ulList, new NoPointsView('everything'), RenderPositions.AFTERBEGIN);
-}
-
+/*
 // блок с логикой сменой фильтров
 const onFilterChange = (evt) => {
   if (POINTS_COUNT === 0) {
@@ -92,9 +42,11 @@ const onFilterChange = (evt) => {
 };
 
 filtersElement.addEventListener('change', onFilterChange);
+*/
 
+const tripPresenter = new TripPresenter(tripInfoContainer, menuContainer, filtersContainer, contentSectionElement, ulList);
 
-//const listElements = ulList.querySelectorAll('.trip-events__item'); //вроде не нужен пока
+tripPresenter.init(points);
 
 
 //пример для добавления формы, чтоб не забыть
