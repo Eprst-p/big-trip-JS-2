@@ -54,7 +54,7 @@ class TripPresenter {
   }
 
   #renderPoint = (container, pointData) => {
-    const pointPresenter = new PointPresenter(container, this.#onPointChange);
+    const pointPresenter = new PointPresenter(container, this.#onPointChange, this.#onModeChange);
     pointPresenter.init(pointData);
     this.#pointPresenter.set(pointData.id, pointPresenter);
   }
@@ -82,6 +82,10 @@ class TripPresenter {
   #clearPointList = () => {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
+  }
+
+  #onModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetViewToDefault());
   }
 
   //метод, который будет передаваться, а потом и вызываться в маленьком презентере точки, при обновлении данных

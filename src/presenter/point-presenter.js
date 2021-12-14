@@ -2,18 +2,26 @@ import {RenderPositions, renderElement, replace, remove} from '../utils/render.j
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  OPENED_FORM: 'OPENED_FORM',
+};
+
 class PointPresenter {
   #pointContainer = null;
   #changeData = null;
+  #changeMode = null;
 
   #pointElement = null;
   #pointEditForm = null;
-
   #pointData = null;
 
-  constructor (container, changeData) {
+  #mode = Mode.DEFAULT;
+
+  constructor (container, changeData, changeMode) {
     this.#pointContainer = container;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
   init = (pointData) => {
@@ -35,12 +43,11 @@ class PointPresenter {
       return;
     }
 
-    //закомменчено - т.к иначе будет ошибка еще на этапе отрисовки
-    if (this.#pointContainer.contains(prevPointElement.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointContainer, this.#pointElement, prevPointElement);
     }
 
-    if (this.#pointContainer.contains(prevPointEditForm.element)) {
+    if (this.#mode === Mode.OPENED_FORM) {
       replace(this.#pointContainer, this.#pointEditForm, prevPointEditForm);
     }
 
@@ -49,31 +56,46 @@ class PointPresenter {
   }
 
   destroy = () => {
-    remove(this.#pointContainer);
+    remove(this.#pointElement);
     remove(this.#pointEditForm);
+  }
+
+  resetViewToDefault = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
+  }
+
+  #replacePointToForm = () => {
+    replace(this.#pointContainer, this.#pointEditForm, this.#pointElement);
+    document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#changeMode();
+    this.#mode = Mode.OPENED_FORM;
+  }
+
+  #replaceFormToPoint = () => {
+    replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#mode = Mode.DEFAULT;
   }
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
-      document.removeEventListener('keydown', this.#onEscKeyDown);
+      this.#replaceFormToPoint();
     }
   };
 
   #pointArrowClick = () => {
-    replace(this.#pointContainer, this.#pointEditForm, this.#pointElement);
-    document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#replacePointToForm();
   }
 
   #formSubmit = () => {
-    replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#replaceFormToPoint();
   }
 
   #formArrowClick = () => {
-    replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#replaceFormToPoint();
   }
 
   //тут происходит установка обработчика и вызов чендждаты при нажатии

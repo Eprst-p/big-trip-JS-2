@@ -1,7 +1,6 @@
 import {RenderPositions, renderElement} from './utils/render.js';
 import EventsList from './view/events-list.js';
 import {generatePoint} from './mock/gen-data.js';
-
 import TripPresenter from './presenter/trip-presenter.js';
 
 const POINTS_COUNT = 20;
