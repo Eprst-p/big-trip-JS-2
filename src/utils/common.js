@@ -20,5 +20,17 @@ const updateItem = (array, updatedItem) => {
   ];
 };
 
+const sortItemsByDuration = (pointA, pointB) => {
+  const valueA = pointA.dateTo - pointA.dateFrom;
+  const valueB = pointB.dateTo - pointB.dateFrom;
+  return valueB - valueA;
+};
 
-export {getRandomPositiveNumber, getRandomElement, updateItem};
+const sortItemsByPrice = (pointA, pointB) => {
+  const valueA = pointA.basePrice;
+  const valueB = pointB.basePrice;
+  return valueB - valueA;
+};
+
+
+export {getRandomPositiveNumber, getRandomElement, updateItem, sortItemsByDuration, sortItemsByPrice};
