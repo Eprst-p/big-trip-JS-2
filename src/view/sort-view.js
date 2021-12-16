@@ -1,7 +1,6 @@
 import AbstractView from './abstract-view.js';
 import {SortType}  from '../utils/constants.js';
 
-
 const createSortTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
@@ -38,22 +37,14 @@ class SortView extends AbstractView {
 
   setOnSortTypeChange = (callback) => {
     this._callbacksStorage.sortTypeChange = callback;
-    //тут надо бы сделать один обработчик через делегирование
-    this.element.querySelector('#sort-day').addEventListener('change', this.#onSortTypeChange);
-    this.element.querySelector('#sort-time').addEventListener('change', this.#onSortTypeChange);
-    this.element.querySelector('#sort-price').addEventListener('change', this.#onSortTypeChange);
+    this.element.addEventListener('change', this.#onSortTypeChange);
   }
 
   #onSortTypeChange = (evt) => {
-    /*if (evt.target.tagName !== 'INPUT') {
-      return;
-    }*/
-
     evt.preventDefault();
-    this._callbacksStorage.sortTypeChange(evt.target.dataset.sortType);
+    const targetInput = evt.target.closest('.trip-sort__input');
+    this._callbacksStorage.sortTypeChange(targetInput.dataset.sortType);
   }
-
 }
-
 
 export default SortView;

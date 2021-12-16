@@ -39,10 +39,10 @@ class TripPresenter {
     this.#points = [...allPoints];
     this.#deafaultPoints = [...allPoints];
 
-
     this.#renderMenu();
     this.#renderFilters();
     this.#renderSort();
+    this.#renderTripInfo(this.#points);
     this.#renderResultPointList();
   }
 
@@ -102,8 +102,6 @@ class TripPresenter {
     if (this.#pointsCount === 0) {
       this.#renderNoPoints('everything');//просто дефолтное отображение при первой загрузке
     } else {
-      this.#renderTripInfo(this.#points);
-
       for (let i = 0; i < this.#pointsCount; i++) {
         this.#renderPoint(this.#ulContainer, this.#points[i]);
       }

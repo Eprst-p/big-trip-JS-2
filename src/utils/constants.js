@@ -10,5 +10,4 @@ const SortType = {
   PRICE_UP: 'price-up',
 };
 
-
 export {POINT_TYPES, OFFER_NAMES, PRICES, SortType};
