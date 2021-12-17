@@ -12,7 +12,7 @@ const SortType = {
 
 const SORT_ITEMS = [
   {
-    type: 'day',
+    type: SortType.DAY,
     tittle: 'Day',
     isChecked: 'checked',
   },
@@ -22,12 +22,12 @@ const SORT_ITEMS = [
     isChecked: 'disabled',
   },
   {
-    type: 'time',
+    type: SortType.TIME,
     tittle: 'Time',
     isChecked: '',
   },
   {
-    type: 'price',
+    type: SortType.PRICE,
     tittle: 'Price',
     isChecked: '',
   },
