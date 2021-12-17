@@ -1,11 +1,12 @@
 import {RenderPositions, renderElement} from '../utils/render.js';
-import {updateItem} from '../utils/common.js';
+import {updateItem, sortItemsByDuration, sortItemsByPrice} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import PointPresenter from './point-presenter.js';
+import {SortType}  from '../utils/constants.js';
 
 const POINTS_COUNT = 20;
 
@@ -22,7 +23,9 @@ class TripPresenter {
 
   #pointsCount = POINTS_COUNT;
   #points = [];
+  #deafaultPoints = [];
   #pointPresenter = new Map();
+  #currentSortType = SortType.DAY;
 
   constructor(tripInfo, menu, filters, listSection, eventsContainer) {
     this.#tripInfoContainer = tripInfo;
@@ -34,10 +37,12 @@ class TripPresenter {
 
   init = (allPoints) => {
     this.#points = [...allPoints];
+    this.#deafaultPoints = [...allPoints];
 
     this.#renderMenu();
     this.#renderFilters();
     this.#renderSort();
+    this.#renderTripInfo(this.#points);
     this.#renderResultPointList();
   }
 
@@ -49,8 +54,34 @@ class TripPresenter {
     renderElement(this.#filtersContainer, this.#filtersComponent, RenderPositions.BEFOREEND);
   }
 
+  #onSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderResultPointList();
+  }
+
+  #sortPoints = (sortType) => {
+    switch (sortType) {
+      case SortType.DURATION_UP:
+        this.#points.sort(sortItemsByDuration);
+        break;
+      case SortType.PRICE_UP:
+        this.#points.sort(sortItemsByPrice);
+        break;
+      default:
+        this.#points = [...this.#deafaultPoints];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
   #renderSort = () => {
     renderElement(this.#listSection, this.#sortComponent, RenderPositions.AFTERBEGIN);
+    this.#sortComponent.setOnSortTypeChange(this.#onSortTypeChange);
   }
 
   #renderPoint = (container, pointData) => {
@@ -71,8 +102,6 @@ class TripPresenter {
     if (this.#pointsCount === 0) {
       this.#renderNoPoints('everything');//просто дефолтное отображение при первой загрузке
     } else {
-      this.#renderTripInfo(this.#points);
-
       for (let i = 0; i < this.#pointsCount; i++) {
         this.#renderPoint(this.#ulContainer, this.#points[i]);
       }
@@ -91,6 +120,7 @@ class TripPresenter {
   //метод, который будет передаваться, а потом и вызываться в маленьком презентере точки, при обновлении данных
   #onPointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
+    this.#deafaultPoints = updateItem(this.#deafaultPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 }

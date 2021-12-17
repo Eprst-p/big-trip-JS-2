@@ -4,4 +4,10 @@ const OFFER_NAMES = ['Add luggage', 'Switch to comfort class', 'Add meal', 'Choo
 
 const PRICES = ['30', '100', '15', '5', '40']; //четко соответсвует по порядку именам офферов
 
-export {POINT_TYPES, OFFER_NAMES, PRICES};
+const SortType = {
+  DAY: 'day',
+  DURATION_UP: 'duration_up',
+  PRICE_UP: 'price-up',
+};
+
+export {POINT_TYPES, OFFER_NAMES, PRICES, SortType};
