@@ -6,8 +6,36 @@ const PRICES = ['30', '100', '15', '5', '40']; //четко соответсву
 
 const SortType = {
   DAY: 'day',
-  DURATION_UP: 'duration_up',
-  PRICE_UP: 'price-up',
+  TIME: 'time',
+  PRICE: 'price',
 };
 
-export {POINT_TYPES, OFFER_NAMES, PRICES, SortType};
+const SORT_ITEMS = [
+  {
+    type: 'day',
+    tittle: 'Day',
+    isChecked: 'checked',
+  },
+  {
+    type: 'event',
+    tittle: 'Event',
+    isChecked: 'disabled',
+  },
+  {
+    type: 'time',
+    tittle: 'Time',
+    isChecked: '',
+  },
+  {
+    type: 'price',
+    tittle: 'Price',
+    isChecked: '',
+  },
+  {
+    type: 'offer',
+    tittle: 'Offers',
+    isChecked: 'disabled',
+  },
+];
+
+export {POINT_TYPES, OFFER_NAMES, PRICES,  SORT_ITEMS, SortType};

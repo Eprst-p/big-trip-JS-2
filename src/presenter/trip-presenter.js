@@ -1,12 +1,12 @@
 import {RenderPositions, renderElement} from '../utils/render.js';
-import {updateItem, sortItemsByDuration, sortItemsByPrice} from '../utils/common.js';
+import {updateItem, sortItemsByTime, sortItemsByPrice} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import PointPresenter from './point-presenter.js';
-import {SortType}  from '../utils/constants.js';
+import {SortType} from '../utils/constants.js';
 
 const POINTS_COUNT = 20;
 
@@ -66,10 +66,10 @@ class TripPresenter {
 
   #sortPoints = (sortType) => {
     switch (sortType) {
-      case SortType.DURATION_UP:
-        this.#points.sort(sortItemsByDuration);
+      case SortType.TIME:
+        this.#points.sort(sortItemsByTime);
         break;
-      case SortType.PRICE_UP:
+      case SortType.PRICE:
         this.#points.sort(sortItemsByPrice);
         break;
       default:
