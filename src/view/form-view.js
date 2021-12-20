@@ -76,12 +76,10 @@ const createFormTemplate = (formType, pointData = {}) => {
     basePrice = '300$',
     dateFrom = formDateValue(),
     dateTo = formDateValue(),
-    destination = '',
-    offers = [],
+    destination = {},
+    offers = {},
     type = POINT_TYPES[0],
     typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
-    city = 'Undercity',
-    pictures = []
   } = pointData;
 
   const showRollBtn = (formType === 'editForm') ?
@@ -110,7 +108,7 @@ const createFormTemplate = (formType, pointData = {}) => {
             </fieldset>
           </div>
         </div>
-        ${createTypeAndCityTextTemplate(type, city)}
+        ${createTypeAndCityTextTemplate(type, destination.name)}
         ${createTimeTemplate(dateFrom, dateTo)}
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -122,16 +120,16 @@ const createFormTemplate = (formType, pointData = {}) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersTemplate(offers)}
+            ${createOffersTemplate(offers.offers)}
           </div>
         </section>
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination}</p>
+          <p class="event__destination-description">${destination.description}</p>
           <div class="event__photos-container">
             <div class="event__photos-tape">
-            ${pictures.map((currentPictureUrl) => `<img class="event__photo" src="${currentPictureUrl}" alt="Event photo">`).join('')}
+            ${destination.pictures.map((currentPictureUrl) => `<img class="event__photo" src="${currentPictureUrl}" alt="Event photo">`).join('')}
             </div>
           </div>
         </section>

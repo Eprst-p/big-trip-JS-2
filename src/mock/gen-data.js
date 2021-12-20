@@ -4,25 +4,25 @@ import {nanoid} from 'nanoid';
 import {getRandomPositiveNumber, getRandomElement} from '../utils/common.js';
 import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} from '../utils/time-and-date.js';
 
-
 //offers
-const createOffer = () => ({
+const createOfferItem = () => ({
+  get id() {
+    return OFFER_NAMES.findIndex((element) => element === this.tittle);
+  },
   tittle: getRandomElement(OFFER_NAMES),
-  currency: '&plus;&euro;&nbsp',
   get offerPrice() {
     return PRICES[OFFER_NAMES.findIndex((element) => element === this.tittle)];
   },
-
 });
 
 const generateOffers = () => {
   const offersAmount = getRandomPositiveNumber(0, 5);
   const usedOffers = [];
   for (let i = 0; i < offersAmount; i++) {
-    let currentObject = createOffer();
+    let currentObject = createOfferItem();
     usedOffers.forEach((element) => {
       while (element.tittle === currentObject.tittle) { //кривая проверка, но вроде пока это не принципиально
-        currentObject = createOffer();
+        currentObject = createOfferItem();
       }
     });
     usedOffers.push(currentObject);
@@ -30,10 +30,15 @@ const generateOffers = () => {
   return usedOffers;
 };
 
+const createResultOffer = (pointType) => ({
+  type: pointType,
+  offers: generateOffers()
+});
+
 //price
 const generatePrice = () => Math.ceil(getRandomPositiveNumber(2, 80))*10;
 
-//destionations
+//destionation text
 const findDestinationSentence = (usedDestinations) => {
   let sentence = getRandomElement(DESTINATIONS);
   while (usedDestinations.includes(sentence)) { //проверка на уникальность
@@ -64,6 +69,12 @@ const createPictures = () => {
   return pictureUrls;
 };
 
+//объект destination
+const createDestination = () => ({
+  description: generateDestinationsText(),
+  name: getRandomElement(CITIES),
+  pictures: createPictures(),
+});
 
 //сам объект point
 let newDate = formDateValue();
@@ -73,20 +84,19 @@ const generatePoint = () => {
   const startTime = generateStartTime(nextDate);
   const endTime = generateEndTime(startTime);
   newDate = endTime;
+  const pointType = getRandomElement(POINT_TYPES);
   return {
     basePrice: generatePrice(),
     dateFrom: startTime,
     dateTo: endTime,
-    destination: generateDestinationsText(),
     id: nanoid(),
     isFavorite: Boolean(getRandomPositiveNumber(0, 1)),
-    offers: generateOffers(),
-    type: getRandomElement(POINT_TYPES),
+    offers: createResultOffer(pointType),
+    type: pointType,
     get typeImg() {
       return `img/icons/${this.type.toLowerCase()}.png`;
     },
-    city: getRandomElement(CITIES),
-    pictures: createPictures()
+    destination: createDestination()
   };
 };
 

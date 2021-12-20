@@ -2,7 +2,7 @@ import {formDateValue, getDateInFormat, getDuration} from '../utils/time-and-dat
 import AbstractView from './abstract-view.js';
 
 const createLiTemplate = (pointData) => {
-  const {type, typeImg, city, dateFrom, dateTo, basePrice, offers, isFavorite} = pointData;
+  const {type, typeImg, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
 
   const editedStartTime = getDateInFormat(dateFrom, 'HH:mm');
   const editedEndTime = getDateInFormat(dateTo, 'HH:mm');
@@ -18,7 +18,7 @@ const createLiTemplate = (pointData) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="${typeImg}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${city}</h3>
+        <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="2019-03-18T10:30">${editedStartTime}</time>
@@ -32,9 +32,9 @@ const createLiTemplate = (pointData) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${offers.map((currentOffer) => `<li class="event__offer">
+          ${offers.offers.map((currentOffer) => `<li class="event__offer">
           <span class="event__offer-title">${currentOffer.tittle}</span>
-          ${currentOffer.currency};
+          &plus;&euro;&nbsp;
           <span class="event__offer-price">${currentOffer.offerPrice}</span>
         </li>`).join('')}
         </ul>
