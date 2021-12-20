@@ -2,6 +2,8 @@ import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
+import {CITIES} from '../mock/data-sources.js';
+
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -10,9 +12,8 @@ const createTypeAndCityTextTemplate = (type, city) => (
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
-      <option value="Amsterdam"></option>
-      <option value="Geneva"></option>
-      <option value="Chamonix"></option>
+    ${CITIES.map((currentCity) => `
+      <option value="${currentCity}"></option>`).join('')}
     </datalist>
   </div>`
 );
@@ -76,8 +77,15 @@ const createFormTemplate = (formType, pointData = {}) => {
     basePrice = '300$',
     dateFrom = formDateValue(),
     dateTo = formDateValue(),
-    destination = {},
-    offers = {},
+    destination = {
+      description: 'In the name of the Empero',
+      name: '',
+      pictures: [],
+    },
+    offers = {
+      type: POINT_TYPES[0],
+      offers: [],
+    },
     type = POINT_TYPES[0],
     typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
   } = pointData;

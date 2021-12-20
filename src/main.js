@@ -1,5 +1,6 @@
 import {RenderPositions, renderElement} from './utils/render.js';
 import EventsList from './view/events-list.js';
+import FormView from './view/form-view.js';
 import {generatePoint} from './mock/gen-data.js';
 import TripPresenter from './presenter/trip-presenter.js';
 
@@ -47,6 +48,13 @@ filtersElement.addEventListener('change', onFilterChange);
 const tripPresenter = new TripPresenter(tripInfoContainer, menuContainer, filtersContainer, contentSectionElement, ulList);
 
 tripPresenter.init(points);
+
+const addPointButton = document.querySelector('.trip-main__event-add-btn');
+const onAddPointCLick = (evt) => {
+  evt.preventDefault();
+  renderElement(ulList, new FormView(), RenderPositions.AFTERBEGIN);
+};
+addPointButton.addEventListener('click', onAddPointCLick);
 
 
 //пример для добавления формы, чтоб не забыть
