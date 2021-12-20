@@ -1,17 +1,19 @@
 import {RenderPositions, renderElement} from '../utils/render.js';
 import {updateItem, sortItemsByTime, sortItemsByPrice} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
+import FormView from '../view/form-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
+import AddPointButtonView from '../view/add-point-view';
 import PointPresenter from './point-presenter.js';
 import {SortType} from '../utils/constants.js';
 
 const POINTS_COUNT = 20;
 
 class TripPresenter {
-  #tripInfoContainer = null;
+  #tripMain = null;
   #menuContainer = null;
   #filtersContainer = null;
   #listSection = null;
@@ -20,6 +22,7 @@ class TripPresenter {
   #menuComponent = new MenuView();
   #filtersComponent = new FiltersView();
   #sortComponent = new SortView();
+  #addPointButtonComponent = new AddPointButtonView();
 
   #pointsCount = POINTS_COUNT;
   #points = [];
@@ -27,8 +30,8 @@ class TripPresenter {
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor(tripInfo, menu, filters, listSection, eventsContainer) {
-    this.#tripInfoContainer = tripInfo;
+  constructor(tripMain, menu, filters, listSection, eventsContainer) {
+    this.#tripMain = tripMain;
     this.#menuContainer = menu;
     this.#filtersContainer = filters;
     this.#listSection = listSection;
@@ -44,6 +47,7 @@ class TripPresenter {
     this.#renderSort();
     this.#renderTripInfo(this.#points);
     this.#renderResultPointList();
+    this.#renderAddPointButton();
   }
 
   #renderMenu = () => {
@@ -91,7 +95,7 @@ class TripPresenter {
   }
 
   #renderTripInfo = (allPoints) => {
-    renderElement(this.#tripInfoContainer, new TripInfoView(allPoints), RenderPositions.AFTERBEGIN);
+    renderElement(this.#tripMain, new TripInfoView(allPoints), RenderPositions.AFTERBEGIN);
   }
 
   #renderNoPoints = (filterValue) => {
@@ -106,6 +110,15 @@ class TripPresenter {
         this.#renderPoint(this.#ulContainer, this.#points[i]);
       }
     }
+  }
+
+  #renderAddPointButton = () => {
+    renderElement(this.#tripMain, this.#addPointButtonComponent, RenderPositions.BEFOREEND);
+    this.#addPointButtonComponent.setOnAddPointCLick(this.#onAddButtonClick);
+  }
+
+  #onAddButtonClick = () => {
+    renderElement(this.#ulContainer, new FormView(), RenderPositions.AFTERBEGIN);
   }
 
   #clearPointList = () => {
