@@ -1,28 +1,28 @@
 import {DESTINATIONS, CITIES,} from './data-sources.js';
-import {POINT_TYPES, OFFER_NAMES, PRICES} from '../utils/constants.js';
+import {POINT_TYPES, PRICES, OFFERS_BY_TYPE} from '../utils/constants.js';
 import {nanoid} from 'nanoid';
 import {getRandomPositiveNumber, getRandomElement} from '../utils/common.js';
 import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} from '../utils/time-and-date.js';
 
 //offers
-const createOfferItem = () => ({
+const createOfferItem = (pointType) => ({
   get id() {
-    return OFFER_NAMES.findIndex((element) => element === this.tittle);
+    return OFFERS_BY_TYPE[pointType].findIndex((element) => element === this.tittle);
   },
-  tittle: getRandomElement(OFFER_NAMES),
+  tittle: getRandomElement(OFFERS_BY_TYPE[pointType]),
   get offerPrice() {
-    return PRICES[OFFER_NAMES.findIndex((element) => element === this.tittle)];
+    return PRICES[OFFERS_BY_TYPE[pointType].findIndex((element) => element === this.tittle)];
   },
 });
 
-const generateOffers = () => {
-  const offersAmount = getRandomPositiveNumber(0, 5);
+const generateOffers = (pointType) => {
+  const offersAmount = getRandomPositiveNumber(0, OFFERS_BY_TYPE[pointType].length);
   const usedOffers = [];
   for (let i = 0; i < offersAmount; i++) {
-    let currentObject = createOfferItem();
+    let currentObject = createOfferItem(pointType);
     usedOffers.forEach((element) => {
       while (element.tittle === currentObject.tittle) { //кривая проверка, но вроде пока это не принципиально
-        currentObject = createOfferItem();
+        currentObject = createOfferItem(pointType);
       }
     });
     usedOffers.push(currentObject);
@@ -32,7 +32,7 @@ const generateOffers = () => {
 
 const createResultOffer = (pointType) => ({
   type: pointType,
-  offers: generateOffers()
+  offers: generateOffers(pointType)
 });
 
 //price
@@ -84,7 +84,7 @@ const generatePoint = () => {
   const startTime = generateStartTime(nextDate);
   const endTime = generateEndTime(startTime);
   newDate = endTime;
-  const pointType = getRandomElement(POINT_TYPES);
+  const pointType = getRandomElement(POINT_TYPES).toLowerCase();
   return {
     basePrice: generatePrice(),
     dateFrom: startTime,

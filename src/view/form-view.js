@@ -1,4 +1,4 @@
-import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
+import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
@@ -45,25 +45,25 @@ const createPriceTemplate = (price) => (
   </div>`
 );
 
-const createOffersTemplate = (offers) => {
+const createOffersTemplate = (offers, pointType) => {
 
   const checkChosenOffer = (index) => {
     let check = '';
     offers.forEach((currentOffer) => {
-      if (currentOffer.tittle === OFFER_NAMES[index]) {
+      if (currentOffer.tittle === OFFERS_BY_TYPE[pointType][index]) {
         check = 'checked';
       }
     });
     return check;
   };
 
-  const names = ['luggage', 'comfort', 'meal', 'seats', 'train'];
+  const names = OFFERS_BY_TYPE[pointType];
 
   return (
     names.map((offerName, index) => `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerName}-1" type="checkbox" name="event-offer-${offerName}" ${checkChosenOffer(index)}>
       <label class="event__offer-label" for="event-offer-${offerName}-1">
-        <span class="event__offer-title">${OFFER_NAMES[index]}</span>
+        <span class="event__offer-title">${offerName}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${PRICES[index]}</span>
       </label>
@@ -84,11 +84,11 @@ const createFormTemplate = (formType, pointData = {}) => {
       pictures: [],
     },
     offers = {
-      type: POINT_TYPES[0],
+      type: POINT_TYPES[5].toLowerCase(),
       offers: [],
     },
-    type = POINT_TYPES[0],
-    typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
+    type = POINT_TYPES[5].toLowerCase(),
+    typeImg = `img/icons/${POINT_TYPES[5].toLowerCase()}.png`,
   } = pointData;
 
   const showRollBtn = (formType === 'editForm') ?
@@ -129,7 +129,7 @@ const createFormTemplate = (formType, pointData = {}) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersTemplate(offers.offers)}
+            ${createOffersTemplate(offers.offers, type)}
           </div>
         </section>
 
@@ -234,11 +234,11 @@ class FormView extends SmartView {
     if (evt.target.checked) {
       newOffer = {
         get id() {
-          return OFFER_NAMES.findIndex((element) => element === this.tittle);
+          return OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.tittle);
         },
         tittle: evt.target.name.slice(12),
         get offerPrice() {
-          return PRICES[OFFER_NAMES.findIndex((element) => element === this.tittle)];
+          return PRICES[OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.tittle)];
         },
       };
     }
@@ -249,6 +249,7 @@ class FormView extends SmartView {
       },
     }, true);
   };
+
 
   #onCityChange =(evt) => {
     evt.preventDefault();
