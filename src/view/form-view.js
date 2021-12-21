@@ -4,7 +4,6 @@ import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
 import {CITIES} from '../mock/data-sources.js';
 
-
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
@@ -148,16 +147,15 @@ const createFormTemplate = (formType, pointData = {}) => {
 
 class FormView extends AbstractView {
   #formType = null;
-  #pointData = null;
 
   constructor(formType, pointData) {
     super();
     this.#formType = formType;
-    this.#pointData = pointData;
+    this._data = FormView.parsePointToData(pointData);
   }
 
   get template() {
-    return createFormTemplate(this.#formType, this.#pointData);
+    return createFormTemplate(this.#formType, this._data);
   }
 
   setOnFormSubmit = (callback) => {
@@ -179,6 +177,48 @@ class FormView extends AbstractView {
     evt.preventDefault();
     this._callbacksStorage.formArrowClick();
   }
+
+  static parsePointToData = (point) => (
+    {...point});
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    return point;
+  }
+
+  setOnTypeChange = (callback) => {
+    //this._callbacksStorage.onTypeChange = callback;
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+  };
+
+  #onTypeChange = (evt) => {
+    evt.preventDefault();
+    //this._callbacksStorage.onTypeChange();
+    console.log(evt.target.value);
+    //обновить данные - изменить значение ключа point.type на evt.target.value
+  }
+
+  updateData = (update) => {
+    if (!update) {
+      return;
+    }
+
+    this._data = {...this._data, ...update};
+
+    this.updateElement();
+  }
+
+  updateElement = () => {
+    const prevElement = this.element;
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.element;
+
+    parent.replaceChild(newElement, prevElement);
+  }
+
 }
 
 

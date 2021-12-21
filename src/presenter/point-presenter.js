@@ -38,6 +38,9 @@ class PointPresenter {
     this.#pointEditForm.setOnFormArrowClick(this.#formArrowClick);
     this.#pointElement.setOnFavoriteStarClick(this.#favoriteStarClick);
 
+    this.#pointEditForm.setOnTypeChange();
+
+
     if (prevPointElement === null || prevPointEditForm === null) {
       renderElement(this.#pointContainer, this.#pointElement, RenderPositions.BEFOREEND);
       return;
