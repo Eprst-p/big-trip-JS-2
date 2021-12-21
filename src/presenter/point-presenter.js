@@ -62,6 +62,7 @@ class PointPresenter {
 
   resetViewToDefault = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditForm.reset(this.#pointData);
       this.#replaceFormToPoint();
     }
   }
@@ -82,6 +83,7 @@ class PointPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditForm.reset(this.#pointData);
       this.#replaceFormToPoint();
     }
   };
@@ -95,6 +97,7 @@ class PointPresenter {
   }
 
   #formArrowClick = () => {
+    this.#pointEditForm.reset(this.#pointData);
     this.#replaceFormToPoint();
   }
 

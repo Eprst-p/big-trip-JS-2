@@ -160,6 +160,12 @@ class FormView extends AbstractView {
     return createFormTemplate(this.#formType, this._data);
   }
 
+  reset = (point) => {
+    this.updateData(
+      FormView.parsePointToData(point),
+    );
+  }
+
   setOnFormSubmit = (callback) => {
     this._callbacksStorage.formSubmit = callback;
     this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
@@ -197,6 +203,7 @@ class FormView extends AbstractView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
   }
 
   #onTypeChange = (evt) => {
@@ -207,11 +214,24 @@ class FormView extends AbstractView {
     });
   }
 
-  updateData = (update) => {
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      description: evt.target.value,
+    }, true);
+  }
+
+  updateData = (update, noRerenderElement) => {
     if (!update) {
       return;
     }
+
     this._data = {...this._data, ...update};
+
+    if (noRerenderElement) {
+      return;
+    }
+
     this.updateElement();
   }
 
