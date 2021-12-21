@@ -26,10 +26,10 @@ class SmartView extends AbstractView {
 
     parent.replaceChild(newElement, prevElement);
 
-    this.restoreHandlers();
+    this.restoreListeners();
   }
 
-  restoreHandlers = () => {
+  restoreListeners = () => {
     throw new Error('Abstract method not implemented: restoreHandlers');
   }
 }

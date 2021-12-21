@@ -153,7 +153,7 @@ class FormView extends SmartView {
     this.#formType = formType;
     this._data = FormView.parsePointToData(pointData);
 
-    this.#setInnerHandlers();
+    this.#setInnerListeners();
   }
 
   get template() {
@@ -195,15 +195,16 @@ class FormView extends SmartView {
     return point;
   }
 
-  restoreHandlers = () => {
-    this.#setInnerHandlers();
+  restoreListeners = () => {
+    this.#setInnerListeners();
     this.setOnFormSubmit(this._callbacksStorage.formSubmit);
     this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
   }
 
-  #setInnerHandlers = () => {
+  #setInnerListeners = () => {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
+    this.element.querySelector('.event__offer-selector').addEventListener('input', this.#onOffersChose);
   }
 
   #onTypeChange = (evt) => {
@@ -214,12 +215,37 @@ class FormView extends SmartView {
     });
   }
 
+  //данные меняются, но форма не перерисовывается (так и задумано)
   #onPriceInput = (evt) => {
     evt.preventDefault();
     this.updateData({
-      description: evt.target.value,
+      basePrice: evt.target.value,
     }, true);
   }
+
+  //данные меняются, но форма не перерисовывается (так и задумано)
+  //как будто бы на будущее, но пока непонятно, нужно ли вот это вот все
+  #onOffersChose = (evt) => {
+    evt.preventDefault();
+    let newOffer = {};
+    if (evt.target.checked) {
+      newOffer = {
+        get id() {
+          return OFFER_NAMES.findIndex((element) => element === this.tittle);
+        },
+        tittle: evt.target.name.slice(12),
+        get offerPrice() {
+          return PRICES[OFFER_NAMES.findIndex((element) => element === this.tittle)];
+        },
+      };
+    }
+
+    this.updateData({
+      offers: {
+        offers: [...newOffer]
+      },
+    }, true);
+  };
 }
 
 export default FormView;
