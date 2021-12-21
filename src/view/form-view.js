@@ -1,7 +1,7 @@
 import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
 
 const createTypeAndCityTextTemplate = (type, city) => (
@@ -145,7 +145,7 @@ const createFormTemplate = (formType, pointData = {}) => {
   );
 };
 
-class FormView extends AbstractView {
+class FormView extends SmartView {
   #formType = null;
 
   constructor(formType, pointData) {
@@ -219,32 +219,6 @@ class FormView extends AbstractView {
     this.updateData({
       description: evt.target.value,
     }, true);
-  }
-
-  updateData = (update, noRerenderElement) => {
-    if (!update) {
-      return;
-    }
-
-    this._data = {...this._data, ...update};
-
-    if (noRerenderElement) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement = () => {
-    const prevElement = this.element;
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.element;
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
   }
 }
 
