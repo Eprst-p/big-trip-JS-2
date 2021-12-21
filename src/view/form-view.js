@@ -152,6 +152,8 @@ class FormView extends AbstractView {
     super();
     this.#formType = formType;
     this._data = FormView.parsePointToData(pointData);
+
+    this.#setInnerHandlers();
   }
 
   get template() {
@@ -187,25 +189,29 @@ class FormView extends AbstractView {
     return point;
   }
 
-  setOnTypeChange = (callback) => {
-    //this._callbacksStorage.onTypeChange = callback;
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setOnFormSubmit(this._callbacksStorage.formSubmit);
+    this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
+  }
+
+  #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-  };
+  }
 
   #onTypeChange = (evt) => {
     evt.preventDefault();
-    //this._callbacksStorage.onTypeChange();
-    console.log(evt.target.value);
-    //обновить данные - изменить значение ключа point.type на evt.target.value
+    this.updateData({
+      type: evt.target.value,
+      typeImg: `img/icons/${evt.target.value}.png`
+    });
   }
 
   updateData = (update) => {
     if (!update) {
       return;
     }
-
     this._data = {...this._data, ...update};
-
     this.updateElement();
   }
 
@@ -217,9 +223,9 @@ class FormView extends AbstractView {
     const newElement = this.element;
 
     parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandlers();
   }
-
 }
-
 
 export default FormView;
