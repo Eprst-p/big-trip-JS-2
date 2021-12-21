@@ -3,6 +3,8 @@ import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
+import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
+
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -205,6 +207,7 @@ class FormView extends SmartView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__offer-selector').addEventListener('input', this.#onOffersChose);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
   }
 
   #onTypeChange = (evt) => {
@@ -242,9 +245,20 @@ class FormView extends SmartView {
 
     this.updateData({
       offers: {
-        offers: [...newOffer]
+        offers: [...this._data.offers.offers, newOffer]
       },
     }, true);
+  };
+
+  #onCityChange =(evt) => {
+    evt.preventDefault();
+    this.updateData({
+      destination: {
+        description: generateDestinationsText(),
+        name: evt.target.value,
+        pictures: createPictures(),
+      }
+    });
   };
 }
 

@@ -100,4 +100,4 @@ const generatePoint = () => {
   };
 };
 
-export {generatePoint};
+export {generatePoint, generateDestinationsText, createPictures};
