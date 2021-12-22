@@ -130,6 +130,7 @@ class TripPresenter {
 
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#newFormComponent.setOnCancelBtnClick(this.#onCancelBtnClick);
+    this.#newFormComponent.setOnFormSubmit(this.#newFormSubmit);
   }
 
   #onEscKeyDown = (evt) => {
@@ -143,6 +144,14 @@ class TripPresenter {
   };
 
   #onCancelBtnClick = () => {
+    remove(this.#newFormComponent);
+    this.#addPointButtonComponent.element.removeAttribute('disabled');
+
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  }
+
+  //пока делает тоже, что и cancel
+  #newFormSubmit = () => {
     remove(this.#newFormComponent);
     this.#addPointButtonComponent.element.removeAttribute('disabled');
 
