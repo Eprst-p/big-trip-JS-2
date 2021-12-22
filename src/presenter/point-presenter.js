@@ -3,7 +3,6 @@ import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
 import {tripPresenter} from '../main.js';
 
-
 const Mode = {
   DEFAULT: 'DEFAULT',
   OPENED_FORM: 'OPENED_FORM',
@@ -105,9 +104,12 @@ class PointPresenter {
   }
 
   //delete работает криво. Удаляется большинство логики, + обработчики с других элементов
+  //пока делает тоже, что и стрелочка
   #deleteBtnClick = () => {
-    this.destroy();
-    tripPresenter.removeOnePoint(this.#pointData);
+    this.#pointEditForm.reset(this.#pointData);
+    this.#replaceFormToPoint();
+    /*this.destroy();
+    tripPresenter.removeOnePoint(this.#pointData);*/
   }
 
   //тут происходит установка обработчика и вызов чендждаты при нажатии

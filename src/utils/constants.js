@@ -16,35 +16,35 @@ const OFFERS_BY_TYPE = {
 const PRICES = ['30', '100', '15', '5', '40']; //четко соответсвует по порядку именам офферов. Теперь уже цены не соответсвуют действительности
 
 const SortType = {
-  DAY: 'day',
-  TIME: 'time',
-  PRICE: 'price',
+  DAY: 'sort-day',
+  TIME: 'sort-time',
+  PRICE: 'sort-price',
 };
 
 const SORT_ITEMS = [
   {
-    type: SortType.DAY,
-    tittle: 'Day',
+    type: 'day',
+    title: 'Day',
     isChecked: 'checked',
   },
   {
     type: 'event',
-    tittle: 'Event',
+    title: 'Event',
     isChecked: 'disabled',
   },
   {
-    type: SortType.TIME,
-    tittle: 'Time',
+    type: 'time',
+    title: 'Time',
     isChecked: '',
   },
   {
-    type: SortType.PRICE,
-    tittle: 'Price',
+    type: 'price',
+    title: 'Price',
     isChecked: '',
   },
   {
     type: 'offer',
-    tittle: 'Offers',
+    title: 'Offers',
     isChecked: 'disabled',
   },
 ];

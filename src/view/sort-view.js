@@ -6,7 +6,7 @@ const createSortTemplate = () => (
     ${SORT_ITEMS.map((currentItem) => `
     <div class="trip-sort__item  trip-sort__item--${currentItem.type}">
       <input id="sort-${currentItem.type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${currentItem.type}" ${currentItem.isChecked}>
-      <label class="trip-sort__btn" for="sort-${currentItem.type}">${currentItem.tittle}</label>
+      <label class="trip-sort__btn" for="sort-${currentItem.type}">${currentItem.title}</label>
     </div>`).join('')}
   </form>`
 );
@@ -23,7 +23,7 @@ class SortView extends AbstractView {
 
   #onSortTypeChange = (evt) => {
     evt.preventDefault();
-    const sortType = evt.target.id.slice(5);
+    const sortType = evt.target.id;
     this._callbacksStorage.sortTypeChange(sortType);
   }
 }

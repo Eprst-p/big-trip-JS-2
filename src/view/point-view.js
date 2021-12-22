@@ -33,7 +33,7 @@ const createLiTemplate = (pointData) => {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
           ${offers.offers.map((currentOffer) => `<li class="event__offer">
-          <span class="event__offer-title">${currentOffer.tittle}</span>
+          <span class="event__offer-title">${currentOffer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${currentOffer.offerPrice}</span>
         </li>`).join('')}

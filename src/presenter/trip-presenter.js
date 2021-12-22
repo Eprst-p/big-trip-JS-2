@@ -5,6 +5,7 @@ import FormView from '../view/form-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
+import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view';
 import PointPresenter from './point-presenter.js';
@@ -23,6 +24,7 @@ class TripPresenter {
   #filtersComponent = new FiltersView();
   #sortComponent = new SortView();
   #addPointButtonComponent = new AddPointButtonView();
+  #eventsContainer = new EventsList();
   #newFormComponent = null;
 
   #pointsCount = POINTS_COUNT;
@@ -31,12 +33,12 @@ class TripPresenter {
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor(tripMain, menu, filters, listSection, eventsContainer) {
+
+  constructor(tripMain, menu, filters, listSection) {
     this.#tripMain = tripMain;
     this.#menuContainer = menu;
     this.#filtersContainer = filters;
     this.#listSection = listSection;
-    this.#ulContainer = eventsContainer;
   }
 
   init = (allPoints) => {
@@ -45,6 +47,7 @@ class TripPresenter {
 
     this.#renderMenu();
     this.#renderFilters();
+    this.#renderEventsList();
     this.#renderSort();
     this.#renderTripInfo(this.#points);
     this.#renderResultPointList();
@@ -57,6 +60,10 @@ class TripPresenter {
 
   #renderFilters = () => {
     renderElement(this.#filtersContainer, this.#filtersComponent, RenderPositions.BEFOREEND);
+  }
+
+  #renderEventsList = () => {
+    renderElement(this.#listSection, this.#eventsContainer, RenderPositions.BEFOREEND);
   }
 
   #onSortTypeChange = (sortType) => {
@@ -99,7 +106,7 @@ class TripPresenter {
   }
 
   #renderNoPoints = (filterValue) => {
-    renderElement(this.#ulContainer, new NoPointsView(filterValue), RenderPositions.AFTERBEGIN);
+    renderElement(this.#eventsContainer.element, new NoPointsView(filterValue), RenderPositions.AFTERBEGIN);
   }
 
   #renderResultPointList = () => {
@@ -107,7 +114,7 @@ class TripPresenter {
       this.#renderNoPoints('everything');//просто дефолтное отображение при первой загрузке
     } else {
       for (let i = 0; i < this.#pointsCount; i++) {
-        this.#renderPoint(this.#ulContainer, this.#points[i]);
+        this.#renderPoint(this.#eventsContainer.element, this.#points[i]);
       }
     }
   }
@@ -119,7 +126,7 @@ class TripPresenter {
 
   #onAddButtonClick = () => {
     this.#newFormComponent = new FormView();
-    renderElement(this.#ulContainer, this.#newFormComponent, RenderPositions.AFTERBEGIN);
+    renderElement(this.#eventsContainer.element, this.#newFormComponent, RenderPositions.AFTERBEGIN);
     remove(this.#sortComponent);
     this.#renderSort();
     this.#onSortTypeChange(SortType.DAY);
@@ -174,9 +181,10 @@ class TripPresenter {
     this.#pointsStorage.get(updatedPoint.id).init(updatedPoint);
   }
 
-  removeOnePoint =(point) => {
+  //бывший метож для удаления
+  /*removeOnePoint =(point) => {
     this.#pointsStorage.delete(point.id);
-  }
+  }*/
 }
 
 export default TripPresenter;

@@ -7,11 +7,11 @@ import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} f
 //offers
 const createOfferItem = (pointType) => ({
   get id() {
-    return OFFERS_BY_TYPE[pointType].findIndex((element) => element === this.tittle);
+    return OFFERS_BY_TYPE[pointType].findIndex((element) => element === this.title);
   },
-  tittle: getRandomElement(OFFERS_BY_TYPE[pointType]),
+  title: getRandomElement(OFFERS_BY_TYPE[pointType]),
   get offerPrice() {
-    return PRICES[OFFERS_BY_TYPE[pointType].findIndex((element) => element === this.tittle)];
+    return PRICES[OFFERS_BY_TYPE[pointType].findIndex((element) => element === this.title)];
   },
 });
 
@@ -21,7 +21,7 @@ const generateOffers = (pointType) => {
   for (let i = 0; i < offersAmount; i++) {
     let currentObject = createOfferItem(pointType);
     usedOffers.forEach((element) => {
-      while (element.tittle === currentObject.tittle) { //кривая проверка, но вроде пока это не принципиально
+      while (element.title === currentObject.title) { //кривая проверка, но вроде пока это не принципиально
         currentObject = createOfferItem(pointType);
       }
     });

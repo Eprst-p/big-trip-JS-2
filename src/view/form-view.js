@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
@@ -50,7 +51,7 @@ const createOffersTemplate = (offers, pointType) => {
   const checkChosenOffer = (index) => {
     let check = '';
     offers.forEach((currentOffer) => {
-      if (currentOffer.tittle === OFFERS_BY_TYPE[pointType][index]) {
+      if (currentOffer.title === OFFERS_BY_TYPE[pointType][index]) {
         check = 'checked';
       }
     });
@@ -91,14 +92,6 @@ const createFormTemplate = (formType, pointData = {}) => {
     typeImg = `img/icons/${POINT_TYPES[5].toLowerCase()}.png`,
   } = pointData;
 
-  const showRollBtn = (formType === 'editForm') ?
-    `<button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>` :
-    '';
-
-  const cancelOrDelete = (formType === 'editForm') ? 'Delete' : 'Cancel';
-
   return (
     `<form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -123,8 +116,11 @@ const createFormTemplate = (formType, pointData = {}) => {
         ${createTimeTemplate(dateFrom, dateTo)}
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${cancelOrDelete}</button>
-        ${showRollBtn}
+        <button class="event__reset-btn" type="reset">${(formType === 'editForm') ? 'Delete' : 'Cancel'}</button>
+        ${(formType === 'editForm') ?
+       `<button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>` : ''}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -256,19 +252,21 @@ class FormView extends SmartView {
     }, true);
   }
 
+
   //данные меняются, но форма не перерисовывается (так и задумано)
   //как будто бы на будущее, но пока непонятно, нужно ли вот это вот все
+  //это пока не нужно
   #onOffersChose = (evt) => {
     evt.preventDefault();
     let newOffer = {};
     if (evt.target.checked) {
       newOffer = {
         get id() {
-          return OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.tittle);
+          return OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.title);
         },
-        tittle: evt.target.name.slice(12),
+        title: evt.target.name.slice(12),
         get offerPrice() {
-          return PRICES[OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.tittle)];
+          return PRICES[OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.title)];
         },
       };
     }
@@ -279,7 +277,6 @@ class FormView extends SmartView {
       },
     }, true);
   };
-
 
   #onCityChange =(evt) => {
     evt.preventDefault();
