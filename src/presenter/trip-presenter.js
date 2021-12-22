@@ -1,4 +1,4 @@
-import {RenderPositions, renderElement} from '../utils/render.js';
+import {RenderPositions, renderElement, remove} from '../utils/render.js';
 import {updateItem, sortItemsByTime, sortItemsByPrice} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
 import FormView from '../view/form-view.js';
@@ -23,6 +23,7 @@ class TripPresenter {
   #filtersComponent = new FiltersView();
   #sortComponent = new SortView();
   #addPointButtonComponent = new AddPointButtonView();
+  #newFormComponent = null;
 
   #pointsCount = POINTS_COUNT;
   #points = [];
@@ -79,7 +80,6 @@ class TripPresenter {
       default:
         this.#points = [...this.#deafaultPoints];
     }
-
     this.#currentSortType = sortType;
   }
 
@@ -118,8 +118,28 @@ class TripPresenter {
   }
 
   #onAddButtonClick = () => {
-    renderElement(this.#ulContainer, new FormView(), RenderPositions.AFTERBEGIN);
+    this.#newFormComponent = new FormView();
+    renderElement(this.#ulContainer, this.#newFormComponent, RenderPositions.AFTERBEGIN);
+    remove(this.#sortComponent);
+    this.#renderSort();
+    this.#onSortTypeChange(SortType.DAY);
+    remove(this.#filtersComponent);
+    this.#renderFilters();
+    // + тут нужно возвращение поведения фильтров к дефолту (everything) (пока их нет)
+    this.#onModeChange();
+
+    document.addEventListener('keydown', this.#onEscKeyDown);
   }
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      //this.#newFormComponent.reset();
+      remove(this.#newFormComponent);
+      this.#addPointButtonComponent.element.removeAttribute('disabled');
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
 
   #clearPointList = () => {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
