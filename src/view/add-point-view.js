@@ -17,6 +17,7 @@ class AddPointButtonView extends AbstractView  {
   #onAddPointCLick = (evt) => {
     evt.preventDefault();
     this._callbacksStorage.onButtonClick();
+    this.element.setAttribute('disabled', 'disabled');
   }
 }
 

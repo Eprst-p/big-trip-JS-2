@@ -97,6 +97,8 @@ const createFormTemplate = (formType, pointData = {}) => {
     </button>` :
     '';
 
+  const cancelOrDelete = (formType === 'editForm') ? 'Delete' : 'Cancel';
+
   return (
     `<form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -121,7 +123,7 @@ const createFormTemplate = (formType, pointData = {}) => {
         ${createTimeTemplate(dateFrom, dateTo)}
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">${cancelOrDelete}</button>
         ${showRollBtn}
       </header>
       <section class="event__details">
@@ -176,6 +178,10 @@ class FormView extends SmartView {
   #onFormSubmit = (evt) => {
     evt.preventDefault();
     this._callbacksStorage.formSubmit();
+    const addBtn = document.querySelector('.trip-main__event-add-btn');
+    if (addBtn.disabled && this.#formType !== 'editForm') {
+      addBtn.removeAttribute('disabled');
+    }
   }
 
   setOnFormArrowClick = (callback) => {
