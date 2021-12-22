@@ -1,6 +1,8 @@
 import {RenderPositions, renderElement, replace, remove} from '../utils/render.js';
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
+import {tripPresenter} from '../main.js';
+
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -105,6 +107,7 @@ class PointPresenter {
   //delete работает криво. Удаляется большинство логики, + обработчики с других элементов
   #deleteBtnClick = () => {
     this.destroy();
+    tripPresenter.removeOnePoint(this.#pointData);
   }
 
   //тут происходит установка обработчика и вызов чендждаты при нажатии

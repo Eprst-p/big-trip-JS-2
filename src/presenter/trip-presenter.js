@@ -28,7 +28,7 @@ class TripPresenter {
   #pointsCount = POINTS_COUNT;
   #points = [];
   #deafaultPoints = [];
-  #pointPresenter = new Map();
+  #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
 
   constructor(tripMain, menu, filters, listSection, eventsContainer) {
@@ -91,7 +91,7 @@ class TripPresenter {
   #renderPoint = (container, pointData) => {
     const pointPresenter = new PointPresenter(container, this.#onPointChange, this.#onModeChange);
     pointPresenter.init(pointData);
-    this.#pointPresenter.set(pointData.id, pointPresenter);
+    this.#pointsStorage.set(pointData.id, pointPresenter);
   }
 
   #renderTripInfo = (allPoints) => {
@@ -150,19 +150,23 @@ class TripPresenter {
   }
 
   #clearPointList = () => {
-    this.#pointPresenter.forEach((presenter) => presenter.destroy());
-    this.#pointPresenter.clear();
+    this.#pointsStorage.forEach((presenter) => presenter.destroy());
+    this.#pointsStorage.clear();
   }
 
   #onModeChange = () => {
-    this.#pointPresenter.forEach((presenter) => presenter.resetViewToDefault());
+    this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
   }
 
   //метод, который будет передаваться, а потом и вызываться в маленьком презентере точки, при обновлении данных
   #onPointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
     this.#deafaultPoints = updateItem(this.#deafaultPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointsStorage.get(updatedPoint.id).init(updatedPoint);
+  }
+
+  removeOnePoint =(point) => {
+    this.#pointsStorage.delete(point.id);
   }
 }
 

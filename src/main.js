@@ -51,3 +51,4 @@ tripPresenter.init(points);
 //пример для добавления формы, чтоб не забыть
 //renderElement(listElements[1], new FormView().element, RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
 
+export {tripPresenter};
