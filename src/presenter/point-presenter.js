@@ -34,8 +34,9 @@ class PointPresenter {
     this.#pointEditForm = new FormView('editForm', this.#pointData);
 
     this.#pointEditForm.setOnFormSubmit(this.#formSubmit);
-    this.#pointElement.setOnPointArrowClick(this.#pointArrowClick);
     this.#pointEditForm.setOnFormArrowClick(this.#formArrowClick);
+    this.#pointEditForm.setOnDeleteBtnClick(this.#deleteBtnClick);
+    this.#pointElement.setOnPointArrowClick(this.#pointArrowClick);
     this.#pointElement.setOnFavoriteStarClick(this.#favoriteStarClick);
 
     if (prevPointElement === null || prevPointEditForm === null) {
@@ -99,6 +100,11 @@ class PointPresenter {
   #formArrowClick = () => {
     this.#pointEditForm.reset(this.#pointData);
     this.#replaceFormToPoint();
+  }
+
+  //delete работает криво. Удаляется большинство логики, + обработчики с других элементов
+  #deleteBtnClick = () => {
+    this.destroy();
   }
 
   //тут происходит установка обработчика и вызов чендждаты при нажатии

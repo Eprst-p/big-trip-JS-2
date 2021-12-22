@@ -129,17 +129,25 @@ class TripPresenter {
     this.#onModeChange();
 
     document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#newFormComponent.setOnCancelBtnClick(this.#onCancelBtnClick);
   }
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      //this.#newFormComponent.reset();
       remove(this.#newFormComponent);
       this.#addPointButtonComponent.element.removeAttribute('disabled');
+
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
+
+  #onCancelBtnClick = () => {
+    remove(this.#newFormComponent);
+    this.#addPointButtonComponent.element.removeAttribute('disabled');
+
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  }
 
   #clearPointList = () => {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());

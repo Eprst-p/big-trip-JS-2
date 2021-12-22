@@ -185,13 +185,35 @@ class FormView extends SmartView {
   }
 
   setOnFormArrowClick = (callback) => {
-    this._callbacksStorage.formArrowClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
+    if (this.#formType === 'editForm') {
+      this._callbacksStorage.formArrowClick = callback;
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
+    }
   }
 
   #onFormArrowClick = (evt) => {
     evt.preventDefault();
     this._callbacksStorage.formArrowClick();
+  }
+
+  setOnDeleteBtnClick = (callback) => {
+    this._callbacksStorage.deleteBtnClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
+  }
+
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.deleteBtnClick();
+  }
+
+  setOnCancelBtnClick = (callback) => {
+    this._callbacksStorage.cancelBtnClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onCancelBtnClick);
+  }
+
+  #onCancelBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.cancelBtnClick();
   }
 
   static parsePointToData = (point) => (
@@ -207,6 +229,8 @@ class FormView extends SmartView {
     this.#setInnerListeners();
     this.setOnFormSubmit(this._callbacksStorage.formSubmit);
     this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
+    this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
+
   }
 
   #setInnerListeners = () => {
