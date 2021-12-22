@@ -232,7 +232,6 @@ class FormView extends SmartView {
   #setInnerListeners = () => {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
-    this.element.querySelector('.event__offer-selector').addEventListener('input', this.#onOffersChose);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
   }
 
@@ -251,32 +250,6 @@ class FormView extends SmartView {
       basePrice: evt.target.value,
     }, true);
   }
-
-
-  //данные меняются, но форма не перерисовывается (так и задумано)
-  //как будто бы на будущее, но пока непонятно, нужно ли вот это вот все
-  //это пока не нужно
-  #onOffersChose = (evt) => {
-    evt.preventDefault();
-    let newOffer = {};
-    if (evt.target.checked) {
-      newOffer = {
-        get id() {
-          return OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.title);
-        },
-        title: evt.target.name.slice(12),
-        get offerPrice() {
-          return PRICES[OFFERS_BY_TYPE[this._data.type].findIndex((element) => element === this.title)];
-        },
-      };
-    }
-
-    this.updateData({
-      offers: {
-        offers: [...this._data.offers.offers, newOffer]
-      },
-    }, true);
-  };
 
   #onCityChange =(evt) => {
     evt.preventDefault();
