@@ -1,5 +1,3 @@
-import {RenderPositions, renderElement} from './utils/render.js';
-import EventsList from './view/events-list.js';
 import {generatePoint} from './mock/gen-data.js';
 import TripPresenter from './presenter/trip-presenter.js';
 
@@ -8,20 +6,15 @@ const POINTS_COUNT = 20;
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
 const headerContainer = document.querySelector('.page-header');
-const tripInfoContainer = headerContainer.querySelector('.trip-main');
-const menuContainer = headerContainer.querySelector('.trip-controls__navigation');
-const filtersContainer = headerContainer.querySelector('.trip-controls__filters');
+const tripMain = headerContainer.querySelector('.trip-main');
+const menuContainer = tripMain.querySelector('.trip-controls__navigation');
+const filtersContainer = tripMain.querySelector('.trip-controls__filters');
 /*
 const filtersElement = new FiltersView().element;
 
 renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
 */
 const contentSectionElement = document.querySelector('.trip-events');
-
-
-renderElement(contentSectionElement, new EventsList(), RenderPositions.BEFOREEND); //здесь, т.к иначе ul не успевает создаться и передаться в класс как аргумент -> нет контейнера и ниче не работает
-
-const ulList = contentSectionElement.querySelector('.trip-events__list');
 
 /*
 // блок с логикой сменой фильтров
@@ -44,11 +37,7 @@ const onFilterChange = (evt) => {
 filtersElement.addEventListener('change', onFilterChange);
 */
 
-const tripPresenter = new TripPresenter(tripInfoContainer, menuContainer, filtersContainer, contentSectionElement, ulList);
+const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement);
 
 tripPresenter.init(points);
-
-
-//пример для добавления формы, чтоб не забыть
-//renderElement(listElements[1], new FormView().element, RenderPositions.AFTERBEGIN);//форма новой точки маршрута, данные по умолчанию. Рисуем на втором элементе списка - чтоб не слипалось
 

@@ -1,15 +1,16 @@
 import AbstractView from './abstract-view.js';
 
 const createTipInfoTemplate = (allPoints) => {
+  const cities = allPoints.map((point) => point.destination.name);
 
-  const startCity = allPoints[0].city;
+  const startCity = cities[0];
   const findSecondCity = () => {
-    const secondCity = allPoints.length >= 2 ? allPoints[1].city : '';
+    const secondCity = cities.length >= 2 ? cities[1] : '';
     return secondCity;
   };
-  const lastCity = allPoints[allPoints.length - 1].city;
+  const lastCity = cities[cities.length - 1];
   const startDate = allPoints[0].dateFrom.format('DD MMM');
-  const lastDate = allPoints[allPoints.length - 1].dateTo.format('DD MMM');
+  const lastDate = allPoints[cities.length - 1].dateTo.format('DD MMM');
   let totalPrice = 0;
   allPoints.forEach((point) => {
     totalPrice += point.basePrice;
@@ -17,8 +18,8 @@ const createTipInfoTemplate = (allPoints) => {
 
   const createCityWritting = () => {
     let cityCount = 0;
-    allPoints.forEach((point) => {
-      if (point.city !== null) { //пока такая примитивненькая проверка, больше для затравки и теста
+    cities.forEach((city) => {
+      if (city !== null) { //пока такая примитивненькая проверка, больше для затравки и теста
         cityCount++;
       }
     });

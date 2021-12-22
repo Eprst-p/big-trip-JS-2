@@ -1,7 +1,11 @@
-import {OFFER_NAMES, PRICES, POINT_TYPES} from '../utils/constants.js';
+/* eslint-disable indent */
+import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
 import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
+import {CITIES} from '../mock/data-sources.js';
+import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
+
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -10,9 +14,8 @@ const createTypeAndCityTextTemplate = (type, city) => (
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
-      <option value="Amsterdam"></option>
-      <option value="Geneva"></option>
-      <option value="Chamonix"></option>
+    ${CITIES.map((currentCity) => `
+      <option value="${currentCity}"></option>`).join('')}
     </datalist>
   </div>`
 );
@@ -43,25 +46,25 @@ const createPriceTemplate = (price) => (
   </div>`
 );
 
-const createOffersTemplate = (offers) => {
+const createOffersTemplate = (offers, pointType) => {
 
   const checkChosenOffer = (index) => {
     let check = '';
     offers.forEach((currentOffer) => {
-      if (currentOffer.tittle === OFFER_NAMES[index]) {
+      if (currentOffer.title === OFFERS_BY_TYPE[pointType][index]) {
         check = 'checked';
       }
     });
     return check;
   };
 
-  const names = ['luggage', 'comfort', 'meal', 'seats', 'train'];
+  const names = OFFERS_BY_TYPE[pointType];
 
   return (
     names.map((offerName, index) => `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerName}-1" type="checkbox" name="event-offer-${offerName}" ${checkChosenOffer(index)}>
       <label class="event__offer-label" for="event-offer-${offerName}-1">
-        <span class="event__offer-title">${OFFER_NAMES[index]}</span>
+        <span class="event__offer-title">${offerName}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${PRICES[index]}</span>
       </label>
@@ -76,19 +79,18 @@ const createFormTemplate = (formType, pointData = {}) => {
     basePrice = '300$',
     dateFrom = formDateValue(),
     dateTo = formDateValue(),
-    destination = '',
-    offers = [],
-    type = POINT_TYPES[0],
-    typeImg = `img/icons/${POINT_TYPES[0].toLowerCase()}.png`,
-    city = 'Undercity',
-    pictures = []
+    destination = {
+      description: 'In the name of the Empero',
+      name: '',
+      pictures: [],
+    },
+    offers = {
+      type: POINT_TYPES[5].toLowerCase(),
+      offers: [],
+    },
+    type = POINT_TYPES[5].toLowerCase(),
+    typeImg = `img/icons/${POINT_TYPES[5].toLowerCase()}.png`,
   } = pointData;
-
-  const showRollBtn = (formType === 'editForm') ?
-    `<button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>` :
-    '';
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -110,28 +112,31 @@ const createFormTemplate = (formType, pointData = {}) => {
             </fieldset>
           </div>
         </div>
-        ${createTypeAndCityTextTemplate(type, city)}
+        ${createTypeAndCityTextTemplate(type, destination.name)}
         ${createTimeTemplate(dateFrom, dateTo)}
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
-        ${showRollBtn}
+        <button class="event__reset-btn" type="reset">${(formType === 'editForm') ? 'Delete' : 'Cancel'}</button>
+        ${(formType === 'editForm') ?
+       `<button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>` : ''}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersTemplate(offers)}
+            ${createOffersTemplate(offers.offers, type)}
           </div>
         </section>
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination}</p>
+          <p class="event__destination-description">${destination.description}</p>
           <div class="event__photos-container">
             <div class="event__photos-tape">
-            ${pictures.map((currentPictureUrl) => `<img class="event__photo" src="${currentPictureUrl}" alt="Event photo">`).join('')}
+            ${destination.pictures.map((currentPictureUrl) => `<img class="event__photo" src="${currentPictureUrl}" alt="Event photo">`).join('')}
             </div>
           </div>
         </section>
@@ -140,18 +145,25 @@ const createFormTemplate = (formType, pointData = {}) => {
   );
 };
 
-class FormView extends AbstractView {
+class FormView extends SmartView {
   #formType = null;
-  #pointData = null;
 
   constructor(formType, pointData) {
     super();
     this.#formType = formType;
-    this.#pointData = pointData;
+    this._data = FormView.parsePointToData(pointData);
+
+    this.#setInnerListeners();
   }
 
   get template() {
-    return createFormTemplate(this.#formType, this.#pointData);
+    return createFormTemplate(this.#formType, this._data);
+  }
+
+  reset = (point) => {
+    this.updateData(
+      FormView.parsePointToData(point),
+    );
   }
 
   setOnFormSubmit = (callback) => {
@@ -162,18 +174,93 @@ class FormView extends AbstractView {
   #onFormSubmit = (evt) => {
     evt.preventDefault();
     this._callbacksStorage.formSubmit();
+    const addBtn = document.querySelector('.trip-main__event-add-btn');
+    if (addBtn.disabled && this.#formType !== 'editForm') {
+      addBtn.removeAttribute('disabled');
+    }
   }
 
   setOnFormArrowClick = (callback) => {
-    this._callbacksStorage.formArrowClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
+    if (this.#formType === 'editForm') {
+      this._callbacksStorage.formArrowClick = callback;
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
+    }
   }
 
   #onFormArrowClick = (evt) => {
     evt.preventDefault();
     this._callbacksStorage.formArrowClick();
   }
-}
 
+  setOnDeleteBtnClick = (callback) => {
+    this._callbacksStorage.deleteBtnClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
+  }
+
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.deleteBtnClick();
+  }
+
+  setOnCancelBtnClick = (callback) => {
+    this._callbacksStorage.cancelBtnClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onCancelBtnClick);
+  }
+
+  #onCancelBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.cancelBtnClick();
+  }
+
+  static parsePointToData = (point) => (
+    {...point});
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    return point;
+  }
+
+  restoreListeners = () => {
+    this.#setInnerListeners();
+    this.setOnFormSubmit(this._callbacksStorage.formSubmit);
+    this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
+    this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
+
+  }
+
+  #setInnerListeners = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
+  }
+
+  #onTypeChange = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+      typeImg: `img/icons/${evt.target.value}.png`
+    });
+  }
+
+  //данные меняются, но форма не перерисовывается (так и задумано)
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      basePrice: evt.target.value,
+    }, true);
+  }
+
+  #onCityChange =(evt) => {
+    evt.preventDefault();
+    this.updateData({
+      destination: {
+        description: generateDestinationsText(),
+        name: evt.target.value,
+        pictures: createPictures(),
+      }
+    });
+  };
+}
 
 export default FormView;

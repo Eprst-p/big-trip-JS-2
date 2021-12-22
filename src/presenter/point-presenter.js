@@ -1,6 +1,7 @@
 import {RenderPositions, renderElement, replace, remove} from '../utils/render.js';
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
+import {tripPresenter} from '../main.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -34,8 +35,9 @@ class PointPresenter {
     this.#pointEditForm = new FormView('editForm', this.#pointData);
 
     this.#pointEditForm.setOnFormSubmit(this.#formSubmit);
-    this.#pointElement.setOnPointArrowClick(this.#pointArrowClick);
     this.#pointEditForm.setOnFormArrowClick(this.#formArrowClick);
+    this.#pointEditForm.setOnDeleteBtnClick(this.#deleteBtnClick);
+    this.#pointElement.setOnPointArrowClick(this.#pointArrowClick);
     this.#pointElement.setOnFavoriteStarClick(this.#favoriteStarClick);
 
     if (prevPointElement === null || prevPointEditForm === null) {
@@ -62,6 +64,7 @@ class PointPresenter {
 
   resetViewToDefault = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditForm.reset(this.#pointData);
       this.#replaceFormToPoint();
     }
   }
@@ -82,6 +85,7 @@ class PointPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditForm.reset(this.#pointData);
       this.#replaceFormToPoint();
     }
   };
@@ -95,7 +99,17 @@ class PointPresenter {
   }
 
   #formArrowClick = () => {
+    this.#pointEditForm.reset(this.#pointData);
     this.#replaceFormToPoint();
+  }
+
+  //delete работает криво. Удаляется большинство логики, + обработчики с других элементов
+  //пока делает тоже, что и стрелочка
+  #deleteBtnClick = () => {
+    this.#pointEditForm.reset(this.#pointData);
+    this.#replaceFormToPoint();
+    /*this.destroy();
+    tripPresenter.removeOnePoint(this.#pointData);*/
   }
 
   //тут происходит установка обработчика и вызов чендждаты при нажатии
