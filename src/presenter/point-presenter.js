@@ -72,6 +72,7 @@ class PointPresenter {
   #replacePointToForm = () => {
     replace(this.#pointContainer, this.#pointEditForm, this.#pointElement);
     document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#pointEditForm.setDatepicker();
     this.#changeMode();
     this.#mode = Mode.OPENED_FORM;
   }
@@ -79,6 +80,7 @@ class PointPresenter {
   #replaceFormToPoint = () => {
     replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
     document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#pointEditForm.removeElement();
     this.#mode = Mode.DEFAULT;
   }
 

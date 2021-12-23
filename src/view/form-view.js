@@ -23,14 +23,15 @@ const createTypeAndCityTextTemplate = (type, city) => (
 const createTimeTemplate = (startTime, endTime) => {
   const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');//немного не тот формат, но принцип моков выполняется
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
+  const smallerFontSize = 'style = font-size:90%';
 
   return (
     `<div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}" ${smallerFontSize}>
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}" ${smallerFontSize}>
     </div>`
   );
 };
@@ -157,7 +158,6 @@ class FormView extends SmartView {
     this._data = FormView.parsePointToData(pointData);
 
     this.#setInnerListeners();
-    this.#setDatepicker();
   }
 
   get template() {
@@ -171,7 +171,7 @@ class FormView extends SmartView {
   }
 
   removeElement = () => {
-    super.removeElement();
+    //super.removeElement();
 
     if (this.#datepickerStart && this.#datepickerEnd) {
       this.#datepickerStart.destroy();
@@ -182,8 +182,7 @@ class FormView extends SmartView {
     }
   }
 
-    //переменные не те
-  #setDatepicker = () => {
+  setDatepicker = () => {
     const startTime = this.element.querySelector('#event-start-time-1');
     const endTime = this.element.querySelector('#event-end-time-1');
 
@@ -281,7 +280,7 @@ class FormView extends SmartView {
     this.setOnFormSubmit(this._callbacksStorage.formSubmit);
     this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
     this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
-    this.#setDatepicker();
+    this.setDatepicker();
   }
 
   #setInnerListeners = () => {
