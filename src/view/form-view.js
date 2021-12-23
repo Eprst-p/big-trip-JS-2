@@ -147,6 +147,9 @@ const createFormTemplate = (formType, pointData = {}) => {
 
 class FormView extends SmartView {
   #formType = null;
+  #datepickerStart = null;
+  #datepickerEnd = null;
+
 
   constructor(formType, pointData) {
     super();
@@ -154,6 +157,7 @@ class FormView extends SmartView {
     this._data = FormView.parsePointToData(pointData);
 
     this.#setInnerListeners();
+    this.#setDatepicker();
   }
 
   get template() {
@@ -164,6 +168,57 @@ class FormView extends SmartView {
     this.updateData(
       FormView.parsePointToData(point),
     );
+  }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerStart && this.#datepickerEnd) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+
+    }
+  }
+
+    //переменные не те
+  #setDatepicker = () => {
+    const startTime = this.element.querySelector('#event-start-time-1');
+    const endTime = this.element.querySelector('#event-end-time-1');
+
+    this.#datepickerStart = flatpickr(
+      startTime,
+      {
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateFrom,
+        onClose: this.#onDateStartChange,
+      },
+    );
+    this.#datepickerEnd = flatpickr(
+      endTime,
+      {
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateTo,
+        onClose: this.#onDateEndChange,
+      },
+    );
+  }
+
+  #onDateStartChange = ([userDate]) => {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  #onDateEndChange = ([userDate]) => {
+    this.updateData({
+      dateTo: userDate,
+    });
   }
 
   setOnFormSubmit = (callback) => {
@@ -226,7 +281,7 @@ class FormView extends SmartView {
     this.setOnFormSubmit(this._callbacksStorage.formSubmit);
     this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
     this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
-
+    this.#setDatepicker();
   }
 
   #setInnerListeners = () => {
