@@ -1,11 +1,11 @@
 /* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
-import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
 import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
-
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
