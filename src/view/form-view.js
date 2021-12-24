@@ -1,11 +1,11 @@
 /* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
-import flatpickr from 'flatpickr';//пока не используется
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
 import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
-
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -23,14 +23,15 @@ const createTypeAndCityTextTemplate = (type, city) => (
 const createTimeTemplate = (startTime, endTime) => {
   const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');//немного не тот формат, но принцип моков выполняется
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
+  const smallerFontSize = 'style = font-size:90%';
 
   return (
     `<div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}" ${smallerFontSize}>
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}" ${smallerFontSize}>
     </div>`
   );
 };
@@ -147,6 +148,9 @@ const createFormTemplate = (formType, pointData = {}) => {
 
 class FormView extends SmartView {
   #formType = null;
+  #datepickerStart = null;
+  #datepickerEnd = null;
+
 
   constructor(formType, pointData) {
     super();
@@ -164,6 +168,56 @@ class FormView extends SmartView {
     this.updateData(
       FormView.parsePointToData(point),
     );
+  }
+
+  removeElement = () => {
+    //super.removeElement();
+
+    if (this.#datepickerStart && this.#datepickerEnd) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+
+    }
+  }
+
+  setDatepicker = () => {
+    const startTime = this.element.querySelector('#event-start-time-1');
+    const endTime = this.element.querySelector('#event-end-time-1');
+
+    this.#datepickerStart = flatpickr(
+      startTime,
+      {
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateFrom,
+        onClose: this.#onDateStartChange,
+      },
+    );
+    this.#datepickerEnd = flatpickr(
+      endTime,
+      {
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateTo,
+        onClose: this.#onDateEndChange,
+      },
+    );
+  }
+
+  #onDateStartChange = ([userDate]) => {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  #onDateEndChange = ([userDate]) => {
+    this.updateData({
+      dateTo: userDate,
+    });
   }
 
   setOnFormSubmit = (callback) => {
@@ -226,7 +280,7 @@ class FormView extends SmartView {
     this.setOnFormSubmit(this._callbacksStorage.formSubmit);
     this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
     this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
-
+    this.setDatepicker();
   }
 
   #setInnerListeners = () => {

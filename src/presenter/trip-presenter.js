@@ -138,6 +138,7 @@ class TripPresenter {
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#newFormComponent.setOnCancelBtnClick(this.#onCancelBtnClick);
     this.#newFormComponent.setOnFormSubmit(this.#newFormSubmit);
+    this.#newFormComponent.setDatepicker();
   }
 
   #onEscKeyDown = (evt) => {
