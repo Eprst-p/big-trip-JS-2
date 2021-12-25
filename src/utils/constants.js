@@ -1,5 +1,7 @@
 const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'CheckIn', 'Sightseeing', 'Restaurant'];
 
+const POINTS_COUNT = 20;
+
 const OFFERS_BY_TYPE = {
   taxi: ['Order Uber'],
   bus: ['Add luggage', 'Choose seats'],
@@ -49,4 +51,4 @@ const SORT_ITEMS = [
   },
 ];
 
-export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE};
+export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT};

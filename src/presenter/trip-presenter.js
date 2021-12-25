@@ -10,8 +10,7 @@ import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view';
 import PointPresenter from './point-presenter.js';
 import {SortType} from '../utils/constants.js';
-
-const POINTS_COUNT = 20;
+import {POINTS_COUNT} from '../utils/constants.js';
 
 class TripPresenter {
   #tripMain = null;
@@ -27,6 +26,8 @@ class TripPresenter {
   #eventsContainer = new EventsList();
   #newFormComponent = null;
 
+  #pointsModel = null;
+
   #pointsCount = POINTS_COUNT;
   #points = [];
   #deafaultPoints = [];
@@ -34,11 +35,17 @@ class TripPresenter {
   #currentSortType = SortType.DAY;
 
 
-  constructor(tripMain, menu, filters, listSection) {
+  constructor(tripMain, menu, filters, listSection, pointsModel) {
     this.#tripMain = tripMain;
     this.#menuContainer = menu;
     this.#filtersContainer = filters;
     this.#listSection = listSection;
+
+    this.#pointsModel = pointsModel;
+  }
+
+  get points() {
+    return this.#pointsModel.points;
   }
 
   init = (allPoints) => {

@@ -1,7 +1,7 @@
 import {generatePoint} from './mock/gen-data.js';
 import TripPresenter from './presenter/trip-presenter.js';
-
-const POINTS_COUNT = 20;
+import PointsModel from './model/points-model.js';
+import {POINTS_COUNT} from './utils/constants.js';
 
 const points = Array.from({length: POINTS_COUNT}, generatePoint);
 
@@ -15,6 +15,9 @@ const filtersElement = new FiltersView().element;
 renderElement(filtersContainer, filtersElement, RenderPositions.BEFOREEND);
 */
 const contentSectionElement = document.querySelector('.trip-events');
+
+const pointsModel = new PointsModel();
+pointsModel.points = points;
 
 /*
 // блок с логикой сменой фильтров
@@ -37,7 +40,7 @@ const onFilterChange = (evt) => {
 filtersElement.addEventListener('change', onFilterChange);
 */
 
-const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement);
+const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel);
 
 tripPresenter.init(points);
 
