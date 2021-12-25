@@ -1,6 +1,8 @@
 import {RenderPositions, renderElement, replace, remove} from '../utils/render.js';
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
+import {UserAction, UpdateType} from '../utils/constants.js';
+
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -95,7 +97,12 @@ class PointPresenter {
     this.#replacePointToForm();
   }
 
-  #formSubmit = () => {
+  #formSubmit = (point) => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this.#replaceFormToPoint();
   }
 
@@ -116,7 +123,11 @@ class PointPresenter {
   //тут происходит установка обработчика и вызов чендждаты при нажатии
   //чендж дата - это по сути метод #onPointChange из большого презентера, только с передачей параметра в виде нового измененного объекта
   #favoriteStarClick = () => {
-    this.#changeData({...this.#pointData, isFavorite: !this.#pointData.isFavorite});
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#pointData, isFavorite: !this.#pointData.isFavorite},
+    );
   }
 }
 

@@ -42,5 +42,5 @@ filtersElement.addEventListener('change', onFilterChange);
 
 const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel);
 
-tripPresenter.init(points);
+tripPresenter.init();
 

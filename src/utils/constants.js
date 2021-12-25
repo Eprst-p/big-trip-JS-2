@@ -27,28 +27,40 @@ const SORT_ITEMS = [
   {
     type: 'day',
     title: 'Day',
-    isChecked: 'checked',
+    isDisabled: '',
   },
   {
     type: 'event',
     title: 'Event',
-    isChecked: 'disabled',
+    isDisabled: 'disabled',
   },
   {
     type: 'time',
     title: 'Time',
-    isChecked: '',
+    isDisabled: '',
   },
   {
     type: 'price',
     title: 'Price',
-    isChecked: '',
+    isDisabled: '',
   },
   {
     type: 'offer',
     title: 'Offers',
-    isChecked: 'disabled',
+    isDisabled: 'disabled',
   },
 ];
 
-export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT, UserAction, UpdateType};
