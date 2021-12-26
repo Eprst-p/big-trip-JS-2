@@ -58,6 +58,52 @@ class PointPresenter {
     remove(prevPointEditForm);
   }
 
+  //обработчики
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#pointEditForm.reset(this.#pointData);
+      this.#replaceFormToPoint();
+    }
+  };
+
+  #pointArrowClick = () => {
+    this.#replacePointToForm();
+  }
+
+  #formSubmit = (update) => {
+    //тут позже можно ввести проверку на минор/патч isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH (на месте UpdateType.MINOR) - патч - это офферы
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      update,
+    );
+    this.#replaceFormToPoint();
+  }
+
+  #formArrowClick = () => {
+    this.#pointEditForm.reset(this.#pointData);
+    this.#replaceFormToPoint();
+  }
+
+  #deleteBtnClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  }
+
+  #favoriteStarClick = () => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#pointData, isFavorite: !this.#pointData.isFavorite},
+    );
+  }
+
+
+  //реплейсы и ресеты
   destroy = () => {
     remove(this.#pointElement);
     remove(this.#pointEditForm);
@@ -83,51 +129,6 @@ class PointPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#pointEditForm.removeElement();
     this.#mode = Mode.DEFAULT;
-  }
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.#pointEditForm.reset(this.#pointData);
-      this.#replaceFormToPoint();
-    }
-  };
-
-  #pointArrowClick = () => {
-    this.#replacePointToForm();
-  }
-
-  #formSubmit = (point) => {
-    this.#changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      point,
-    );
-    this.#replaceFormToPoint();
-  }
-
-  #formArrowClick = () => {
-    this.#pointEditForm.reset(this.#pointData);
-    this.#replaceFormToPoint();
-  }
-
-  //delete работает криво. Удаляется большинство логики, + обработчики с других элементов
-  //пока делает тоже, что и стрелочка
-  #deleteBtnClick = () => {
-    this.#pointEditForm.reset(this.#pointData);
-    this.#replaceFormToPoint();
-    /*this.destroy();
-    tripPresenter.removeOnePoint(this.#pointData);*/
-  }
-
-  //тут происходит установка обработчика и вызов чендждаты при нажатии
-  //чендж дата - это по сути метод #onPointChange из большого презентера, только с передачей параметра в виде нового измененного объекта
-  #favoriteStarClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      {...this.#pointData, isFavorite: !this.#pointData.isFavorite},
-    );
   }
 }
 

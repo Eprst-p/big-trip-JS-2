@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
 import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
@@ -164,12 +165,122 @@ class FormView extends SmartView {
     return createFormTemplate(this.#formType, this._data);
   }
 
+  //установка обработчиков
+  setOnFormSubmit = (callback) => {
+    this._callbacksStorage.formSubmit = callback;
+    this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
+  }
+
+  #onFormSubmit = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
+    const addBtn = document.querySelector('.trip-main__event-add-btn');
+    if (addBtn.disabled && this.#formType !== 'editForm') {
+      addBtn.removeAttribute('disabled');
+    }
+  }
+
+  setOnFormArrowClick = (callback) => {
+    if (this.#formType === 'editForm') {
+      this._callbacksStorage.formArrowClick = callback;
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
+    }
+  }
+
+  #onFormArrowClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.formArrowClick();
+  }
+
+  setOnDeleteBtnClick = (callback) => {
+    this._callbacksStorage.deleteBtnClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
+  }
+
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.deleteBtnClick(FormView.parseDataToPoint(this._data));
+  }
+
+  setOnCancelBtnClick = (callback) => {
+    this._callbacksStorage.cancelBtnClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onCancelBtnClick);
+  }
+
+  #onCancelBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.cancelBtnClick();
+  }
+
+  #setInnerListeners = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
+  }
+
+  restoreListeners = () => {
+    this.#setInnerListeners();
+    this.setOnFormSubmit(this._callbacksStorage.formSubmit);
+    this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
+    this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
+    this.setDatepicker();
+  }
+
+  //изменение данных
+  static parsePointToData = (point) => (
+    {...point});
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    return point;
+  }
+
   reset = (point) => {
     this.updateData(
       FormView.parsePointToData(point),
     );
   }
 
+  #onDateStartChange = ([userDate]) => {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  #onDateEndChange = ([userDate]) => {
+    this.updateData({
+      dateTo: userDate,
+    });
+  }
+
+  #onTypeChange = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+      typeImg: `img/icons/${evt.target.value}.png`
+    });
+  }
+
+  #onPriceInput = (evt) => {//данные меняются, но форма не перерисовывается (так и задумано)
+    evt.preventDefault();
+    this.updateData({
+      basePrice: evt.target.value,
+    }, true);
+  }
+
+  #onCityChange =(evt) => {
+    evt.preventDefault();
+    this.updateData({
+      destination: {
+        description: generateDestinationsText(),
+        name: evt.target.value,
+        pictures: createPictures(),
+      }
+    });
+  }
+
+  //другие методы
   removeElement = () => {
     //super.removeElement();
 
@@ -207,114 +318,6 @@ class FormView extends SmartView {
       },
     );
   }
-
-  #onDateStartChange = ([userDate]) => {
-    this.updateData({
-      dateFrom: userDate,
-    });
-  }
-
-  #onDateEndChange = ([userDate]) => {
-    this.updateData({
-      dateTo: userDate,
-    });
-  }
-
-  setOnFormSubmit = (callback) => {
-    this._callbacksStorage.formSubmit = callback;
-    this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
-  }
-
-  #onFormSubmit = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.formSubmit();
-    const addBtn = document.querySelector('.trip-main__event-add-btn');
-    if (addBtn.disabled && this.#formType !== 'editForm') {
-      addBtn.removeAttribute('disabled');
-    }
-  }
-
-  setOnFormArrowClick = (callback) => {
-    if (this.#formType === 'editForm') {
-      this._callbacksStorage.formArrowClick = callback;
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
-    }
-  }
-
-  #onFormArrowClick = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.formArrowClick();
-  }
-
-  setOnDeleteBtnClick = (callback) => {
-    this._callbacksStorage.deleteBtnClick = callback;
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
-  }
-
-  #onDeleteBtnClick = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.deleteBtnClick();
-  }
-
-  setOnCancelBtnClick = (callback) => {
-    this._callbacksStorage.cancelBtnClick = callback;
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onCancelBtnClick);
-  }
-
-  #onCancelBtnClick = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.cancelBtnClick();
-  }
-
-  static parsePointToData = (point) => (
-    {...point});
-
-  static parseDataToPoint = (data) => {
-    const point = {...data};
-
-    return point;
-  }
-
-  restoreListeners = () => {
-    this.#setInnerListeners();
-    this.setOnFormSubmit(this._callbacksStorage.formSubmit);
-    this.setOnFormArrowClick(this._callbacksStorage.formArrowClick);
-    this.setOnDeleteBtnClick(this._callbacksStorage.deleteBtnClick);
-    this.setDatepicker();
-  }
-
-  #setInnerListeners = () => {
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
-  }
-
-  #onTypeChange = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      type: evt.target.value,
-      typeImg: `img/icons/${evt.target.value}.png`
-    });
-  }
-
-  //данные меняются, но форма не перерисовывается (так и задумано)
-  #onPriceInput = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      basePrice: evt.target.value,
-    }, true);
-  }
-
-  #onCityChange =(evt) => {
-    evt.preventDefault();
-    this.updateData({
-      destination: {
-        description: generateDestinationsText(),
-        name: evt.target.value,
-        pictures: createPictures(),
-      }
-    });
-  };
 }
 
 export default FormView;

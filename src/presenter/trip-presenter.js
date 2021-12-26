@@ -58,6 +58,7 @@ class TripPresenter {
     this.#renderBoard();
   }
 
+  //рендеры
   #renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
   }
@@ -68,16 +69,6 @@ class TripPresenter {
 
   #renderEventsList = () => {
     renderElement(this.#listSection, this.#eventsContainer, RenderPositions.BEFOREEND);
-  }
-
-  #onSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearBoard();
-    this.#renderBoard();
   }
 
   #renderSort = () => {
@@ -105,6 +96,12 @@ class TripPresenter {
     points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point));
   }
 
+  #renderAddPointButton = () => {
+    renderElement(this.#tripMain, this.#addPointButtonComponent, RenderPositions.BEFOREEND);
+    this.#addPointButtonComponent.setOnAddPointCLick(this.#onAddButtonClick);
+  }
+
+  //общий ренедер
   #renderBoard = () => {
     const points = this.points;
     const pointsCount = points.lenght;
@@ -123,22 +120,15 @@ class TripPresenter {
     this.#renderPointsList(points);
   }
 
-  #clearBoard = ({resetSortType = false} = {}) => {
-    this.#pointsStorage.forEach((presenter) => presenter.destroy());
-    this.#pointsStorage.clear();
-
-    remove(this.#sortComponent);
-    remove(this.#noPointsComponent);
-
-    if (resetSortType) {
-      this.#currentSortType = SortType.DAY;
+  //обработчики
+  #onSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
     }
-  }
 
-
-  #renderAddPointButton = () => {
-    renderElement(this.#tripMain, this.#addPointButtonComponent, RenderPositions.BEFOREEND);
-    this.#addPointButtonComponent.setOnAddPointCLick(this.#onAddButtonClick);
+    this.#currentSortType = sortType;
+    this.#clearBoard();
+    this.#renderBoard();
   }
 
   #onAddButtonClick = () => {
@@ -175,33 +165,28 @@ class TripPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
-  //пока делает тоже, что и cancel
-  #newFormSubmit = () => {
+  #newFormSubmit = () => {//пока делает тоже, что и cancel
     remove(this.#newFormComponent);
     this.#addPointButtonComponent.element.removeAttribute('disabled');
 
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
-  #clearPointList = () => {
-    this.#pointsStorage.forEach((presenter) => presenter.destroy());
-    this.#pointsStorage.clear();
-  }
-
   #onModeChange = () => {
     this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
   }
 
+  //смена данных
   #onViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updateTask(updateType, update);
+        this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addTask(updateType, update);
+        this.#pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deleteTask(updateType, update);
+        this.#pointsModel.deletePoint(updateType, update);
         break;
     }
   }
@@ -218,11 +203,22 @@ class TripPresenter {
       case UpdateType.MAJOR:
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
-
         break;
     }
   }
 
+  //другие методы
+  #clearBoard = ({resetSortType = false} = {}) => {
+    this.#pointsStorage.forEach((presenter) => presenter.destroy());
+    this.#pointsStorage.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#noPointsComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
+  }
 }
 
 export default TripPresenter;
