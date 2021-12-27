@@ -282,7 +282,7 @@ class FormView extends SmartView {
 
   //другие методы
   removeElement = () => {
-    //super.removeElement();
+    super.removeElement();
 
     if (this.#datepickerStart && this.#datepickerEnd) {
       this.#datepickerStart.destroy();
