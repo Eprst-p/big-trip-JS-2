@@ -174,6 +174,7 @@ class FormView extends SmartView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
+    this.#updateOffers();
     this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
   }
 
@@ -297,6 +298,26 @@ class FormView extends SmartView {
         }
       });
     }
+  }
+
+  #updateOffers = () => {
+    const offerRadioDivs = this.element.querySelectorAll('.event__offer-selector');
+    const newOffers = [];
+    offerRadioDivs.forEach((offerDiv) => {
+      const offerInput = offerDiv.querySelector('.event__offer-checkbox');
+      const spanTitle = offerDiv.querySelector('.event__offer-title');
+      const spanPrice = offerDiv.querySelector('.event__offer-price');
+
+      if (offerInput.checked) {
+        const newOffer = {
+          id: offerInput.id,
+          title: spanTitle.textContent,
+          offerPrice: spanPrice.textContent
+        };
+        newOffers.push(newOffer);
+      }
+    });
+    this._data.offers.offers = newOffers;
   }
 
   //другие методы
