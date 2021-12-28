@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import {getRandomPositiveNumber} from './common.js';
 
 const formDateValue = (someDate) => dayjs(someDate);
-const testDate = dayjs('2022-01-10', 'YYYY-MM-DD');//тестовая дата - так как от текущей будет ненаглядные фильтры
+const testDate = dayjs('2022-01-10', 'YYYY-MM-DD');//тестовая дата - так как от текущей будут ненаглядные фильтры
 
 //генератор рандомного шага у даты
 const generateRandomDate = (lastDate) => {

@@ -8,14 +8,15 @@ import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view';
 import PointPresenter from './point-presenter.js';
-import {SortType, POINTS_COUNT, UserAction, UpdateType} from '../utils/constants.js';
+import {SortType, UserAction, UpdateType, FilterType} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
   #tripMain = null;
   #menuContainer = null;
   #listSection = null;
-  #ulContainer = null;
+  #pointsModel = null;
+  #filterModel = null;
 
   #menuComponent = new MenuView();
   #sortComponent = null;
@@ -23,13 +24,11 @@ class TripPresenter {
   #eventsContainer = new EventsList();
   #newFormComponent = null;
   #noPointsComponent = null;
+  #tripInfoComponent = null;
 
-  #pointsModel = null;
-  #filterModel = null;
-
-  #pointsCount = POINTS_COUNT;
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
 
   constructor(tripMain, menu, listSection, pointsModel, filterModel) {
@@ -44,9 +43,9 @@ class TripPresenter {
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filterFunctional[filterType](points);
+    const filteredPoints = filterFunctional[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.TIME:
@@ -58,7 +57,6 @@ class TripPresenter {
   }
 
   init = () => {
-    this.#renderTripInfo(this.#pointsModel.points);
     this.#renderBoard();
   }
 
@@ -84,11 +82,12 @@ class TripPresenter {
   }
 
   #renderTripInfo = (allPoints) => {
-    renderElement(this.#tripMain, new TripInfoView(allPoints), RenderPositions.AFTERBEGIN);
+    this.#tripInfoComponent = new TripInfoView(allPoints);
+    renderElement(this.#tripMain, this.#tripInfoComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderNoPoints = (filterValue) => {
-    this.#noPointsComponent = new NoPointsView(filterValue);
+  #renderNoPoints = () => {
+    this.#noPointsComponent = new NoPointsView(this.#filterType);
     renderElement(this.#eventsContainer.element, this.#noPointsComponent, RenderPositions.AFTERBEGIN);
   }
 
@@ -104,17 +103,18 @@ class TripPresenter {
   //общий ренедер
   #renderBoard = () => {
     const points = this.points;
-    const pointsCount = points.lenght;
+    const pointsCount = points.length;
 
     this.#renderMenu();
     this.#renderEventsList();
     this.#renderAddPointButton();
 
     if (pointsCount === 0) {
-      this.#renderNoPoints('everything');
+      this.#renderNoPoints();
       return;
     }
 
+    this.#renderTripInfo(this.#pointsModel.points);
     this.#renderSort();
     this.#renderPointsList(points);
   }
@@ -136,7 +136,7 @@ class TripPresenter {
     remove(this.#sortComponent);
     this.#renderSort();
     this.#onSortTypeChange(SortType.DAY);
-    // + тут нужно возвращение поведения фильтров к дефолту (everything) (пока их нет)
+    // + тут нужно возвращение поведения фильтров к дефолту (everything)
     this.#onModeChange();
 
     document.addEventListener('keydown', this.#onEscKeyDown);
@@ -210,7 +210,14 @@ class TripPresenter {
     this.#pointsStorage.clear();
 
     remove(this.#sortComponent);
-    remove(this.#noPointsComponent);
+
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
+
+    if (this.#tripInfoComponent) {
+      remove(this.#tripInfoComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
