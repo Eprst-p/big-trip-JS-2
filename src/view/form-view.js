@@ -174,10 +174,6 @@ class FormView extends SmartView {
   #onFormSubmit = (evt) => {
     evt.preventDefault();
     this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
-    const addBtn = document.querySelector('.trip-main__event-add-btn');
-    if (addBtn.disabled && this.#formType !== 'editForm') {
-      addBtn.removeAttribute('disabled');
-    }
   }
 
   setOnFormArrowClick = (callback) => {

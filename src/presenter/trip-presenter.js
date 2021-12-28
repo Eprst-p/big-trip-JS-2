@@ -1,13 +1,13 @@
 import {RenderPositions, renderElement, remove} from '../utils/render.js';
-import {sortItemsByTime, sortItemsByPrice} from '../utils/common.js';
+import {sortItemsByTime, sortItemsByPrice, sortItemsByDay} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
-import FormView from '../view/form-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import SortView from '../view/sort-view.js';
 import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view';
 import PointPresenter from './point-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
 import {SortType, UserAction, UpdateType, FilterType} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
@@ -22,7 +22,7 @@ class TripPresenter {
   #sortComponent = null;
   #addPointButtonComponent = new AddPointButtonView();
   #eventsContainer = new EventsList();
-  #newFormComponent = null;
+  #newFormPresenter = null;
   #noPointsComponent = null;
   #tripInfoComponent = null;
 
@@ -35,6 +35,7 @@ class TripPresenter {
     this.#tripMain = tripMain;
     this.#menuContainer = menu;
     this.#listSection = listSection;
+    this.#newFormPresenter = new NewPointPresenter(this.#eventsContainer.element, this.#onViewAction);
 
     this.#pointsModel = pointsModel;
     this.#pointsModel.addObserver(this.#onModelEvent);
@@ -48,6 +49,8 @@ class TripPresenter {
     const filteredPoints = filterFunctional[this.#filterType](points);
 
     switch (this.#currentSortType) {
+      case SortType.DAY:
+        return filteredPoints.sort(sortItemsByDay);
       case SortType.TIME:
         return filteredPoints.sort(sortItemsByTime);
       case SortType.PRICE:
@@ -131,45 +134,22 @@ class TripPresenter {
   }
 
   #onAddButtonClick = () => {
-    this.#newFormComponent = new FormView();
-    renderElement(this.#eventsContainer.element, this.#newFormComponent, RenderPositions.AFTERBEGIN);
-    remove(this.#sortComponent);
-    this.#renderSort();
-    this.#onSortTypeChange(SortType.DAY);
-    // + тут нужно возвращение поведения фильтров к дефолту (everything)
-    this.#onModeChange();
-
-    document.addEventListener('keydown', this.#onEscKeyDown);
-    this.#newFormComponent.setOnCancelBtnClick(this.#onCancelBtnClick);
-    this.#newFormComponent.setOnFormSubmit(this.#newFormSubmit);
-    this.#newFormComponent.setDatepicker();
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newFormPresenter.init();
   }
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      remove(this.#newFormComponent);
       this.#addPointButtonComponent.element.removeAttribute('disabled');
 
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
 
-  #onCancelBtnClick = () => {
-    remove(this.#newFormComponent);
-    this.#addPointButtonComponent.element.removeAttribute('disabled');
-
-    document.removeEventListener('keydown', this.#onEscKeyDown);
-  }
-
-  #newFormSubmit = () => {//пока делает тоже, что и cancel
-    remove(this.#newFormComponent);
-    this.#addPointButtonComponent.element.removeAttribute('disabled');
-
-    document.removeEventListener('keydown', this.#onEscKeyDown);
-  }
-
   #onModeChange = () => {
+    this.#newFormPresenter.destroy();
     this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
   }
 
@@ -208,6 +188,7 @@ class TripPresenter {
   #clearBoard = ({resetSortType = false} = {}) => {
     this.#pointsStorage.forEach((presenter) => presenter.destroy());
     this.#pointsStorage.clear();
+    this.#newFormPresenter.destroy();
 
     remove(this.#sortComponent);
 

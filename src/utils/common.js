@@ -6,6 +6,13 @@ const getRandomPositiveNumber = (a, b) => {
 
 const getRandomElement = (array) => array[getRandomPositiveNumber(0, array.length-1)];
 
+
+const sortItemsByDay = (pointA, pointB) => {
+  const valueA = pointA.dateFrom;
+  const valueB = pointB.dateFrom;
+  return valueB - valueA;
+};
+
 const sortItemsByTime = (pointA, pointB) => {
   const valueA = pointA.dateTo - pointA.dateFrom;
   const valueB = pointB.dateTo - pointB.dateFrom;
@@ -19,4 +26,4 @@ const sortItemsByPrice = (pointA, pointB) => {
 };
 
 
-export {getRandomPositiveNumber, getRandomElement, sortItemsByTime, sortItemsByPrice};
+export {getRandomPositiveNumber, getRandomElement, sortItemsByTime, sortItemsByPrice, sortItemsByDay};
