@@ -3,23 +3,21 @@ import {sortItemsByTime, sortItemsByPrice} from '../utils/common.js';
 import MenuView from '../view/menu-view.js';
 import FormView from '../view/form-view.js';
 import NoPointsView from '../view/no-points-view.js';
-import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view';
 import PointPresenter from './point-presenter.js';
 import {SortType, POINTS_COUNT, UserAction, UpdateType} from '../utils/constants.js';
+import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
   #tripMain = null;
   #menuContainer = null;
-  #filtersContainer = null;
   #listSection = null;
   #ulContainer = null;
 
   #menuComponent = new MenuView();
-  #filtersComponent = new FiltersView();
   #sortComponent = null;
   #addPointButtonComponent = new AddPointButtonView();
   #eventsContainer = new EventsList();
@@ -27,30 +25,36 @@ class TripPresenter {
   #noPointsComponent = null;
 
   #pointsModel = null;
+  #filterModel = null;
 
   #pointsCount = POINTS_COUNT;
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
 
 
-  constructor(tripMain, menu, filters, listSection, pointsModel) {
+  constructor(tripMain, menu, listSection, pointsModel, filterModel) {
     this.#tripMain = tripMain;
     this.#menuContainer = menu;
-    this.#filtersContainer = filters;
     this.#listSection = listSection;
 
     this.#pointsModel = pointsModel;
     this.#pointsModel.addObserver(this.#onModelEvent);
+    this.#filterModel = filterModel;
+    this.#filterModel.addObserver(this.#onModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filterFunctional[filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.TIME:
-        return [...this.#pointsModel.points].sort(sortItemsByTime);
+        return filteredPoints.sort(sortItemsByTime);
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortItemsByPrice);
+        return filteredPoints.sort(sortItemsByPrice);
     }
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   init = () => {
@@ -61,10 +65,6 @@ class TripPresenter {
   //рендеры
   #renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
-  }
-
-  #renderFilters = () => {
-    renderElement(this.#filtersContainer, this.#filtersComponent, RenderPositions.BEFOREEND);
   }
 
   #renderEventsList = () => {
@@ -107,7 +107,6 @@ class TripPresenter {
     const pointsCount = points.lenght;
 
     this.#renderMenu();
-    this.#renderFilters();
     this.#renderEventsList();
     this.#renderAddPointButton();
 
@@ -137,8 +136,6 @@ class TripPresenter {
     remove(this.#sortComponent);
     this.#renderSort();
     this.#onSortTypeChange(SortType.DAY);
-    remove(this.#filtersComponent);
-    this.#renderFilters();
     // + тут нужно возвращение поведения фильтров к дефолту (everything) (пока их нет)
     this.#onModeChange();
 
