@@ -7,6 +7,7 @@ import {CITIES} from '../mock/data-sources.js';
 import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+//import he from 'he';//непонятно как использовать - в inpute в  value он не работает
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -260,20 +261,42 @@ class FormView extends SmartView {
 
   #onPriceInput = (evt) => {//данные меняются, но форма не перерисовывается (так и задумано)
     evt.preventDefault();
-    this.updateData({
-      basePrice: evt.target.value,
-    }, true);
+    const priceInput = this.element.querySelector('.event__input--price');
+    const price = +evt.target.value;
+
+    if (!Number.isInteger(price)) {
+      priceInput.setCustomValidity('Введите положительное число');
+      priceInput.reportValidity();
+    }
+    else {
+      priceInput.setCustomValidity('');
+      priceInput.reportValidity();
+      this.updateData({
+        basePrice: evt.target.value,
+      }, true);
+    }
   }
 
   #onCityChange =(evt) => {
     evt.preventDefault();
-    this.updateData({
-      destination: {
-        description: generateDestinationsText(),
-        name: evt.target.value,
-        pictures: createPictures(),
-      }
-    });
+    const cityInput = this.element.querySelector('.event__input--destination');
+    const chosenCity = evt.target.value;
+
+    if (!CITIES.includes(chosenCity)) {
+      cityInput.setCustomValidity('Выберите город из представленных');
+      cityInput.reportValidity();
+    }
+    else {
+      cityInput.setCustomValidity('');
+      cityInput.reportValidity();
+      this.updateData({
+        destination: {
+          description: generateDestinationsText(),
+          name: evt.target.value,
+          pictures: createPictures(),
+        }
+      });
+    }
   }
 
   //другие методы

@@ -48,7 +48,7 @@ class NewPointPresenter {
       {id: nanoid(), ...point},//сгенереный айди (пока нет сервера)
     );
     this.destroy();
-  }
+  }//на текущий момент сейв не работает, т.к опять конфликтует дата
 
   #onCancelClick = () => {
     this.destroy();
