@@ -10,7 +10,7 @@ const getRandomElement = (array) => array[getRandomPositiveNumber(0, array.lengt
 const sortItemsByDay = (pointA, pointB) => {
   const valueA = pointA.dateFrom;
   const valueB = pointB.dateFrom;
-  return valueB - valueA;
+  return valueA - valueB;
 };
 
 const sortItemsByTime = (pointA, pointB) => {

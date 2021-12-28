@@ -2,6 +2,7 @@ import FormView from '../view/form-view.js';
 import {nanoid} from 'nanoid';
 import {RenderPositions, renderElement, remove} from '../utils/render.js';
 import {UserAction, UpdateType} from '../utils/constants.js';
+import {defaultData} from '../utils/deafault-data.js';
 
 class NewPointPresenter {
   #pointsListContainer = null;
@@ -18,7 +19,7 @@ class NewPointPresenter {
       return;
     }
 
-    this.#newFormComponent = new FormView();
+    this.#newFormComponent = new FormView('', defaultData);//нужна поинт дата
     this.#newFormComponent.setOnFormSubmit(this.#onFormSubmit);
     this.#newFormComponent.setOnDeleteBtnClick(this.#onCancelClick);
     this.#newFormComponent.setDatepicker();
