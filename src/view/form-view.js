@@ -76,24 +76,8 @@ const createOffersTemplate = (offers, pointType) => {
 };
 
 //основной темплейт
-const createFormTemplate = (formType, pointData = {}) => {
-
-  const {
-    basePrice = '300$',
-    dateFrom = formDayjsFromStr(),
-    dateTo = formDayjsFromStr(),
-    destination = {
-      description: 'In the name of the Empero',
-      name: '',
-      pictures: [],
-    },
-    offers = {
-      type: POINT_TYPES[5].toLowerCase(),
-      offers: [],
-    },
-    type = POINT_TYPES[5].toLowerCase(),
-    typeImg = `img/icons/${POINT_TYPES[5].toLowerCase()}.png`,
-  } = pointData;
+const createFormTemplate = (formType, pointData) => {
+  const {type, typeImg, dateFrom, dateTo, basePrice, offers, destination} = pointData;
 
   return (
     `<form class="event event--edit" action="#" method="post">
