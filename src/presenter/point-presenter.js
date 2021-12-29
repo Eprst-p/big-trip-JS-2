@@ -78,7 +78,6 @@ class PointPresenter {
       UpdateType.MINOR,
       update,
     );
-    this.#replaceFormToPoint();
   }
 
   #formArrowClick = () => {
