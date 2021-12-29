@@ -5,7 +5,7 @@ const createSortTemplate = (currentSortType) => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     ${SORT_ITEMS.map((currentItem) => `
     <div class="trip-sort__item  trip-sort__item--${currentItem.type}">
-      <input id="sort-${currentItem.type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${currentItem.type}" ${currentSortType === `sort-${currentItem.type}` ? 'checked' : ''} ${currentItem.isDisabled}>
+      <input id="sort-${currentItem.type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${currentItem.type}" ${currentSortType === `sort-${currentItem.type}` ? 'checked' : ''} ${currentItem.isDisabled ? 'disabled' : ''}>
       <label class="trip-sort__btn" for="sort-${currentItem.type}">${currentItem.title}</label>
     </div>`).join('')}
   </form>`

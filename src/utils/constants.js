@@ -12,7 +12,6 @@ const OFFERS_BY_TYPE = {
   checkin: ['Add breakfast'],
   sightseeing: ['Book tickets', 'Lunch in city'],
   restaurant: ['Add breakfast', 'Add meal'],
-
 };
 
 const PRICES = ['30', '100', '15', '5', '40']; //четко соответсвует по порядку именам офферов. Теперь уже цены не соответсвуют действительности
@@ -27,27 +26,27 @@ const SORT_ITEMS = [
   {
     type: 'day',
     title: 'Day',
-    isDisabled: '',
+    isDisabled: false,
   },
   {
     type: 'event',
     title: 'Event',
-    isDisabled: 'disabled',
+    isDisabled: true,
   },
   {
     type: 'time',
     title: 'Time',
-    isDisabled: '',
+    isDisabled: false,
   },
   {
     type: 'price',
     title: 'Price',
-    isDisabled: '',
+    isDisabled: false,
   },
   {
     type: 'offer',
     title: 'Offers',
-    isDisabled: 'disabled',
+    isDisabled: true,
   },
 ];
 

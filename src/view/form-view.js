@@ -212,7 +212,7 @@ class FormView extends SmartView {
 
   #setInnerListeners = () => {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
   }
 
@@ -260,7 +260,7 @@ class FormView extends SmartView {
     });
   }
 
-  #onPriceInput = (evt) => {//данные меняются, но форма не перерисовывается (так и задумано)
+  #onPriceChange = (evt) => {//данные меняются, но форма не перерисовывается (так и задумано)
     evt.preventDefault();
     const priceInput = this.element.querySelector('.event__input--price');
     const price = +evt.target.value;
@@ -268,8 +268,7 @@ class FormView extends SmartView {
     if (!Number.isInteger(price)) {
       priceInput.setCustomValidity('Введите положительное число');
       priceInput.reportValidity();
-    }
-    else {
+    } else {
       priceInput.setCustomValidity('');
       priceInput.reportValidity();
       this.updateData({
@@ -286,8 +285,7 @@ class FormView extends SmartView {
     if (!CITIES.includes(chosenCity)) {
       cityInput.setCustomValidity('Выберите город из представленных');
       cityInput.reportValidity();
-    }
-    else {
+    } else {
       cityInput.setCustomValidity('');
       cityInput.reportValidity();
       this.updateData({

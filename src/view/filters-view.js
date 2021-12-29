@@ -4,7 +4,7 @@ const createFiltersTemplate = (filters, currentFilterType) => (
   `<form class="trip-filters" action="#" method="get">
     ${filters.map((filter) => `
     <div class="trip-filters__filter">
-      <input id="filter-${filter.filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.filterType}" ${filter.filterType === currentFilterType || filter.filterType === 'everything' ? 'checked' : ''}>
+      <input id="filter-${filter.filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.filterType}" ${filter.filterType === currentFilterType ? 'checked' : ''}>
       <label class="trip-filters__filter-label" for="filter-${filter.filterType}">${filter.title}</label>
     </div>
     `).join('')}

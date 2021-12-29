@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid';
 import {POINT_TYPES} from './constants.js';
 
 const defaultData = {
-  basePrice:'300$',
+  basePrice:'300',
   dateFrom: getDateInFormat(formDayjsFromStr(), 'DD MM YY HH:mm'),
   dateTo: getDateInFormat(formDayjsFromStr(), 'DD MM YY HH:mm'),
   id: nanoid(),
