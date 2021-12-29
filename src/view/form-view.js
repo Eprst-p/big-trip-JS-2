@@ -1,7 +1,5 @@
-/* eslint-disable camelcase */
-/* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
-import {formDayjsFromStr, getDateInFormat} from '../utils/time-and-date.js';
+import {getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
 import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
@@ -105,7 +103,7 @@ const createFormTemplate = (formType, pointData) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">${(formType === 'editForm') ? 'Delete' : 'Cancel'}</button>
         ${(formType === 'editForm') ?
-       `<button class="event__rollup-btn" type="button">
+      `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>` : ''}
       </header>
@@ -323,6 +321,7 @@ class FormView extends SmartView {
       startTime,
       {
         enableTime: true,
+        // eslint-disable-next-line camelcase
         time_24hr: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.dateFrom,
@@ -333,6 +332,7 @@ class FormView extends SmartView {
       endTime,
       {
         enableTime: true,
+        // eslint-disable-next-line camelcase
         time_24hr: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.dateTo,

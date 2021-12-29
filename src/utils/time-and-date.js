@@ -1,7 +1,7 @@
-/* eslint-disable no-undef */
 import dayjs from 'dayjs';
 import {getRandomPositiveNumber} from './common.js';
 
+// eslint-disable-next-line no-undef
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
 
