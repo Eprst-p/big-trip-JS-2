@@ -1,11 +1,11 @@
-import {formDateValue} from './time-and-date.js';
+import {formDayjsFromStr, getDateInFormat} from './time-and-date.js';
 import {nanoid} from 'nanoid';
 import {POINT_TYPES} from './constants.js';
 
 const defaultData = {
   basePrice:'300$',
-  dateFrom: formDateValue(),
-  dateTo: formDateValue(),
+  dateFrom: getDateInFormat(formDayjsFromStr(), 'DD MM YY HH:mm'),
+  dateTo: getDateInFormat(formDayjsFromStr(), 'DD MM YY HH:mm'),
   id: nanoid(),
   isFavorite: 0,
   destination: {

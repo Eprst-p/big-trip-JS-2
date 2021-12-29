@@ -1,4 +1,5 @@
 import AbstractView from './abstract-view.js';
+import {formDayjsFromStr, getDateInFormat} from '../utils/time-and-date.js';
 
 const createTipInfoTemplate = (allPoints) => {
   const cities = allPoints.map((point) => point.destination.name);
@@ -9,12 +10,16 @@ const createTipInfoTemplate = (allPoints) => {
     return secondCity;
   };
   const lastCity = cities[cities.length - 1];
-  const startDate = allPoints[0].dateFrom.format('DD MMM');
-  const lastDate = allPoints[cities.length - 1].dateTo.format('DD MMM');
+  const startDayjs = formDayjsFromStr(allPoints[0].dateFrom, 'DD MM YY HH:mm');
+  const startDate = getDateInFormat(startDayjs, 'DD MMM');
+  const lastDayjs = formDayjsFromStr(allPoints[cities.length - 1].dateTo, 'DD MM YY HH:mm');
+  const lastDate = getDateInFormat(lastDayjs, 'DD MMM');
+
   let totalPrice = 0;
   allPoints.forEach((point) => {
     totalPrice += point.basePrice;
   });
+
 
   const createCityWritting = () => {
     let cityCount = 0;

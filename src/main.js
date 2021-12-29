@@ -23,4 +23,3 @@ const filterPresenter = new FilterPresenter(filtersContainer, filterModel, point
 
 filterPresenter.init();
 tripPresenter.init();
-

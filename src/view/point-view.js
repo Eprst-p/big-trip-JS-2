@@ -1,20 +1,23 @@
-import {formDateValue, getDateInFormat, getDuration} from '../utils/time-and-date.js';
+import {formDayjsFromStr, getDateInFormat, getDuration} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
 
 const createLiTemplate = (pointData) => {
   const {type, typeImg, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
 
-  const editedStartTime = getDateInFormat(dateFrom, 'HH:mm');
-  const editedEndTime = getDateInFormat(dateTo, 'HH:mm');
-  const editedDuration = getDuration(dateTo, dateFrom);
-  const shortDate = getDateInFormat(dateFrom, 'D MMM');
+  const startDayjs = formDayjsFromStr(dateFrom, 'DD MM YY HH:mm');
+  const endDayjs = formDayjsFromStr(dateTo, 'DD MM YY HH:mm');
+
+  const editedStartTime = getDateInFormat(startDayjs, 'HH:mm');
+  const editedEndTime = getDateInFormat(endDayjs, 'HH:mm');
+  const editedDuration = getDuration(endDayjs, startDayjs).format('HH:mm');
+  const shortDate = getDateInFormat(startDayjs, 'D MMM');
 
   const addFavoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${formDateValue(dateFrom)}">${shortDate}</time>
+        <time class="event__date" datetime="${startDayjs}">${shortDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="${typeImg}" alt="Event type icon">
         </div>

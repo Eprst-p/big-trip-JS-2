@@ -1,13 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
-import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
+import {formDayjsFromStr, getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
 import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-//import he from 'he';//непонятно как использовать - в inpute в  value он не работает
 
 const createTypeAndCityTextTemplate = (type, city) => (
   `<div class="event__field-group  event__field-group--destination">
@@ -23,6 +22,7 @@ const createTypeAndCityTextTemplate = (type, city) => (
 );
 
 const createTimeTemplate = (startTime, endTime) => {
+
   const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');//немного не тот формат, но принцип моков выполняется
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
   const smallerFontSize = 'style = font-size:90%';
@@ -80,8 +80,8 @@ const createFormTemplate = (formType, pointData = {}) => {
 
   const {
     basePrice = '300$',
-    dateFrom = formDateValue(),
-    dateTo = formDateValue(),
+    dateFrom = formDayjsFromStr(),
+    dateTo = formDayjsFromStr(),
     destination = {
       description: 'In the name of the Empero',
       name: '',

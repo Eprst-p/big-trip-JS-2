@@ -1,7 +1,11 @@
+/* eslint-disable no-undef */
 import dayjs from 'dayjs';
 import {getRandomPositiveNumber} from './common.js';
 
-const formDateValue = (someDate) => dayjs(someDate);
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
+const formDayjsFromStr = (someDate, string) => dayjs(someDate, string);
 const testDate = dayjs('2022-01-10', 'YYYY-MM-DD');//тестовая дата - так как от текущей будут ненаглядные фильтры
 
 //генератор рандомного шага у даты
@@ -23,8 +27,8 @@ const generateEndTime = (startHour) => {
   return dayjs(startHour).add(randomHoursToAdd, 'hour').add(randomMinutesToAdd, 'minute');
 };
 
-const getDateInFormat = (date, format) => formDateValue(date).format(format);
+const getDateInFormat = (date, format) => dayjs(date).format(format);
 
-const getDuration = (endTime, startTime) => formDateValue(endTime - startTime).format('HH:mm');
+const getDuration = (endTime, startTime) => dayjs(endTime - startTime);
 
-export {formDateValue, generateRandomDate, generateStartTime, generateEndTime, getDateInFormat, getDuration, testDate};
+export {formDayjsFromStr, generateRandomDate, generateStartTime, generateEndTime, getDateInFormat, getDuration, testDate};
