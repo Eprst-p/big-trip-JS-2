@@ -17,7 +17,7 @@ const createTipInfoTemplate = (allPoints) => {
 
   let totalPrice = 0;
   allPoints.forEach((point) => {
-    totalPrice += point.basePrice;
+    totalPrice += +point.basePrice;
   });
 
 
