@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
 import {getRandomPositiveNumber} from './common.js';
 
-// eslint-disable-next-line no-undef
-const customParseFormat = require('dayjs/plugin/customParseFormat');
+const customParseFormat = require('dayjs/plugin/customParseFormat');// eslint-disable-line no-undef
 dayjs.extend(customParseFormat);
 
 const formDayjsFromStr = (someDate, string) => dayjs(someDate, string);

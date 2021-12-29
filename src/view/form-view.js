@@ -321,8 +321,7 @@ class FormView extends SmartView {
       startTime,
       {
         enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
+        time_24hr: true,// eslint-disable-line camelcase
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.dateFrom,
         onClose: this.#onDateStartChange,
@@ -332,8 +331,7 @@ class FormView extends SmartView {
       endTime,
       {
         enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
+        time_24hr: true,// eslint-disable-line camelcase
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.dateTo,
         onClose: this.#onDateEndChange,
