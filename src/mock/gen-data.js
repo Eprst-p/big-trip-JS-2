@@ -2,7 +2,7 @@ import {DESTINATIONS, CITIES,} from './data-sources.js';
 import {POINT_TYPES, PRICES, OFFERS_BY_TYPE} from '../utils/constants.js';
 import {nanoid} from 'nanoid';
 import {getRandomPositiveNumber, getRandomElement} from '../utils/common.js';
-import {formDateValue, generateRandomDate, generateStartTime, generateEndTime} from '../utils/time-and-date.js';
+import {formDayjsFromStr, generateRandomDate, generateStartTime, generateEndTime, getDateInFormat} from '../utils/time-and-date.js';
 
 //offers
 const createOfferItem = (pointType) => ({
@@ -77,7 +77,7 @@ const createDestination = () => ({
 });
 
 //сам объект point
-let newDate = formDateValue();
+let newDate = formDayjsFromStr();
 
 const generatePoint = () => {
   const nextDate = generateRandomDate(newDate);
@@ -87,8 +87,8 @@ const generatePoint = () => {
   const pointType = getRandomElement(POINT_TYPES).toLowerCase();
   return {
     basePrice: generatePrice(),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: getDateInFormat(startTime, 'DD MM YY HH:mm'),
+    dateTo: getDateInFormat(endTime, 'DD MM YY HH:mm'),
     id: nanoid(),
     isFavorite: Boolean(getRandomPositiveNumber(0, 1)),
     offers: createResultOffer(pointType),

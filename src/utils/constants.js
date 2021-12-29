@@ -1,5 +1,7 @@
 const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'CheckIn', 'Sightseeing', 'Restaurant'];
 
+const POINTS_COUNT = 20;
+
 const OFFERS_BY_TYPE = {
   taxi: ['Order Uber'],
   bus: ['Add luggage', 'Choose seats'],
@@ -10,7 +12,6 @@ const OFFERS_BY_TYPE = {
   checkin: ['Add breakfast'],
   sightseeing: ['Book tickets', 'Lunch in city'],
   restaurant: ['Add breakfast', 'Add meal'],
-
 };
 
 const PRICES = ['30', '100', '15', '5', '40']; //четко соответсвует по порядку именам офферов. Теперь уже цены не соответсвуют действительности
@@ -25,28 +26,46 @@ const SORT_ITEMS = [
   {
     type: 'day',
     title: 'Day',
-    isChecked: 'checked',
+    isDisabled: false,
   },
   {
     type: 'event',
     title: 'Event',
-    isChecked: 'disabled',
+    isDisabled: true,
   },
   {
     type: 'time',
     title: 'Time',
-    isChecked: '',
+    isDisabled: false,
   },
   {
     type: 'price',
     title: 'Price',
-    isChecked: '',
+    isDisabled: false,
   },
   {
     type: 'offer',
     title: 'Offers',
-    isChecked: 'disabled',
+    isDisabled: true,
   },
 ];
 
-export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
+export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT, UserAction, UpdateType, FilterType};

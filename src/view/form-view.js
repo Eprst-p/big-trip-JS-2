@@ -1,6 +1,5 @@
-/* eslint-disable indent */
 import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
-import {formDateValue, getDateInFormat} from '../utils/time-and-date.js';
+import {getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import {CITIES} from '../mock/data-sources.js';
 import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
@@ -21,6 +20,7 @@ const createTypeAndCityTextTemplate = (type, city) => (
 );
 
 const createTimeTemplate = (startTime, endTime) => {
+
   const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');//немного не тот формат, но принцип моков выполняется
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
   const smallerFontSize = 'style = font-size:90%';
@@ -74,24 +74,8 @@ const createOffersTemplate = (offers, pointType) => {
 };
 
 //основной темплейт
-const createFormTemplate = (formType, pointData = {}) => {
-
-  const {
-    basePrice = '300$',
-    dateFrom = formDateValue(),
-    dateTo = formDateValue(),
-    destination = {
-      description: 'In the name of the Empero',
-      name: '',
-      pictures: [],
-    },
-    offers = {
-      type: POINT_TYPES[5].toLowerCase(),
-      offers: [],
-    },
-    type = POINT_TYPES[5].toLowerCase(),
-    typeImg = `img/icons/${POINT_TYPES[5].toLowerCase()}.png`,
-  } = pointData;
+const createFormTemplate = (formType, pointData) => {
+  const {type, typeImg, dateFrom, dateTo, basePrice, offers, destination} = pointData;
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -119,7 +103,7 @@ const createFormTemplate = (formType, pointData = {}) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">${(formType === 'editForm') ? 'Delete' : 'Cancel'}</button>
         ${(formType === 'editForm') ?
-       `<button class="event__rollup-btn" type="button">
+      `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>` : ''}
       </header>
@@ -164,62 +148,7 @@ class FormView extends SmartView {
     return createFormTemplate(this.#formType, this._data);
   }
 
-  reset = (point) => {
-    this.updateData(
-      FormView.parsePointToData(point),
-    );
-  }
-
-  removeElement = () => {
-    //super.removeElement();
-
-    if (this.#datepickerStart && this.#datepickerEnd) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-
-    }
-  }
-
-  setDatepicker = () => {
-    const startTime = this.element.querySelector('#event-start-time-1');
-    const endTime = this.element.querySelector('#event-end-time-1');
-
-    this.#datepickerStart = flatpickr(
-      startTime,
-      {
-        enableTime: true,
-        time_24hr: true,
-        dateFormat: 'd/m/Y H:i',
-        defaultDate: this._data.dateFrom,
-        onClose: this.#onDateStartChange,
-      },
-    );
-    this.#datepickerEnd = flatpickr(
-      endTime,
-      {
-        enableTime: true,
-        time_24hr: true,
-        dateFormat: 'd/m/Y H:i',
-        defaultDate: this._data.dateTo,
-        onClose: this.#onDateEndChange,
-      },
-    );
-  }
-
-  #onDateStartChange = ([userDate]) => {
-    this.updateData({
-      dateFrom: userDate,
-    });
-  }
-
-  #onDateEndChange = ([userDate]) => {
-    this.updateData({
-      dateTo: userDate,
-    });
-  }
-
+  //установка обработчиков
   setOnFormSubmit = (callback) => {
     this._callbacksStorage.formSubmit = callback;
     this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
@@ -227,11 +156,8 @@ class FormView extends SmartView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this._callbacksStorage.formSubmit();
-    const addBtn = document.querySelector('.trip-main__event-add-btn');
-    if (addBtn.disabled && this.#formType !== 'editForm') {
-      addBtn.removeAttribute('disabled');
-    }
+    this.#updateOffers();
+    this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
   }
 
   setOnFormArrowClick = (callback) => {
@@ -253,7 +179,7 @@ class FormView extends SmartView {
 
   #onDeleteBtnClick = (evt) => {
     evt.preventDefault();
-    this._callbacksStorage.deleteBtnClick();
+    this._callbacksStorage.deleteBtnClick(FormView.parseDataToPoint(this._data));
   }
 
   setOnCancelBtnClick = (callback) => {
@@ -266,13 +192,10 @@ class FormView extends SmartView {
     this._callbacksStorage.cancelBtnClick();
   }
 
-  static parsePointToData = (point) => (
-    {...point});
-
-  static parseDataToPoint = (data) => {
-    const point = {...data};
-
-    return point;
+  #setInnerListeners = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
   }
 
   restoreListeners = () => {
@@ -283,10 +206,32 @@ class FormView extends SmartView {
     this.setDatepicker();
   }
 
-  #setInnerListeners = () => {
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
+  //изменение данных
+  static parsePointToData = (point) => (
+    {...point});
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    return point;
+  }
+
+  reset = (point) => {
+    this.updateData(
+      FormView.parsePointToData(point),
+    );
+  }
+
+  #onDateStartChange = ([userDate]) => {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  #onDateEndChange = ([userDate]) => {
+    this.updateData({
+      dateTo: userDate,
+    });
   }
 
   #onTypeChange = (evt) => {
@@ -297,24 +242,102 @@ class FormView extends SmartView {
     });
   }
 
-  //данные меняются, но форма не перерисовывается (так и задумано)
-  #onPriceInput = (evt) => {
+  #onPriceChange = (evt) => {//данные меняются, но форма не перерисовывается (так и задумано)
     evt.preventDefault();
-    this.updateData({
-      basePrice: evt.target.value,
-    }, true);
+    const priceInput = this.element.querySelector('.event__input--price');
+    const price = +evt.target.value;
+
+    if (!Number.isInteger(price)) {
+      priceInput.setCustomValidity('Введите положительное число');
+      priceInput.reportValidity();
+    } else {
+      priceInput.setCustomValidity('');
+      priceInput.reportValidity();
+      this.updateData({
+        basePrice: evt.target.value,
+      }, true);
+    }
   }
 
   #onCityChange =(evt) => {
     evt.preventDefault();
-    this.updateData({
-      destination: {
-        description: generateDestinationsText(),
-        name: evt.target.value,
-        pictures: createPictures(),
+    const cityInput = this.element.querySelector('.event__input--destination');
+    const chosenCity = evt.target.value;
+
+    if (!CITIES.includes(chosenCity)) {
+      cityInput.setCustomValidity('Выберите город из представленных');
+      cityInput.reportValidity();
+    } else {
+      cityInput.setCustomValidity('');
+      cityInput.reportValidity();
+      this.updateData({
+        destination: {
+          description: generateDestinationsText(),
+          name: evt.target.value,
+          pictures: createPictures(),
+        }
+      });
+    }
+  }
+
+  #updateOffers = () => {
+    const offerRadioDivs = this.element.querySelectorAll('.event__offer-selector');
+    const newOffers = [];
+    offerRadioDivs.forEach((offerDiv) => {
+      const offerInput = offerDiv.querySelector('.event__offer-checkbox');
+      const spanTitle = offerDiv.querySelector('.event__offer-title');
+      const spanPrice = offerDiv.querySelector('.event__offer-price');
+
+      if (offerInput.checked) {
+        const newOffer = {
+          id: offerInput.id,
+          title: spanTitle.textContent,
+          offerPrice: spanPrice.textContent
+        };
+        newOffers.push(newOffer);
       }
     });
-  };
+    this._data.offers.offers = newOffers;
+  }
+
+  //другие методы
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerStart && this.#datepickerEnd) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+
+    }
+  }
+
+  setDatepicker = () => {
+    const startTime = this.element.querySelector('#event-start-time-1');
+    const endTime = this.element.querySelector('#event-end-time-1');
+
+    this.#datepickerStart = flatpickr(
+      startTime,
+      {
+        enableTime: true,
+        time_24hr: true,// eslint-disable-line camelcase
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateFrom,
+        onClose: this.#onDateStartChange,
+      },
+    );
+    this.#datepickerEnd = flatpickr(
+      endTime,
+      {
+        enableTime: true,
+        time_24hr: true,// eslint-disable-line camelcase
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateTo,
+        onClose: this.#onDateEndChange,
+      },
+    );
+  }
 }
 
 export default FormView;
