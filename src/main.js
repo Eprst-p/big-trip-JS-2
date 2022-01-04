@@ -18,8 +18,6 @@ pointsModel.points = points;
 
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(tripMain, menuContainer, contentSectionElement, pointsModel, filterModel);
-const filterPresenter = new FilterPresenter(filtersContainer, filterModel, pointsModel);
+const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel, filterModel);
 
-filterPresenter.init();
 tripPresenter.init();
