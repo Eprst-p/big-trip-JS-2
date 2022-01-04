@@ -1,4 +1,6 @@
 import AbstractView from './abstract-view.js';
+import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const createStatsTemplate = () => (
   `<section class="statistics">
