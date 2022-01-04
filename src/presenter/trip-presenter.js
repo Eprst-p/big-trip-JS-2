@@ -66,6 +66,8 @@ class TripPresenter {
   //рендеры
   #renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
+    this.#menuComponent.setOnTableClick(this.#onTableClick);
+    this.#menuComponent.setOnStatsClick(this.#onStatsClick);
   }
 
   #renderEventsList = () => {
@@ -152,6 +154,15 @@ class TripPresenter {
     this.#newFormPresenter.destroy();
     this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
   }
+
+  #onTableClick = () => {
+    console.log('table');
+  }
+
+  #onStatsClick = () => {
+    console.log('stats');
+  }
+
 
   //смена данных
   #onViewAction = (actionType, updateType, update) => {
