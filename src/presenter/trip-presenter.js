@@ -173,7 +173,7 @@ class TripPresenter {
     this.#filterPresenter.destroy();
     this.destroy();
     this.#renderTripInfo(this.#pointsModel.points);
-    this.#statsComponent = new StatsView();
+    this.#statsComponent = new StatsView(this.#pointsModel.points);
     renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
   }
 
