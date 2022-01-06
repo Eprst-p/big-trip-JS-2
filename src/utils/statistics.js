@@ -1,7 +1,7 @@
 import {POINT_TYPES} from './constants';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {formDayjsFromStr, getDateInFormat, getDuration} from './time-and-date.js';
+import {formDayjsFromStr, getDurationInDayjs, getDurationFormat, getDuration, zeroDuration} from './time-and-date.js';
 
 
 //вычисление данных
@@ -29,15 +29,27 @@ const sumTypesAmount = (points) => UPPER_CASE_TYPES.map((type) => {
 
 //не работает
 const sumDurationPerType = (points) => UPPER_CASE_TYPES.map((type) => {
-  let duration = formDayjsFromStr('00:00', 'HH:mm');
+  let currentDuration = '';
+  const totalDuration = zeroDuration;
   points.forEach((point) => {
     if (point.type === type.toLowerCase()) {
       const startDayjs = formDayjsFromStr(point.dateFrom, 'DD MM YY HH:mm');
       const endDayjs = formDayjsFromStr(point.dateTo, 'DD MM YY HH:mm');
-      duration += getDuration(endDayjs, startDayjs);
+      currentDuration = getDuration(endDayjs, startDayjs);
+      totalDuration.add(currentDuration).days();
+      totalDuration.add(currentDuration).hours();
+      totalDuration.add(currentDuration).minutes();
     }
   });
-  return getDateInFormat(duration, 'DD HH:mm');
+  console.log('currentDuration:');
+  console.log(currentDuration);
+  console.log('totalDuration:');
+  console.log(totalDuration);
+
+  console.log(`${totalDuration.format('DD')}D ${totalDuration.format('HH')}H ${totalDuration.format('mm')}M`);
+
+
+  return `${totalDuration.format('DD')}D ${totalDuration.format('HH')}H ${totalDuration.format('mm')}M`;
 });
 
 

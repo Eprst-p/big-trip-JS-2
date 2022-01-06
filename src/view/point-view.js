@@ -1,5 +1,7 @@
-import {formDayjsFromStr, getDateInFormat, getDuration} from '../utils/time-and-date.js';
+import {formDayjsFromStr, getDateInFormat, getDurationFormat} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
+//import dayjs from 'dayjs';
+
 
 const createLiTemplate = (pointData) => {
   const {type, typeImg, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
@@ -9,7 +11,6 @@ const createLiTemplate = (pointData) => {
 
   const editedStartTime = getDateInFormat(startDayjs, 'HH:mm');
   const editedEndTime = getDateInFormat(endDayjs, 'HH:mm');
-  const editedDuration = getDuration(endDayjs, startDayjs).format('HH:mm');
   const shortDate = getDateInFormat(startDayjs, 'D MMM');
 
   const addFavoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
@@ -28,7 +29,7 @@ const createLiTemplate = (pointData) => {
             &mdash;
             <time class="event__end-time" datetime="2019-03-18T11:00">${editedEndTime}</time>
           </p>
-          <p class="event__duration">${editedDuration}</p>
+          <p class="event__duration">${getDurationFormat(endDayjs, startDayjs)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

@@ -1,4 +1,4 @@
-import {formDayjsFromStr, getDuration} from './time-and-date.js';
+import {formDayjsFromStr, getDurationInDayjs} from './time-and-date.js';
 
 const getRandomPositiveNumber = (a, b) => {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
@@ -20,8 +20,8 @@ const sortItemsByTime = (pointA, pointB) => {
   const endDayjsB = formDayjsFromStr(pointB.dateTo, 'DD MM YY HH:mm');
   const startDayjsB = formDayjsFromStr(pointB.dateFrom, 'DD MM YY HH:mm');
 
-  const valueA = getDuration(endDayjsA, startDayjsA);
-  const valueB = getDuration(endDayjsB, startDayjsB);
+  const valueA = getDurationInDayjs(endDayjsA, startDayjsA);
+  const valueB = getDurationInDayjs(endDayjsB, startDayjsB);
   return valueB - valueA;
 };
 
