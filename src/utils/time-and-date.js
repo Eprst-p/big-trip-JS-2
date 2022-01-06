@@ -37,8 +37,8 @@ const zeroDuration = dayjs.duration(0);
 
 const getDuration = (endTime, startTime) => dayjs.duration(endTime.diff(startTime));
 
-const getDurationFormat = (endTime, startTime) => {
-  const currentDuration = getDuration(endTime, startTime);
+const getDurationFormat = (endTime, startTime, someDuration) => {
+  const currentDuration = someDuration || getDuration(endTime, startTime);
 
   const days = currentDuration.days();
   const hours = currentDuration.hours();

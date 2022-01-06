@@ -1,7 +1,7 @@
 import {POINT_TYPES} from './constants';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {formDayjsFromStr, getDurationInDayjs, getDurationFormat, getDuration, zeroDuration} from './time-and-date.js';
+import {formDayjsFromStr, getDurationFormat, getDuration, zeroDuration} from './time-and-date.js';
 
 
 //вычисление данных
@@ -27,30 +27,32 @@ const sumTypesAmount = (points) => UPPER_CASE_TYPES.map((type) => {
   return amount;
 });
 
-//не работает
 const sumDurationPerType = (points) => UPPER_CASE_TYPES.map((type) => {
   let currentDuration = '';
-  const totalDuration = zeroDuration;
+  let totalDuration = zeroDuration;
   points.forEach((point) => {
     if (point.type === type.toLowerCase()) {
       const startDayjs = formDayjsFromStr(point.dateFrom, 'DD MM YY HH:mm');
       const endDayjs = formDayjsFromStr(point.dateTo, 'DD MM YY HH:mm');
       currentDuration = getDuration(endDayjs, startDayjs);
-      totalDuration.add(currentDuration).days();
-      totalDuration.add(currentDuration).hours();
-      totalDuration.add(currentDuration).minutes();
+      totalDuration = totalDuration.add(currentDuration);
     }
   });
-  console.log('currentDuration:');
-  console.log(currentDuration);
-  console.log('totalDuration:');
-  console.log(totalDuration);
-
-  console.log(`${totalDuration.format('DD')}D ${totalDuration.format('HH')}H ${totalDuration.format('mm')}M`);
-
-
-  return `${totalDuration.format('DD')}D ${totalDuration.format('HH')}H ${totalDuration.format('mm')}M`;
+  return totalDuration;
 });
+
+const convertDurationToNumber = (points) => sumDurationPerType(points).map((duration) => duration.asMilliseconds());
+
+const convertDurationToString = (points, dataIndex) => {
+  const formatedDurations = sumDurationPerType(points).map((duration) => getDurationFormat(null, null, duration));
+  let resultDuration = '';
+  formatedDurations.forEach((value, index) => {
+    if (index === dataIndex) {
+      resultDuration = value;
+    }
+  });
+  return resultDuration;
+};
 
 
 //рендер чартов
@@ -203,7 +205,7 @@ const renderTimeChart = (timeElement, points) => {
     data: {
       labels: UPPER_CASE_TYPES,
       datasets: [{
-        data: sumDurationPerType(points),
+        data: convertDurationToNumber(points),
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
@@ -221,7 +223,7 @@ const renderTimeChart = (timeElement, points) => {
           color: '#000000',
           anchor: 'end',
           align: 'start',
-          formatter: (val) => `${val}`,
+          formatter: (value, context) => convertDurationToString(points, context.dataIndex),
         },
       },
       title: {

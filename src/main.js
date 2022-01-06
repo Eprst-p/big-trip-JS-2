@@ -1,6 +1,5 @@
 import {generatePoint} from './mock/gen-data.js';
 import TripPresenter from './presenter/trip-presenter.js';
-import FilterPresenter from './presenter/filter-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import {POINTS_COUNT} from './utils/constants.js';
