@@ -47,10 +47,10 @@ const getDurationFormat = (endTime, startTime, someDuration) => {
   if (minutes <= 59 && hours === 0 && days === 0) {
     return `${currentDuration.format('mm')}M`;
   }
-  if (hours > 0 && days <= 1) {
+  if (hours > 0 && days === 0) {
     return `${currentDuration.format('HH')}H ${currentDuration.format('mm')}M`;
   }
-  if (days > 1) {
+  if (days >= 1) {
     return `${currentDuration.format('DD')}D ${currentDuration.format('HH')}H ${currentDuration.format('mm')}M`;
   }
 };
