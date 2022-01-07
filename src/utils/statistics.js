@@ -3,29 +3,67 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {formDayjsFromStr, getDurationFormat, getDuration, zeroDuration} from './time-and-date.js';
 
-
 //вычисление данных
 const UPPER_CASE_TYPES = POINT_TYPES.map((type) => type.toUpperCase());
 
-const sumPricePerType = (points) => UPPER_CASE_TYPES.map((type) => {
-  let price = 0;
-  points.forEach((point) => {
-    if (point.type === type.toLowerCase()) {
-      price += point.basePrice;
-    }
-  });
-  return price;
-});
+let sortedTypesByPrice = [];
+let sortedTypesByTypes = [];
+let sortedTypesByDuration = [];
 
-const sumTypesAmount = (points) => UPPER_CASE_TYPES.map((type) => {
-  let amount = 0;
-  points.forEach((point) => {
-    if (point.type === type.toLowerCase()) {
-      amount += 1;
-    }
+let formatedDurations = [];
+
+const sortByAnyValue = (labelA, labelB) => {
+  const valueA = labelA.VALUE;
+  const valueB = labelB.VALUE;
+  return valueB - valueA;
+};
+
+
+const sumPricePerType = (points) => {
+  const prices = UPPER_CASE_TYPES.map((type) => {
+    let price = 0;
+    points.forEach((point) => {
+      if (point.type === type.toLowerCase()) {
+        price += point.basePrice;
+      }
+    });
+    return price;
   });
-  return amount;
-});
+
+  const labels = UPPER_CASE_TYPES.map((type, index) => ({
+    TYPE: type,
+    VALUE: prices[index]
+  }));
+
+  const sortedLabels = labels.sort(sortByAnyValue);
+  const sortedValues = sortedLabels.map((element) => element.VALUE);
+  sortedTypesByPrice = sortedLabels.map((element) => element.TYPE);
+
+  return sortedValues;
+};
+
+const sumTypesAmount = (points) => {
+  const typesAmount = UPPER_CASE_TYPES.map((type) => {
+    let amount = 0;
+    points.forEach((point) => {
+      if (point.type === type.toLowerCase()) {
+        amount += 1;
+      }
+    });
+    return amount;
+  });
+
+  const labels = UPPER_CASE_TYPES.map((type, index) => ({
+    TYPE: type,
+    VALUE: typesAmount[index]
+  }));
+
+  const sortedLabels = labels.sort(sortByAnyValue);
+  const sortedValues = sortedLabels.map((element) => element.VALUE);
+  sortedTypesByTypes = sortedLabels.map((element) => element.TYPE);
+
+  return sortedValues;
+};
 
 const sumDurationPerType = (points) => UPPER_CASE_TYPES.map((type) => {
   let currentDuration = '';
@@ -41,10 +79,27 @@ const sumDurationPerType = (points) => UPPER_CASE_TYPES.map((type) => {
   return totalDuration;
 });
 
-const convertDurationToNumber = (points) => sumDurationPerType(points).map((duration) => duration.asMilliseconds());
+const convertDurationToNumber = (points) => {
+  const durations = sumDurationPerType(points).map((duration) => ({
+    MILISECONDS: duration.asMilliseconds(),
+    FORMATED_TIME: getDurationFormat(null, null, duration)
+  }));
 
-const convertDurationToString = (points, dataIndex) => {
-  const formatedDurations = sumDurationPerType(points).map((duration) => getDurationFormat(null, null, duration));
+  const labels = UPPER_CASE_TYPES.map((type, index) => ({
+    TYPE: type,
+    VALUE: durations[index].MILISECONDS,
+    FORMATED: durations[index].FORMATED_TIME
+  }));
+
+  const sortedLabels = labels.sort(sortByAnyValue);
+  const sortedValues = sortedLabels.map((element) => element.VALUE);
+  sortedTypesByDuration = sortedLabels.map((element) => element.TYPE);
+  formatedDurations = sortedLabels.map((element) => element.FORMATED);
+
+  return sortedValues;
+};
+
+const convertDurationToString = (dataIndex) => {
   let resultDuration = '';
   formatedDurations.forEach((value, index) => {
     if (index === dataIndex) {
@@ -63,7 +118,6 @@ const renderMoneyChart = (moneyElement, points) => {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: UPPER_CASE_TYPES,
       datasets: [{
         data: sumPricePerType(points),
         backgroundColor: '#ffffff',
@@ -72,6 +126,7 @@ const renderMoneyChart = (moneyElement, points) => {
         barThickness: 30,
         minBarLength: 50,
       }],
+      labels: sortedTypesByPrice,
     },
     options: {
       responsive: false,
@@ -133,7 +188,6 @@ const renderTypeChart = (typeElement, points) => {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: UPPER_CASE_TYPES,
       datasets: [{
         data: sumTypesAmount(points),
         backgroundColor: '#ffffff',
@@ -142,6 +196,7 @@ const renderTypeChart = (typeElement, points) => {
         barThickness: 30,
         minBarLength: 50,
       }],
+      labels: sortedTypesByTypes,
     },
     options: {
       responsive: false,
@@ -203,15 +258,15 @@ const renderTimeChart = (timeElement, points) => {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: UPPER_CASE_TYPES,
       datasets: [{
         data: convertDurationToNumber(points),
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
         barThickness: 30,
-        minBarLength: 50,
+        minBarLength: 100,
       }],
+      labels: sortedTypesByDuration,
     },
     options: {
       responsive: false,
@@ -223,7 +278,7 @@ const renderTimeChart = (timeElement, points) => {
           color: '#000000',
           anchor: 'end',
           align: 'start',
-          formatter: (value, context) => convertDurationToString(points, context.dataIndex),
+          formatter: (value, context) => convertDurationToString(context.dataIndex),
         },
       },
       title: {
