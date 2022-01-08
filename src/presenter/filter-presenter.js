@@ -16,6 +16,11 @@ class FilterPresenter {
 
     this.#pointsModel.addObserver(this.#onModelEvent);
     this.#filterModel.addObserver(this.#onModelEvent);
+
+    if (this.#filterComponent !== null) {
+      remove(this.#filterComponent);
+      this.#filterComponent = null;
+    }
   }
 
   get filters() {

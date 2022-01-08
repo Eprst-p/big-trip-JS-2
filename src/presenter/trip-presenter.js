@@ -35,7 +35,6 @@ class TripPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-
   constructor(tripMain, menu, filterContainer, listSection, pointsModel, filterModel) {
     this.#tripMain = tripMain;
     this.#menuContainer = menu;
@@ -64,11 +63,6 @@ class TripPresenter {
   }
 
   init = () => {
-    if (this.#filterPresenter) {
-      this.#filterPresenter.destroy();
-      remove(this.#tripInfoComponent);
-      remove(this.#sortComponent);//непонятно, почему здесь это работает, а в клир борде нет, когда она вызывается кликом по кнопке Table. Там вообще похоже вся клир-борда странно работает
-    }
     this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
     this.#filterPresenter.init();
     this.#pointsModel.addObserver(this.#onModelEvent);
@@ -170,8 +164,11 @@ class TripPresenter {
   #onMenuTabClick = (targetTab) => {
     switch (targetTab) {
       case TripTabsTypes.TABLE:
-        this.#clearBoard();
-        this.init();
+        if (this.#statsComponent) {
+          this.#clearBoard();
+          this.init();
+          this.#statsComponent = null;
+        }
         break;
       case TripTabsTypes.STATS:
         if (this.#filterPresenter) {
