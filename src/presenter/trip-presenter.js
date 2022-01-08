@@ -171,6 +171,7 @@ class TripPresenter {
         break;
       case TripTabsTypes.STATS:
         this.#filterPresenter.destroy();
+        this.#filterPresenter = null;
         this.destroy();
         this.#renderTripInfo(this.#pointsModel.points);
         this.#statsComponent = new StatsView(this.#pointsModel.points);
