@@ -75,8 +75,7 @@ class TripPresenter {
   //рендеры
   #renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
-    this.#menuComponent.setOnTableClick(this.#onTableClick);
-    this.#menuComponent.setOnStatsClick(this.#onStatsClick);
+    this.#menuComponent.setOnMenuTabClick(this.#onMenuTabClick);
   }
 
   #renderEventsList = () => {
@@ -164,17 +163,20 @@ class TripPresenter {
     this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
   }
 
-  #onTableClick = () => {
-    this.#clearBoard();
-    this.init();
-  }
-
-  #onStatsClick = () => {
-    this.#filterPresenter.destroy();
-    this.destroy();
-    this.#renderTripInfo(this.#pointsModel.points);
-    this.#statsComponent = new StatsView(this.#pointsModel.points);
-    renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
+  #onMenuTabClick = (targetTab) => {
+    switch (targetTab) {
+      case 'table':
+        this.#clearBoard();
+        this.init();
+        break;
+      case 'stats':
+        this.#filterPresenter.destroy();
+        this.destroy();
+        this.#renderTripInfo(this.#pointsModel.points);
+        this.#statsComponent = new StatsView(this.#pointsModel.points);
+        renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
+        break;
+    }
   }
 
   //смена данных

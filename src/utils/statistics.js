@@ -18,7 +18,6 @@ const sortByAnyValue = (labelA, labelB) => {
   return valueB - valueA;
 };
 
-
 const sumPricePerType = (points) => {
   const prices = UPPER_CASE_TYPES.map((type) => {
     let price = 0;

@@ -1,7 +1,5 @@
 import {formDayjsFromStr, getDateInFormat, getDurationFormat} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
-//import dayjs from 'dayjs';
-
 
 const createLiTemplate = (pointData) => {
   const {type, typeImg, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
