@@ -10,7 +10,7 @@ import StatsView from '../view/stats-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
-import {SortType, UserAction, UpdateType, FilterType} from '../utils/constants.js';
+import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
@@ -165,11 +165,11 @@ class TripPresenter {
 
   #onMenuTabClick = (targetTab) => {
     switch (targetTab) {
-      case 'table':
+      case TripTabsTypes.TABLE:
         this.#clearBoard();
         this.init();
         break;
-      case 'stats':
+      case TripTabsTypes.STATS:
         this.#filterPresenter.destroy();
         this.destroy();
         this.#renderTripInfo(this.#pointsModel.points);

@@ -79,6 +79,11 @@ const TripTabs = [
   }
 ];
 
+const TripTabsTypes = {
+  TABLE: 'table',
+  STATS: 'stats',
+};
+
 const BAR_HEIGHT = 85;
 
-export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT, UserAction, UpdateType, FilterType, TripTabs, BAR_HEIGHT};
+export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT, UserAction, UpdateType, FilterType, TripTabs, TripTabsTypes, BAR_HEIGHT};

@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view.js';
-import {TripTabs} from '../utils/constants.js';
+import {TripTabs, TripTabsTypes} from '../utils/constants.js';
 
 const createMenuTemplate = () => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">
@@ -29,11 +29,11 @@ class MenuView extends AbstractView {
   #onMenuTabClick = (evt) => {
     evt.preventDefault();
     const targetTab = evt.target.id;
-    if (targetTab === 'table') {
+    if (targetTab === TripTabsTypes.TABLE) {
       this.#statsBtn.classList.remove('trip-tabs__btn--active');
       this.#tableBtn.classList.add('trip-tabs__btn--active');
     }
-    if (targetTab === 'stats') {
+    if (targetTab === TripTabsTypes.STATS) {
       this.#tableBtn.classList.remove('trip-tabs__btn--active');
       this.#statsBtn.classList.add('trip-tabs__btn--active');
     }
