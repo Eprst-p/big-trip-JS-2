@@ -45,8 +45,6 @@ class TripPresenter {
 
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
-
-    this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
   }
 
   get points() {
@@ -66,6 +64,12 @@ class TripPresenter {
   }
 
   init = () => {
+    if (this.#filterPresenter) {
+      this.#filterPresenter.destroy();
+      remove(this.#tripInfoComponent);
+      remove(this.#sortComponent);//непонятно, почему здесь это работает, а в клир борде нет, когда она вызывается кликом по кнопке Table. Там вообще похоже вся клир-борда странно работает
+    }
+    this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
     this.#filterPresenter.init();
     this.#pointsModel.addObserver(this.#onModelEvent);
     this.#filterModel.addObserver(this.#onModelEvent);
@@ -170,8 +174,10 @@ class TripPresenter {
         this.init();
         break;
       case TripTabsTypes.STATS:
-        this.#filterPresenter.destroy();
-        this.#filterPresenter = null;
+        if (this.#filterPresenter) {
+          this.#filterPresenter.destroy();
+          this.#filterPresenter = null;
+        }
         this.destroy();
         this.#renderTripInfo(this.#pointsModel.points);
         this.#statsComponent = new StatsView(this.#pointsModel.points);

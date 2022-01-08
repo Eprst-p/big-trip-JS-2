@@ -10,7 +10,6 @@ const createMenuTemplate = () => (
 
 class MenuView extends AbstractView {
   #tableBtn = this.element.querySelector('#table');
-  #statsBtn = this.element.querySelector('#stats');
 
   constructor() {
     super();
@@ -28,17 +27,27 @@ class MenuView extends AbstractView {
 
   #onMenuTabClick = (evt) => {
     evt.preventDefault();
-    const targetTab = evt.target.id;
-    if (targetTab === TripTabsTypes.TABLE) {
-      this.#statsBtn.classList.remove('trip-tabs__btn--active');
-      this.#tableBtn.classList.add('trip-tabs__btn--active');
-    }
-    if (targetTab === TripTabsTypes.STATS) {
-      this.#tableBtn.classList.remove('trip-tabs__btn--active');
-      this.#statsBtn.classList.add('trip-tabs__btn--active');
+    const tabBtns = Array.from(this.element.querySelectorAll('.trip-tabs__btn'));
+
+    if (!tabBtns.includes(evt.target)) {
+      return;
     }
 
-    this._callbacksStorage.tabMenuClick(targetTab);
+    const target = evt.target.id;
+
+    const activeTab = this.element.querySelector('.trip-tabs__btn--active');
+    const targetTab = this.element.querySelector(`#${target}`);
+
+    if (target === TripTabsTypes.TABLE) {
+      activeTab.classList.remove('trip-tabs__btn--active');
+      targetTab.classList.add('trip-tabs__btn--active');
+    }
+    if (target === TripTabsTypes.STATS) {
+      activeTab.classList.remove('trip-tabs__btn--active');
+      targetTab.classList.add('trip-tabs__btn--active');
+    }
+
+    this._callbacksStorage.tabMenuClick(target);
   }
 }
 
