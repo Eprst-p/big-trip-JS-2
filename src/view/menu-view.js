@@ -10,6 +10,7 @@ const createMenuTemplate = () => (
 
 class MenuView extends AbstractView {
   #tableBtn = this.element.querySelector('#table');
+  #tabBtns = Array.from(this.element.querySelectorAll('.trip-tabs__btn'));
 
   constructor() {
     super();
@@ -27,9 +28,8 @@ class MenuView extends AbstractView {
 
   #onMenuTabClick = (evt) => {
     evt.preventDefault();
-    const tabBtns = Array.from(this.element.querySelectorAll('.trip-tabs__btn'));
 
-    if (!tabBtns.includes(evt.target)) {
+    if (!this.#tabBtns.includes(evt.target)) {
       return;
     }
 
