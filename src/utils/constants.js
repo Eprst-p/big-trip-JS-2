@@ -68,17 +68,6 @@ const FilterType = {
   PAST: 'past',
 };
 
-const TripTabs = [
-  {
-    id: 'table',
-    tittle: 'Table'
-  },
-  {
-    id: 'stats',
-    tittle: 'Stats'
-  }
-];
-
 const TripTabsTypes = {
   TABLE: 'table',
   STATS: 'stats',
@@ -86,4 +75,4 @@ const TripTabsTypes = {
 
 const BAR_HEIGHT = 85;
 
-export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT, UserAction, UpdateType, FilterType, TripTabs, TripTabsTypes, BAR_HEIGHT};
+export {POINT_TYPES, PRICES,  SORT_ITEMS, SortType, OFFERS_BY_TYPE, POINTS_COUNT, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT};

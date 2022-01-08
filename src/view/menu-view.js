@@ -1,21 +1,26 @@
 import AbstractView from './abstract-view.js';
-import {TripTabs, TripTabsTypes} from '../utils/constants.js';
+
+const DEFAULT_ACTIVE_BTN = 'table';
+
+const TripTabs = [
+  {
+    id: 'table',
+    tittle: 'Table'
+  },
+  {
+    id: 'stats',
+    tittle: 'Stats'
+  }
+];
 
 const createMenuTemplate = () => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">
     ${TripTabs.map((tab) =>
-    `<a id="${tab.id}" class="trip-tabs__btn" href="#">${tab.tittle}</a>`).join('')}
+    `<a id="${tab.id}" class="trip-tabs__btn ${tab.id === DEFAULT_ACTIVE_BTN ? 'trip-tabs__btn--active' : ''}" href="#">${tab.tittle}</a>`).join('')}
   </nav>`
 );
 
 class MenuView extends AbstractView {
-  #tableBtn = this.element.querySelector('#table');
-  #tabBtns = Array.from(this.element.querySelectorAll('.trip-tabs__btn'));
-
-  constructor() {
-    super();
-    this.#tableBtn.classList.add('trip-tabs__btn--active');
-  }
 
   get template() {
     return createMenuTemplate();
@@ -28,19 +33,18 @@ class MenuView extends AbstractView {
 
   #onMenuTabClick = (evt) => {
     evt.preventDefault();
+    const target = evt.target.closest('.trip-tabs__btn');
 
-    if (!this.#tabBtns.includes(evt.target)) {
+    if (!target) {
       return;
     }
 
-    const target = evt.target.id;
     const activeTab = this.element.querySelector('.trip-tabs__btn--active');
-    const targetTab = this.element.querySelector(`#${target}`);
 
     activeTab.classList.remove('trip-tabs__btn--active');
-    targetTab.classList.add('trip-tabs__btn--active');
+    target.classList.add('trip-tabs__btn--active');
 
-    this._callbacksStorage.tabMenuClick(target);
+    this._callbacksStorage.tabMenuClick(target.id);
   }
 }
 
