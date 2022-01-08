@@ -34,18 +34,11 @@ class MenuView extends AbstractView {
     }
 
     const target = evt.target.id;
-
     const activeTab = this.element.querySelector('.trip-tabs__btn--active');
     const targetTab = this.element.querySelector(`#${target}`);
 
-    if (target === TripTabsTypes.TABLE) {
-      activeTab.classList.remove('trip-tabs__btn--active');
-      targetTab.classList.add('trip-tabs__btn--active');
-    }
-    if (target === TripTabsTypes.STATS) {
-      activeTab.classList.remove('trip-tabs__btn--active');
-      targetTab.classList.add('trip-tabs__btn--active');
-    }
+    activeTab.classList.remove('trip-tabs__btn--active');
+    targetTab.classList.add('trip-tabs__btn--active');
 
     this._callbacksStorage.tabMenuClick(target);
   }
