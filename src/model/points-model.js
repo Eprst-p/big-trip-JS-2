@@ -2,6 +2,16 @@ import AbstractObservable from '../utils/abstract-observable.js';
 
 class PointsModel  extends AbstractObservable {
   #points = [];
+  #apiService = null;
+
+  constructor(apiService) {
+    super();
+    this.#apiService = apiService;
+
+    this.#apiService.points.then((points) => {
+      console.log(points);
+    });
+  }
 
   set points(points) {
     this.#points = [...points];
