@@ -75,7 +75,9 @@ const createOffersTemplate = (offers, pointType) => {
 
 //основной темплейт
 const createFormTemplate = (formType, pointData) => {
-  const {type, typeImg, dateFrom, dateTo, basePrice, offers, destination} = pointData;
+  const {type, dateFrom, dateTo, basePrice, offers, destination} = pointData;
+
+  const typeImg = `img/icons/${type.toLowerCase()}.png`;
 
   return (
     `<form class="event event--edit" action="#" method="post">

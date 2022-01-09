@@ -21,7 +21,7 @@ class ApiService {
     const response = await this.#load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(point),
+      body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
@@ -49,6 +49,24 @@ class ApiService {
     } catch (err) {
       ApiService.catchError(err);
     }
+  }
+
+  #adaptToServer = (point) => {
+    const adaptedTask = {...point,
+      'base_price': point.basePrice,
+      'date_from': point.dateFrom,
+      'date_to': point.dateTo,
+      'is_favorite': point.isFavorite,
+      //'due_date': point.dueDate instanceof Date ? task.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
+    };
+
+    // Ненужные ключи мы удаляем
+    delete adaptedTask.basePrice;
+    delete adaptedTask.dateFrom;
+    delete adaptedTask.dateTo;
+    delete adaptedTask.isFavorite;
+
+    return adaptedTask;
   }
 
   static parseResponse = (response) => response.json();

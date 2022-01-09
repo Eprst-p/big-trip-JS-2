@@ -2,7 +2,9 @@ import {formDayjsFromStr, getDateInFormat, getDurationFormat} from '../utils/tim
 import AbstractView from './abstract-view.js';
 
 const createLiTemplate = (pointData) => {
-  const {type, typeImg, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
+  const {type, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
+
+  const typeImg = `img/icons/${type.toLowerCase()}.png`;
 
   const startDayjs = formDayjsFromStr(dateFrom, 'DD MM YY HH:mm');
   const endDayjs = formDayjsFromStr(dateTo, 'DD MM YY HH:mm');

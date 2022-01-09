@@ -10,6 +10,7 @@ class PointsModel  extends AbstractObservable {
 
     this.#apiService.points.then((points) => {
       console.log(points);
+      console.log(points.map(this.#adaptToClient));
     });
   }
 
@@ -59,6 +60,23 @@ class PointsModel  extends AbstractObservable {
     ];
 
     this._notify(updateType);
+  }
+
+  #adaptToClient = (point) => {
+    const adaptedTask = {...point,
+      basePrice: point['base_price'], //!== null ? new Date(task['due_date']) : task['due_date'], // На клиенте дата хранится как экземпляр Date
+      dateFrom: point['date_from'],
+      dateTo: point['date_to'],
+      isFavorite: point['is_favorite'],
+    };
+
+    // Ненужные ключи мы удаляем
+    delete adaptedTask['base_price'];
+    delete adaptedTask['date_from'];
+    delete adaptedTask['date_to'];
+    delete adaptedTask['is_favorite'];
+
+    return adaptedTask;
   }
 }
 

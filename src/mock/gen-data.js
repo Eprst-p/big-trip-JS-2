@@ -93,9 +93,6 @@ const generatePoint = () => {
     isFavorite: Boolean(getRandomPositiveNumber(0, 1)),
     offers: createResultOffer(pointType),
     type: pointType,
-    get typeImg() {
-      return `img/icons/${this.type.toLowerCase()}.png`;
-    },
     destination: createDestination()
   };
 };
