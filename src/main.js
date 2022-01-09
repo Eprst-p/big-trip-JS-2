@@ -1,6 +1,5 @@
 import {generatePoint} from './mock/gen-data.js';
 import TripPresenter from './presenter/trip-presenter.js';
-import FilterPresenter from './presenter/filter-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import {POINTS_COUNT} from './utils/constants.js';
@@ -18,8 +17,6 @@ pointsModel.points = points;
 
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(tripMain, menuContainer, contentSectionElement, pointsModel, filterModel);
-const filterPresenter = new FilterPresenter(filtersContainer, filterModel, pointsModel);
+const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel, filterModel);
 
-filterPresenter.init();
 tripPresenter.init();

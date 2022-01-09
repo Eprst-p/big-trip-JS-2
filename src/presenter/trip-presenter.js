@@ -5,15 +5,18 @@ import NoPointsView from '../view/no-points-view.js';
 import SortView from '../view/sort-view.js';
 import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
-import AddPointButtonView from '../view/add-point-view';
+import AddPointButtonView from '../view/add-point-view.js';
+import StatsView from '../view/stats-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
-import {SortType, UserAction, UpdateType, FilterType} from '../utils/constants.js';
+import FilterPresenter from './filter-presenter.js';
+import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
   #tripMain = null;
   #menuContainer = null;
+  #filterContainer = null;
   #listSection = null;
   #pointsModel = null;
   #filterModel = null;
@@ -24,23 +27,23 @@ class TripPresenter {
   #eventsContainer = new EventsList();
   #newFormPresenter = null;
   #noPointsComponent = null;
+  #filterPresenter = null;
   #tripInfoComponent = null;
+  #statsComponent = null;
 
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-
-  constructor(tripMain, menu, listSection, pointsModel, filterModel) {
+  constructor(tripMain, menu, filterContainer, listSection, pointsModel, filterModel) {
     this.#tripMain = tripMain;
     this.#menuContainer = menu;
+    this.#filterContainer = filterContainer;
     this.#listSection = listSection;
     this.#newFormPresenter = new NewPointPresenter(this.#eventsContainer.element, this.#onViewAction);
 
     this.#pointsModel = pointsModel;
-    this.#pointsModel.addObserver(this.#onModelEvent);
     this.#filterModel = filterModel;
-    this.#filterModel.addObserver(this.#onModelEvent);
   }
 
   get points() {
@@ -60,12 +63,17 @@ class TripPresenter {
   }
 
   init = () => {
+    this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
+    this.#filterPresenter.init();
+    this.#pointsModel.addObserver(this.#onModelEvent);
+    this.#filterModel.addObserver(this.#onModelEvent);
     this.#renderBoard();
   }
 
   //рендеры
   #renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
+    this.#menuComponent.setOnMenuTabClick(this.#onMenuTabClick);
   }
 
   #renderEventsList = () => {
@@ -103,7 +111,7 @@ class TripPresenter {
     this.#addPointButtonComponent.setOnAddPointCLick(this.#onAddButtonClick);
   }
 
-  //общий ренедер
+  //общий рендер
   #renderBoard = () => {
     const points = this.points;
     const pointsCount = points.length;
@@ -153,6 +161,28 @@ class TripPresenter {
     this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
   }
 
+  #onMenuTabClick = (targetTab) => {
+    switch (targetTab) {
+      case TripTabsTypes.TABLE:
+        if (this.#statsComponent) {
+          this.#clearBoard();
+          this.init();
+          this.#statsComponent = null;
+        }
+        break;
+      case TripTabsTypes.STATS:
+        if (this.#filterPresenter) {
+          this.#filterPresenter.destroy();
+          this.#filterPresenter = null;
+        }
+        this.destroy();
+        this.#renderTripInfo(this.#pointsModel.points);
+        this.#statsComponent = new StatsView(this.#pointsModel.points);
+        renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
+        break;
+    }
+  }
+
   //смена данных
   #onViewAction = (actionType, updateType, update) => {
     switch (actionType) {
@@ -200,9 +230,20 @@ class TripPresenter {
       remove(this.#tripInfoComponent);
     }
 
+    if (this.#statsComponent) {
+      remove(this.#statsComponent);
+    }
+
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
+  }
+
+  destroy = () => {
+    this.#clearBoard({resetSortType: true});
+
+    this.#pointsModel.removeObserver(this.#onModelEvent);
+    this.#filterModel.removeObserver(this.#onModelEvent);
   }
 }
 
