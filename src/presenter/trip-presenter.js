@@ -7,6 +7,7 @@ import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view.js';
 import StatsView from '../view/stats-view.js';
+import LoadingView from '../view/loading-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
@@ -30,10 +31,12 @@ class TripPresenter {
   #filterPresenter = null;
   #tripInfoComponent = null;
   #statsComponent = null;
+  #loadingComponent = new LoadingView();
 
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor(tripMain, menu, filterContainer, listSection, pointsModel, filterModel) {
     this.#tripMain = tripMain;
@@ -119,12 +122,22 @@ class TripPresenter {
     this.#addPointButtonComponent.setOnAddPointCLick(this.#onAddButtonClick);
   }
 
+  #renderLoading = () => {
+    renderElement(this.#eventsContainer.element, this.#loadingComponent, RenderPositions.AFTERBEGIN);
+  }
+
   //общий рендер
   #renderBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
     const allPossisbleOffers = this.allPossisbleOffers;
     const allDestinations = this.allDestinations;
     const pointsCount = points.length;
+    console.log(pointsCount);
 
     this.#renderMenu();
     this.#renderEventsList();
@@ -226,8 +239,8 @@ class TripPresenter {
         this.#renderBoard();
         break;
       case UpdateType.INIT:
-        //this.#isLoading = false;
-        //remove(this.#loadingComponent);
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }
