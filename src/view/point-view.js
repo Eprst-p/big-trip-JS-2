@@ -4,7 +4,7 @@ import AbstractView from './abstract-view.js';
 const createLiTemplate = (pointData) => {
   const {type, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
 
-  const typeImg = `img/icons/${type.toLowerCase()}.png`;
+  const typeImg = `img/icons/${type}.png`;
 
   const startDayjs = formDayjsFromStr(dateFrom, 'DD MM YY HH:mm');
   const endDayjs = formDayjsFromStr(dateTo, 'DD MM YY HH:mm');
