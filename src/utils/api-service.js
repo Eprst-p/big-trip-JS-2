@@ -70,7 +70,6 @@ class ApiService {
       //'due_date': point.dueDate instanceof Date ? task.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.basePrice;
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;

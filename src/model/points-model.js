@@ -25,10 +25,6 @@ class PointsModel  extends AbstractObservable {
 
   }
 
-  /*set points(points) {
-    this.#points = [...points];
-  }*/
-
   get points() {
     return this.#points;
   }
@@ -105,7 +101,6 @@ class PointsModel  extends AbstractObservable {
       isFavorite: point['is_favorite'],
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint['base_price'];
     delete adaptedPoint['date_from'];
     delete adaptedPoint['date_to'];

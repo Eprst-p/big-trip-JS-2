@@ -135,6 +135,10 @@ class TripPresenter {
       return;
     }
 
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);//т.к первый инит происходит на 0 поинтах -> отрисовывается всегда заглушка. А потом дорисоваываются точки (после получения с сервера видимо)
+    }
+
     this.#renderTripInfo(this.#pointsModel.points);
     this.#renderSort();
     this.#renderPointsList(points, allPossisbleOffers, allDestinations);

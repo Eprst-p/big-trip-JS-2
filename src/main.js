@@ -23,5 +23,5 @@ const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel, filterModel);
 
-tripPresenter.init();
 pointsModel.init();
+tripPresenter.init();

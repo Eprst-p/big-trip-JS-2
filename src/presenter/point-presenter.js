@@ -130,7 +130,6 @@ class PointPresenter {
   #replaceFormToPoint = () => {
     replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
     document.removeEventListener('keydown', this.#onEscKeyDown);
-    //this.#pointEditForm.removeElement(); - если это оставить, то при повторном открытии формы не навешиваются обработчики (т.к элемент = null) и ломается логика. Зачем это было изначально не помню.
     this.#mode = Mode.DEFAULT;
   }
 }
