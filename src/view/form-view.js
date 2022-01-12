@@ -47,34 +47,35 @@ const createPriceTemplate = (price) => (
   </div>`
 );
 
-const createOffersTemplate = (offers, pointType) => {
+const createOffersTemplate = (offers, pointType, allPossisbleOffers) => {
+  const offerByType = allPossisbleOffers.find((element) => element.type === pointType);
 
-  const checkChosenOffer = (index) => {
+  const names = offerByType.offers;
+
+  const checkChosenOffer = (offerId) => {
     let check = '';
     offers.forEach((currentOffer) => {
-      if (currentOffer.title === OFFERS_BY_TYPE[pointType][index]) {
+      if (currentOffer.id === offerId) {
         check = 'checked';
       }
     });
     return check;
   };
 
-  const names = OFFERS_BY_TYPE[pointType];
-
   return (
-    names.map((offerName, index) => `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerName}-1" type="checkbox" name="event-offer-${offerName}" ${checkChosenOffer(index)}>
-      <label class="event__offer-label" for="event-offer-${offerName}-1">
-        <span class="event__offer-title">${offerName}</span>
+    names.map((offer) => `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${checkChosenOffer(offer.id)}>
+      <label class="event__offer-label" for="event-offer-${offer.title}-1">
+        <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${PRICES[index]}</span>
+        <span class="event__offer-price">${offer.price}</span>
       </label>
     </div>`).join('')
   );
 };
 
 //основной темплейт
-const createFormTemplate = (formType, pointData) => {
+const createFormTemplate = (formType, pointData, allPossisbleOffers) => {
   const {type, dateFrom, dateTo, basePrice, offers, destination} = pointData;
 
   const typeImg = `img/icons/${type.toLowerCase()}.png`;
@@ -114,7 +115,7 @@ const createFormTemplate = (formType, pointData) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersTemplate(offers.offers, type)}
+            ${createOffersTemplate(offers, type, allPossisbleOffers)}
           </div>
         </section>
 
@@ -136,18 +137,20 @@ class FormView extends SmartView {
   #formType = null;
   #datepickerStart = null;
   #datepickerEnd = null;
+  #allPossisbleOffers = null;
 
 
-  constructor(formType, pointData) {
+  constructor(formType, pointData, allPossisbleOffers) {
     super();
     this.#formType = formType;
+    this.#allPossisbleOffers = allPossisbleOffers;
     this._data = FormView.parsePointToData(pointData);
 
     this.#setInnerListeners();
   }
 
   get template() {
-    return createFormTemplate(this.#formType, this._data);
+    return createFormTemplate(this.#formType, this._data, this.#allPossisbleOffers);
   }
 
   //установка обработчиков
@@ -294,12 +297,12 @@ class FormView extends SmartView {
         const newOffer = {
           id: offerInput.id,
           title: spanTitle.textContent,
-          offerPrice: spanPrice.textContent
+          price: spanPrice.textContent
         };
         newOffers.push(newOffer);
       }
     });
-    this._data.offers.offers = newOffers;
+    this._data.offers = newOffers;
   }
 
   //другие методы

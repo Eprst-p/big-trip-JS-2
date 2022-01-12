@@ -17,7 +17,12 @@ class ApiService {
       .then(ApiService.parseResponse);
   }
 
-  updateTask = async (point) => {
+  get allPossisbleOffers() {
+    return this.#load({url: 'offers'})
+      .then(ApiService.parseResponse);
+  }
+
+  updatePoint = async (point) => {
     const response = await this.#load({
       url: `points/${point.id}`,
       method: Method.PUT,
@@ -52,7 +57,7 @@ class ApiService {
   }
 
   #adaptToServer = (point) => {
-    const adaptedTask = {...point,
+    const adaptedPoint = {...point,
       'base_price': point.basePrice,
       'date_from': point.dateFrom,
       'date_to': point.dateTo,
@@ -61,12 +66,12 @@ class ApiService {
     };
 
     // Ненужные ключи мы удаляем
-    delete adaptedTask.basePrice;
-    delete adaptedTask.dateFrom;
-    delete adaptedTask.dateTo;
-    delete adaptedTask.isFavorite;
+    delete adaptedPoint.basePrice;
+    delete adaptedPoint.dateFrom;
+    delete adaptedPoint.dateTo;
+    delete adaptedPoint.isFavorite;
 
-    return adaptedTask;
+    return adaptedPoint;
   }
 
   static parseResponse = (response) => response.json();

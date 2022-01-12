@@ -62,6 +62,10 @@ class TripPresenter {
     return filteredPoints;
   }
 
+  get allPossisbleOffers() {
+    return this.#pointsModel.allPossisbleOffers;
+  }
+
   init = () => {
     this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
     this.#filterPresenter.init();
@@ -86,9 +90,9 @@ class TripPresenter {
     renderElement(this.#listSection, this.#sortComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderPoint = (container, pointData) => {
+  #renderPoint = (container, pointData, allPossisbleOffers) => {
     const pointPresenter = new PointPresenter(container, this.#onViewAction, this.#onModeChange);
-    pointPresenter.init(pointData);
+    pointPresenter.init(pointData, allPossisbleOffers);
     this.#pointsStorage.set(pointData.id, pointPresenter);
   }
 
@@ -102,8 +106,8 @@ class TripPresenter {
     renderElement(this.#eventsContainer.element, this.#noPointsComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderPointsList = (points) => {
-    points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point));
+  #renderPointsList = (points, allPossisbleOffers) => {
+    points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point, allPossisbleOffers));
   }
 
   #renderAddPointButton = () => {
@@ -114,6 +118,7 @@ class TripPresenter {
   //общий рендер
   #renderBoard = () => {
     const points = this.points;
+    const allPossisbleOffers = this.allPossisbleOffers;
     const pointsCount = points.length;
 
     this.#renderMenu();
@@ -127,7 +132,7 @@ class TripPresenter {
 
     this.#renderTripInfo(this.#pointsModel.points);
     this.#renderSort();
-    this.#renderPointsList(points);
+    this.#renderPointsList(points, allPossisbleOffers);
   }
 
   //обработчики
@@ -144,7 +149,7 @@ class TripPresenter {
   #onAddButtonClick = () => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newFormPresenter.init();
+    this.#newFormPresenter.init(this.allPossisbleOffers);
   }
 
   #onEscKeyDown = (evt) => {
@@ -209,6 +214,11 @@ class TripPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT:
+        //this.#isLoading = false;
+        //remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }

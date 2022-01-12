@@ -18,10 +18,10 @@ const filtersContainer = tripMain.querySelector('.trip-controls__filters');
 const contentSectionElement = document.querySelector('.trip-events');
 
 const pointsModel = new PointsModel(new ApiService(SERVER_PATH, AUTHORIZATION));
-pointsModel.points = points;
 
 const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel, filterModel);
 
 tripPresenter.init();
+pointsModel.init();

@@ -1,7 +1,10 @@
 import AbstractObservable from '../utils/abstract-observable.js';
+import {UpdateType} from '../utils/constants.js';
+
 
 class PointsModel  extends AbstractObservable {
   #points = [];
+  #allPossisbleOffers = [];
   #apiService = null;
 
   constructor(apiService) {
@@ -9,17 +12,39 @@ class PointsModel  extends AbstractObservable {
     this.#apiService = apiService;
 
     this.#apiService.points.then((points) => {
-      console.log(points);
-      console.log(points.map(this.#adaptToClient));
+      console.log('server-points :', points);
+      console.log('adapted-points :', points.map(this.#adaptToClient));
+    });
+    this.#apiService.allPossisbleOffers.then((offers) => {
+      console.log('offers:', offers);
+
     });
   }
 
-  set points(points) {
+  /*set points(points) {
     this.#points = [...points];
-  }
+  }*/
 
   get points() {
     return this.#points;
+  }
+
+  get allPossisbleOffers() {
+    return this.#allPossisbleOffers;
+
+  }
+
+  init = async () => {
+    try {
+      const points = await this.#apiService.points;
+      this.#points = points.map(this.#adaptToClient);
+      this.#allPossisbleOffers = await this.#apiService.allPossisbleOffers;
+    } catch(err) {
+      this.#points = [];
+      this.#allPossisbleOffers = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   updatePoint = (updateType, update) => {
@@ -63,7 +88,7 @@ class PointsModel  extends AbstractObservable {
   }
 
   #adaptToClient = (point) => {
-    const adaptedTask = {...point,
+    const adaptedPoint = {...point,
       basePrice: point['base_price'], //!== null ? new Date(task['due_date']) : task['due_date'], // На клиенте дата хранится как экземпляр Date
       dateFrom: point['date_from'],
       dateTo: point['date_to'],
@@ -71,12 +96,12 @@ class PointsModel  extends AbstractObservable {
     };
 
     // Ненужные ключи мы удаляем
-    delete adaptedTask['base_price'];
-    delete adaptedTask['date_from'];
-    delete adaptedTask['date_to'];
-    delete adaptedTask['is_favorite'];
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
 
-    return adaptedTask;
+    return adaptedPoint;
   }
 }
 

@@ -8,18 +8,20 @@ class NewPointPresenter {
   #pointsListContainer = null;
   #changeData = null;
   #newFormComponent = null;
+  #allPossisbleOffers = null;
 
   constructor(pointsListContainer, changeData) {
     this.#pointsListContainer = pointsListContainer;
     this.#changeData = changeData;
   }
 
-  init = () => {
+  init = (allPossisbleOffers) => {
     if (this.#newFormComponent !== null) {
       return;
     }
 
-    this.#newFormComponent = new FormView('', defaultData);//нужна поинт дата
+    this.#allPossisbleOffers = allPossisbleOffers;
+    this.#newFormComponent = new FormView('', defaultData, this.#allPossisbleOffers);
     this.#newFormComponent.setOnFormSubmit(this.#onFormSubmit);
     this.#newFormComponent.setOnDeleteBtnClick(this.#onCancelClick);
     this.#newFormComponent.setDatepicker();
