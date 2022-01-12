@@ -66,6 +66,10 @@ class TripPresenter {
     return this.#pointsModel.allPossisbleOffers;
   }
 
+  get allDestinations() {
+    return this.#pointsModel.allDestinations;
+  }
+
   init = () => {
     this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
     this.#filterPresenter.init();
@@ -90,9 +94,9 @@ class TripPresenter {
     renderElement(this.#listSection, this.#sortComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderPoint = (container, pointData, allPossisbleOffers) => {
+  #renderPoint = (container, pointData, allPossisbleOffers, allDestinations) => {
     const pointPresenter = new PointPresenter(container, this.#onViewAction, this.#onModeChange);
-    pointPresenter.init(pointData, allPossisbleOffers);
+    pointPresenter.init(pointData, allPossisbleOffers, allDestinations);
     this.#pointsStorage.set(pointData.id, pointPresenter);
   }
 
@@ -106,8 +110,8 @@ class TripPresenter {
     renderElement(this.#eventsContainer.element, this.#noPointsComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderPointsList = (points, allPossisbleOffers) => {
-    points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point, allPossisbleOffers));
+  #renderPointsList = (points, allPossisbleOffers, allDestinations) => {
+    points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point, allPossisbleOffers, allDestinations));
   }
 
   #renderAddPointButton = () => {
@@ -119,6 +123,7 @@ class TripPresenter {
   #renderBoard = () => {
     const points = this.points;
     const allPossisbleOffers = this.allPossisbleOffers;
+    const allDestinations = this.allDestinations;
     const pointsCount = points.length;
 
     this.#renderMenu();
@@ -132,7 +137,7 @@ class TripPresenter {
 
     this.#renderTripInfo(this.#pointsModel.points);
     this.#renderSort();
-    this.#renderPointsList(points, allPossisbleOffers);
+    this.#renderPointsList(points, allPossisbleOffers, allDestinations);
   }
 
   //обработчики
@@ -149,7 +154,7 @@ class TripPresenter {
   #onAddButtonClick = () => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newFormPresenter.init(this.allPossisbleOffers);
+    this.#newFormPresenter.init(this.allPossisbleOffers, this.allDestinations);
   }
 
   #onEscKeyDown = (evt) => {

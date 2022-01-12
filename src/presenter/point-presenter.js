@@ -18,6 +18,7 @@ class PointPresenter {
   #pointEditForm = null;
   #pointData = null;
   #allPossisbleOffers = null;
+  #allDestinations = null;
 
   #mode = Mode.DEFAULT;
 
@@ -27,15 +28,16 @@ class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (pointData, allPossisbleOffers) => {
+  init = (pointData, allPossisbleOffers, allDestinations) => {
     this.#pointData = pointData;
     this.#allPossisbleOffers = allPossisbleOffers;
+    this.#allDestinations = allDestinations;
 
     const prevPointElement = this.#pointElement;
     const prevPointEditForm = this.#pointEditForm;
 
     this.#pointElement = new PointView(this.#pointData);
-    this.#pointEditForm = new FormView('editForm', this.#pointData, this.#allPossisbleOffers);
+    this.#pointEditForm = new FormView('editForm', this.#pointData, this.#allPossisbleOffers, this.#allDestinations);
 
     this.#pointEditForm.setOnFormSubmit(this.#formSubmit);
     this.#pointEditForm.setOnFormArrowClick(this.#formArrowClick);

@@ -6,14 +6,14 @@ import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const createTypeAndCityTextTemplate = (type, city) => (
+const createTypeAndCityTextTemplate = (type, city, allCities) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
-    ${CITIES.map((currentCity) => `
+    ${allCities.map((currentCity) => `
       <option value="${currentCity}"></option>`).join('')}
     </datalist>
   </div>`
@@ -75,7 +75,7 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers) => {
 };
 
 //основной темплейт
-const createFormTemplate = (formType, pointData, allPossisbleOffers) => {
+const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) => {
   const {type, dateFrom, dateTo, basePrice, offers, destination} = pointData;
 
   const typeImg = `img/icons/${type.toLowerCase()}.png`;
@@ -100,7 +100,7 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers) => {
             </fieldset>
           </div>
         </div>
-        ${createTypeAndCityTextTemplate(type, destination.name)}
+        ${createTypeAndCityTextTemplate(type, destination.name, allCities)}
         ${createTimeTemplate(dateFrom, dateTo)}
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -124,7 +124,7 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers) => {
           <p class="event__destination-description">${destination.description}</p>
           <div class="event__photos-container">
             <div class="event__photos-tape">
-            ${destination.pictures.map((currentPictureUrl) => `<img class="event__photo" src="${currentPictureUrl}" alt="Event photo">`).join('')}
+            ${destination.pictures.map((currentPicture) => `<img class="event__photo" src="${currentPicture.src}" alt="${currentPicture.description}">`).join('')}
             </div>
           </div>
         </section>
@@ -138,19 +138,23 @@ class FormView extends SmartView {
   #datepickerStart = null;
   #datepickerEnd = null;
   #allPossisbleOffers = null;
+  #allDestinations = null;
+  #allCities = null;
 
 
-  constructor(formType, pointData, allPossisbleOffers) {
+  constructor(formType, pointData, allPossisbleOffers, allDestinations) {
     super();
     this.#formType = formType;
     this.#allPossisbleOffers = allPossisbleOffers;
+    this.#allDestinations = allDestinations;
+    this.#allCities = this.#allDestinations.map((element) => element.name);
     this._data = FormView.parsePointToData(pointData);
 
     this.#setInnerListeners();
   }
 
   get template() {
-    return createFormTemplate(this.#formType, this._data, this.#allPossisbleOffers);
+    return createFormTemplate(this.#formType, this._data, this.#allPossisbleOffers, this.#allCities);
   }
 
   //установка обработчиков
@@ -268,8 +272,9 @@ class FormView extends SmartView {
     evt.preventDefault();
     const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCity = evt.target.value;
+    const chosenCityDestinations = this.#allDestinations.find((element) => element.name === chosenCity);
 
-    if (!CITIES.includes(chosenCity)) {
+    if (!this.#allCities.includes(chosenCity)) {
       cityInput.setCustomValidity('Выберите город из представленных');
       cityInput.reportValidity();
     } else {
@@ -277,9 +282,9 @@ class FormView extends SmartView {
       cityInput.reportValidity();
       this.updateData({
         destination: {
-          description: generateDestinationsText(),
-          name: evt.target.value,
-          pictures: createPictures(),
+          description: chosenCityDestinations.desription,
+          name: chosenCity,
+          pictures: chosenCityDestinations.pictures,
         }
       });
     }

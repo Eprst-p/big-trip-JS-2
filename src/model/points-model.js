@@ -5,6 +5,7 @@ import {UpdateType} from '../utils/constants.js';
 class PointsModel  extends AbstractObservable {
   #points = [];
   #allPossisbleOffers = [];
+  #allDestinations = [];
   #apiService = null;
 
   constructor(apiService) {
@@ -17,8 +18,11 @@ class PointsModel  extends AbstractObservable {
     });
     this.#apiService.allPossisbleOffers.then((offers) => {
       console.log('offers:', offers);
-
     });
+    this.#apiService.allDestinations.then((allDestinations) => {
+      console.log('destinations:', allDestinations);
+    });
+
   }
 
   /*set points(points) {
@@ -31,17 +35,23 @@ class PointsModel  extends AbstractObservable {
 
   get allPossisbleOffers() {
     return this.#allPossisbleOffers;
-
   }
+
+  get allDestinations() {
+    return this.#allDestinations;
+  }
+
 
   init = async () => {
     try {
       const points = await this.#apiService.points;
       this.#points = points.map(this.#adaptToClient);
       this.#allPossisbleOffers = await this.#apiService.allPossisbleOffers;
+      this.#allDestinations = await this.#apiService.allDestinations;
     } catch(err) {
       this.#points = [];
       this.#allPossisbleOffers = [];
+      this.#allDestinations = [];
     }
 
     this._notify(UpdateType.INIT);
@@ -100,6 +110,7 @@ class PointsModel  extends AbstractObservable {
     delete adaptedPoint['date_from'];
     delete adaptedPoint['date_to'];
     delete adaptedPoint['is_favorite'];
+
 
     return adaptedPoint;
   }
