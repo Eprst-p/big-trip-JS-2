@@ -50,10 +50,10 @@ class NewPointPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},//сгенереный айди (пока нет сервера)
+      {id: nanoid(), ...point},
     );
     this.destroy();
-  }//на текущий момент сейв не работает, т.к опять конфликтует дата
+  }
 
   #onCancelClick = () => {
     this.destroy();

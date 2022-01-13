@@ -82,7 +82,7 @@ class TripPresenter {
   }
 
   //рендеры
-  #renderMenu = () => {
+  _renderMenu = () => {
     renderElement(this.#menuContainer, this.#menuComponent, RenderPositions.BEFOREEND);
     this.#menuComponent.setOnMenuTabClick(this.#onMenuTabClick);
   }
@@ -137,9 +137,8 @@ class TripPresenter {
     const allPossisbleOffers = this.allPossisbleOffers;
     const allDestinations = this.allDestinations;
     const pointsCount = points.length;
-    console.log(pointsCount);
 
-    this.#renderMenu();
+    this._renderMenu();
     this.#renderEventsList();
     this.#renderAddPointButton();
 

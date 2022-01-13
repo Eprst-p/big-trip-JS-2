@@ -1,8 +1,6 @@
-import {PRICES, POINT_TYPES, OFFERS_BY_TYPE} from '../utils/constants.js';
+import {POINT_TYPES} from '../utils/constants.js';
 import {getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
-import {CITIES} from '../mock/data-sources.js';
-import {generateDestinationsText, createPictures} from '../mock/gen-data.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
@@ -263,7 +261,7 @@ class FormView extends SmartView {
       priceInput.setCustomValidity('');
       priceInput.reportValidity();
       this.updateData({
-        basePrice: evt.target.value,
+        basePrice: +evt.target.value,
       }, true);
     }
   }
@@ -272,7 +270,7 @@ class FormView extends SmartView {
     evt.preventDefault();
     const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCity = evt.target.value;
-    const chosenCityDestinations = this.#allDestinations.find((element) => element.name === chosenCity);
+    const chosenCityDestination = this.#allDestinations.find((element) => element.name === chosenCity);
 
     if (!this.#allCities.includes(chosenCity)) {
       cityInput.setCustomValidity('Выберите город из представленных');
@@ -282,9 +280,9 @@ class FormView extends SmartView {
       cityInput.reportValidity();
       this.updateData({
         destination: {
-          description: chosenCityDestinations.desription,
+          description: chosenCityDestination.description,
           name: chosenCity,
-          pictures: chosenCityDestinations.pictures,
+          pictures: chosenCityDestination.pictures,
         }
       });
     }
@@ -293,16 +291,16 @@ class FormView extends SmartView {
   #updateOffers = () => {
     const offerRadioDivs = this.element.querySelectorAll('.event__offer-selector');
     const newOffers = [];
-    offerRadioDivs.forEach((offerDiv) => {
+    offerRadioDivs.forEach((offerDiv, index) => {
       const offerInput = offerDiv.querySelector('.event__offer-checkbox');
       const spanTitle = offerDiv.querySelector('.event__offer-title');
       const spanPrice = offerDiv.querySelector('.event__offer-price');
 
       if (offerInput.checked) {
         const newOffer = {
-          id: offerInput.id,
+          id: index + 1,
           title: spanTitle.textContent,
-          price: spanPrice.textContent
+          price: +spanPrice.textContent
         };
         newOffers.push(newOffer);
       }

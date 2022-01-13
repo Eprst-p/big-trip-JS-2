@@ -67,7 +67,6 @@ class ApiService {
       'date_from': point.dateFrom,
       'date_to': point.dateTo,
       'is_favorite': point.isFavorite,
-      //'due_date': point.dueDate instanceof Date ? task.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
     };
 
     delete adaptedPoint.basePrice;

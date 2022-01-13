@@ -3,7 +3,6 @@ import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
 import {UserAction, UpdateType} from '../utils/constants.js';
 
-
 const Mode = {
   DEFAULT: 'DEFAULT',
   OPENED_FORM: 'OPENED_FORM',
