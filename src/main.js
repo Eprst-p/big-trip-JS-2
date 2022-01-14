@@ -19,8 +19,3 @@ const filterModel = new FilterModel();
 const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContainer, contentSectionElement, pointsModel, filterModel);
 
 tripPresenter.init();
-
-pointsModel.init().finally(() => {
-  tripPresenter._renderMenu();
-  //как сюда затолкать фильтр презентер (чтобы не появлялись фильтры до загрузки)
-});
