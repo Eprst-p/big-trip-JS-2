@@ -123,7 +123,7 @@ class TripPresenter {
   }
 
   #renderLoading = () => {
-    renderElement(this.#eventsContainer.element, this.#loadingComponent, RenderPositions.AFTERBEGIN);
+    renderElement(this.#listSection, this.#loadingComponent, RenderPositions.AFTERBEGIN);
   }
 
   //общий рендер
@@ -145,10 +145,6 @@ class TripPresenter {
     if (pointsCount === 0) {
       this.#renderNoPoints();
       return;
-    }
-
-    if (this.#noPointsComponent) {
-      remove(this.#noPointsComponent);//т.к первый инит происходит на 0 поинтах -> отрисовывается всегда заглушка. А потом дорисоваываются точки (после получения с сервера видимо)
     }
 
     this.#renderTripInfo(this.#pointsModel.points);

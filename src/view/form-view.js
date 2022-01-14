@@ -1,4 +1,4 @@
-import {POINT_TYPES} from '../utils/constants.js';
+import {POINT_TYPES, FORM_TYPES} from '../utils/constants.js';
 import {getDateInFormat} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import flatpickr from 'flatpickr';
@@ -19,7 +19,7 @@ const createTypeAndCityTextTemplate = (type, city, allCities) => (
 
 const createTimeTemplate = (startTime, endTime) => {
 
-  const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');//немного не тот формат, но принцип моков выполняется
+  const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
   const smallerFontSize = 'style = font-size:90%';
 
@@ -102,8 +102,8 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) 
         ${createTimeTemplate(dateFrom, dateTo)}
         ${createPriceTemplate(basePrice)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${(formType === 'editForm') ? 'Delete' : 'Cancel'}</button>
-        ${(formType === 'editForm') ?
+        <button class="event__reset-btn" type="reset">${(formType === FORM_TYPES.EDIT_FORM) ? 'Delete' : 'Cancel'}</button>
+        ${(formType === FORM_TYPES.EDIT_FORM) ?
       `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>` : ''}
@@ -168,7 +168,7 @@ class FormView extends SmartView {
   }
 
   setOnFormArrowClick = (callback) => {
-    if (this.#formType === 'editForm') {
+    if (this.#formType === FORM_TYPES.EDIT_FORM) {
       this._callbacksStorage.formArrowClick = callback;
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormArrowClick);
     }

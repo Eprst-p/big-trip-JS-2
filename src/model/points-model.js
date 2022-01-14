@@ -10,10 +10,6 @@ class PointsModel  extends AbstractObservable {
   constructor(apiService) {
     super();
     this.#apiService = apiService;
-
-    //this.#apiService.points.then();
-    //this.#apiService.allPossisbleOffers.then();
-    //this.#apiService.allDestinations.then();- зачем эти нужны?
   }
 
   get points() {
@@ -90,7 +86,7 @@ class PointsModel  extends AbstractObservable {
 
   #adaptToClient = (point) => {
     const adaptedPoint = {...point,
-      basePrice: point['base_price'], //!== null ? new Date(task['due_date']) : task['due_date'], // На клиенте дата хранится как экземпляр Date
+      basePrice: point['base_price'],
       dateFrom: point['date_from'],
       dateTo: point['date_to'],
       isFavorite: point['is_favorite'],

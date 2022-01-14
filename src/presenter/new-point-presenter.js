@@ -1,7 +1,7 @@
 import FormView from '../view/form-view.js';
 import {nanoid} from 'nanoid';
 import {RenderPositions, renderElement, remove} from '../utils/render.js';
-import {UserAction, UpdateType} from '../utils/constants.js';
+import {UserAction, UpdateType, FORM_TYPES} from '../utils/constants.js';
 import {defaultData} from '../utils/deafault-data.js';
 
 class NewPointPresenter {
@@ -23,7 +23,7 @@ class NewPointPresenter {
 
     this.#allPossisbleOffers = allPossisbleOffers;
     this.#allDestinations = allDestinations;
-    this.#newFormComponent = new FormView('', defaultData, this.#allPossisbleOffers, this.#allDestinations);
+    this.#newFormComponent = new FormView(FORM_TYPES.NEW_FORM, defaultData, this.#allPossisbleOffers, this.#allDestinations);
     this.#newFormComponent.setOnFormSubmit(this.#onFormSubmit);
     this.#newFormComponent.setOnDeleteBtnClick(this.#onCancelClick);
     this.#newFormComponent.setDatepicker();
