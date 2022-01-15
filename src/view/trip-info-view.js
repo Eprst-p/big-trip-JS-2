@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view.js';
-import {formDayjsFromStr, getDateInFormat} from '../utils/time-and-date.js';
+import {getDateInDayjs, getDateInFormat} from '../utils/time-and-date.js';
 
 const createTipInfoTemplate = (allPoints) => {
   const cities = allPoints.map((point) => point.destination.name);
@@ -10,9 +10,9 @@ const createTipInfoTemplate = (allPoints) => {
     return secondCity;
   };
   const lastCity = cities[cities.length - 1];
-  const startDayjs = formDayjsFromStr(allPoints[0].dateFrom, 'DD MM YY HH:mm');
+  const startDayjs = getDateInDayjs(allPoints[0].dateFrom);
   const startDate = getDateInFormat(startDayjs, 'DD MMM');
-  const lastDayjs = formDayjsFromStr(allPoints[cities.length - 1].dateTo, 'DD MM YY HH:mm');
+  const lastDayjs = getDateInDayjs(allPoints[cities.length - 1].dateTo);
   const lastDate = getDateInFormat(lastDayjs, 'DD MMM');
 
   let totalPrice = 0;
@@ -24,7 +24,7 @@ const createTipInfoTemplate = (allPoints) => {
   const createCityWritting = () => {
     let cityCount = 0;
     cities.forEach((city) => {
-      if (city !== null) { //пока такая примитивненькая проверка, больше для затравки и теста
+      if (city !== null) {
         cityCount++;
       }
     });
