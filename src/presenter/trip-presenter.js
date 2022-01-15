@@ -220,7 +220,7 @@ class TripPresenter {
       case UserAction.ADD_POINT:
         this.#newFormPresenter.setSaving();
         try {
-          await this.#pointsModel.addTask(updateType, update);
+          await this.#pointsModel.addPoint(updateType, update);
         } catch(err) {
           this.#pointsStorage.setAborting();
         }
@@ -228,7 +228,7 @@ class TripPresenter {
       case UserAction.DELETE_POINT:
         this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.DELETING);
         try {
-          await this.#pointsModel.deleteTask(updateType, update);
+          await this.#pointsModel.deletePoint(updateType, update);
         } catch(err) {
           this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.ABORTING);
         }

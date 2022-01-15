@@ -28,7 +28,6 @@ class PointsModel  extends AbstractObservable {
     try {
       const points = await this.#apiService.points;
       this.#points = points.map(this.#adaptToClient);
-      console.log(this.#points);
       this.#allPossisbleOffers = await this.#apiService.allPossisbleOffers;
       this.#allDestinations = await this.#apiService.allDestinations;
     } catch(err) {
