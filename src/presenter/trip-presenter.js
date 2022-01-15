@@ -8,7 +8,7 @@ import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view.js';
 import StatsView from '../view/stats-view.js';
 import LoadingView from '../view/loading-view.js';
-import PointPresenter from './point-presenter.js';
+import PointPresenter, {State as PointPresenterViewState} from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
 import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes} from '../utils/constants.js';
@@ -210,12 +210,15 @@ class TripPresenter {
   #onViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
+        this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.SAVING);
         this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
+        this.#newFormPresenter.setSaving();
         this.#pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
+        this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.DELETING);
         this.#pointsModel.deletePoint(updateType, update);
         break;
     }

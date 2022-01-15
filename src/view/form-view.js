@@ -111,9 +111,9 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers, isDisabled)
 };
 
 //основной темплейт
-const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities, isDisabled, isSaving, isDeleting) => {
+const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) => {
 
-  const {type, dateFrom, dateTo, basePrice, offers, destination} = pointData;
+  const {type, dateFrom, dateTo, basePrice, offers, destination, isDisabled, isSaving, isDeleting} = pointData;
 
   const typeImg = `img/icons/${type.toLowerCase()}.png`;
 

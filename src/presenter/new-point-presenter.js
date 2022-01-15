@@ -45,13 +45,19 @@ class NewPointPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
+  setSaving = () => {
+    this.#newFormComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
   #onFormSubmit = (point) => {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       point,
     );
-    this.destroy();
   }
 
   #onCancelClick = () => {
