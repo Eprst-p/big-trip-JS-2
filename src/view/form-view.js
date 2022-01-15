@@ -74,6 +74,7 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers) => {
 
 //основной темплейт
 const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) => {
+
   const {type, dateFrom, dateTo, basePrice, offers, destination} = pointData;
 
   const typeImg = `img/icons/${type.toLowerCase()}.png`;
@@ -138,7 +139,7 @@ class FormView extends SmartView {
   #allPossisbleOffers = null;
   #allDestinations = null;
   #allCities = null;
-
+  #cityInput = null;
 
   constructor(formType, pointData, allPossisbleOffers, allDestinations) {
     super();
@@ -147,6 +148,8 @@ class FormView extends SmartView {
     this.#allDestinations = allDestinations;
     this.#allCities = this.#allDestinations.map((element) => element.name);
     this._data = FormView.parsePointToData(pointData);
+    this.#cityInput = this.element.querySelector('.event__input--destination');
+
 
     this.#setInnerListeners();
   }
@@ -164,6 +167,16 @@ class FormView extends SmartView {
   #onFormSubmit = (evt) => {
     evt.preventDefault();
     this.#updateOffers();
+
+    if (this.#cityInput.value === '') { //работает кривовато, если поменять некоторые данные - то перестает показываться сообщение валидации
+      this.#cityInput.setCustomValidity('Выберите город из представленных');
+      this.#cityInput.reportValidity();
+      return;
+    } else {
+      this.#cityInput.setCustomValidity('');
+      this.#cityInput.reportValidity();
+    }
+
     this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
   }
 
@@ -268,16 +281,16 @@ class FormView extends SmartView {
 
   #onCityChange =(evt) => {
     evt.preventDefault();
-    const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCity = evt.target.value;
+    this.#cityInput.value = chosenCity;
     const chosenCityDestination = this.#allDestinations.find((element) => element.name === chosenCity);
 
     if (!this.#allCities.includes(chosenCity)) {
-      cityInput.setCustomValidity('Выберите город из представленных');
-      cityInput.reportValidity();
+      this.#cityInput.setCustomValidity('Выберите город из представленных');
+      this.#cityInput.reportValidity();
     } else {
-      cityInput.setCustomValidity('');
-      cityInput.reportValidity();
+      this.#cityInput.setCustomValidity('');
+      this.#cityInput.reportValidity();
       this.updateData({
         destination: {
           description: chosenCityDestination.description,
