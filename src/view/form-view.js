@@ -168,13 +168,12 @@ class FormView extends SmartView {
     evt.preventDefault();
     this.#updateOffers();
 
-    if (this.#cityInput.value === '') { //работает кривовато, если поменять некоторые данные - то перестает показываться сообщение валидации
-      this.#cityInput.setCustomValidity('Выберите город из представленных');
-      this.#cityInput.reportValidity();
+    if (!this.#checkDateDifference()) {
       return;
-    } else {
-      this.#cityInput.setCustomValidity('');
-      this.#cityInput.reportValidity();
+    }
+
+    if (!this.#checkCity()) {
+      return;
     }
 
     this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
@@ -358,6 +357,36 @@ class FormView extends SmartView {
         onClose: this.#onDateEndChange,
       },
     );
+  }
+
+  #checkDateDifference = () => {//валидация времени, пока работает криво - после фикса проблем перестает показываться любая другая валидация (это характерно для всей валидации на форме)
+    const startDate = new Date(this._data.dateFrom);
+    const endDate = new Date(this._data.dateTo);
+    const dateDifference = endDate - startDate;
+
+    const saveBtn = this.element.querySelector('.event__save-btn');
+
+    if (dateDifference < 0) {
+      saveBtn.setCustomValidity('Время начала поездки позже времени окончания');
+      saveBtn.reportValidity();
+      return false;
+    } else {
+      saveBtn.setCustomValidity('');
+      saveBtn.reportValidity();
+      return true;
+    }
+  }
+
+  #checkCity = () => {
+    if (this.#cityInput.value === '') { //работает кривовато, если поменять некоторые данные - то перестает показываться сообщение валидации
+      this.#cityInput.setCustomValidity('Выберите город из представленных');
+      this.#cityInput.reportValidity();
+      return false;
+    } else {
+      this.#cityInput.setCustomValidity('');
+      this.#cityInput.reportValidity();
+      return true;
+    }
   }
 }
 
