@@ -13,12 +13,8 @@ const defaultData = {
     name: '',
     pictures: [],
   },
-  offers: {
-    type: POINT_TYPES[5].toLowerCase(),
-    offers: [],
-  },
+  offers: [],
   type: POINT_TYPES[5].toLowerCase(),
-  typeImg: `img/icons/${POINT_TYPES[5].toLowerCase()}.png`,
 };
 
 export {defaultData};

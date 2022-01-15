@@ -1,8 +1,7 @@
 import {RenderPositions, renderElement, replace, remove} from '../utils/render.js';
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
-import {UserAction, UpdateType} from '../utils/constants.js';
-
+import {UserAction, UpdateType, FORM_TYPES} from '../utils/constants.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -17,6 +16,8 @@ class PointPresenter {
   #pointElement = null;
   #pointEditForm = null;
   #pointData = null;
+  #allPossisbleOffers = null;
+  #allDestinations = null;
 
   #mode = Mode.DEFAULT;
 
@@ -26,14 +27,16 @@ class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (pointData) => {
+  init = (pointData, allPossisbleOffers, allDestinations) => {
     this.#pointData = pointData;
+    this.#allPossisbleOffers = allPossisbleOffers;
+    this.#allDestinations = allDestinations;
 
     const prevPointElement = this.#pointElement;
     const prevPointEditForm = this.#pointEditForm;
 
     this.#pointElement = new PointView(this.#pointData);
-    this.#pointEditForm = new FormView('editForm', this.#pointData);
+    this.#pointEditForm = new FormView(FORM_TYPES.EDIT_FORM, this.#pointData, this.#allPossisbleOffers, this.#allDestinations);
 
     this.#pointEditForm.setOnFormSubmit(this.#formSubmit);
     this.#pointEditForm.setOnFormArrowClick(this.#formArrowClick);
@@ -126,7 +129,6 @@ class PointPresenter {
   #replaceFormToPoint = () => {
     replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
     document.removeEventListener('keydown', this.#onEscKeyDown);
-    //this.#pointEditForm.removeElement(); - если это оставить, то при повторном открытии формы не навешиваются обработчики (т.к элемент = null) и ломается логика. Зачем это было изначально не помню.
     this.#mode = Mode.DEFAULT;
   }
 }

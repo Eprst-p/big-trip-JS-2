@@ -7,6 +7,7 @@ import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view.js';
 import StatsView from '../view/stats-view.js';
+import LoadingView from '../view/loading-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
@@ -30,10 +31,12 @@ class TripPresenter {
   #filterPresenter = null;
   #tripInfoComponent = null;
   #statsComponent = null;
+  #loadingComponent = new LoadingView();
 
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor(tripMain, menu, filterContainer, listSection, pointsModel, filterModel) {
     this.#tripMain = tripMain;
@@ -62,6 +65,14 @@ class TripPresenter {
     return filteredPoints;
   }
 
+  get allPossisbleOffers() {
+    return this.#pointsModel.allPossisbleOffers;
+  }
+
+  get allDestinations() {
+    return this.#pointsModel.allDestinations;
+  }
+
   init = () => {
     this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
     this.#filterPresenter.init();
@@ -86,9 +97,9 @@ class TripPresenter {
     renderElement(this.#listSection, this.#sortComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderPoint = (container, pointData) => {
+  #renderPoint = (container, pointData, allPossisbleOffers, allDestinations) => {
     const pointPresenter = new PointPresenter(container, this.#onViewAction, this.#onModeChange);
-    pointPresenter.init(pointData);
+    pointPresenter.init(pointData, allPossisbleOffers, allDestinations);
     this.#pointsStorage.set(pointData.id, pointPresenter);
   }
 
@@ -102,8 +113,8 @@ class TripPresenter {
     renderElement(this.#eventsContainer.element, this.#noPointsComponent, RenderPositions.AFTERBEGIN);
   }
 
-  #renderPointsList = (points) => {
-    points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point));
+  #renderPointsList = (points, allPossisbleOffers, allDestinations) => {
+    points.forEach((point) => this.#renderPoint(this.#eventsContainer.element, point, allPossisbleOffers, allDestinations));
   }
 
   #renderAddPointButton = () => {
@@ -111,9 +122,21 @@ class TripPresenter {
     this.#addPointButtonComponent.setOnAddPointCLick(this.#onAddButtonClick);
   }
 
+  #renderLoading = () => {
+    renderElement(this.#listSection, this.#loadingComponent, RenderPositions.AFTERBEGIN);
+  }
+
   //общий рендер
   #renderBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      this.#filterPresenter.hide();
+      return;
+    }
+
     const points = this.points;
+    const allPossisbleOffers = this.allPossisbleOffers;
+    const allDestinations = this.allDestinations;
     const pointsCount = points.length;
 
     this.#renderMenu();
@@ -127,7 +150,7 @@ class TripPresenter {
 
     this.#renderTripInfo(this.#pointsModel.points);
     this.#renderSort();
-    this.#renderPointsList(points);
+    this.#renderPointsList(points, allPossisbleOffers, allDestinations);
   }
 
   //обработчики
@@ -144,7 +167,7 @@ class TripPresenter {
   #onAddButtonClick = () => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newFormPresenter.init();
+    this.#newFormPresenter.init(this.allPossisbleOffers, this.allDestinations);
   }
 
   #onEscKeyDown = (evt) => {
@@ -209,6 +232,11 @@ class TripPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }

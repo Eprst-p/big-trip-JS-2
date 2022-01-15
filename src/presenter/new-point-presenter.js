@@ -1,25 +1,29 @@
 import FormView from '../view/form-view.js';
 import {nanoid} from 'nanoid';
 import {RenderPositions, renderElement, remove} from '../utils/render.js';
-import {UserAction, UpdateType} from '../utils/constants.js';
+import {UserAction, UpdateType, FORM_TYPES} from '../utils/constants.js';
 import {defaultData} from '../utils/deafault-data.js';
 
 class NewPointPresenter {
   #pointsListContainer = null;
   #changeData = null;
   #newFormComponent = null;
+  #allPossisbleOffers = null;
+  #allDestinations = null;
 
   constructor(pointsListContainer, changeData) {
     this.#pointsListContainer = pointsListContainer;
     this.#changeData = changeData;
   }
 
-  init = () => {
+  init = (allPossisbleOffers, allDestinations) => {
     if (this.#newFormComponent !== null) {
       return;
     }
 
-    this.#newFormComponent = new FormView('', defaultData);//нужна поинт дата
+    this.#allPossisbleOffers = allPossisbleOffers;
+    this.#allDestinations = allDestinations;
+    this.#newFormComponent = new FormView(FORM_TYPES.NEW_FORM, defaultData, this.#allPossisbleOffers, this.#allDestinations);
     this.#newFormComponent.setOnFormSubmit(this.#onFormSubmit);
     this.#newFormComponent.setOnDeleteBtnClick(this.#onCancelClick);
     this.#newFormComponent.setDatepicker();
@@ -46,10 +50,10 @@ class NewPointPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},//сгенереный айди (пока нет сервера)
+      {id: nanoid(), ...point},
     );
     this.destroy();
-  }//на текущий момент сейв не работает, т.к опять конфликтует дата
+  }
 
   #onCancelClick = () => {
     this.destroy();

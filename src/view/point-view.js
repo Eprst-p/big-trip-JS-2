@@ -2,7 +2,9 @@ import {formDayjsFromStr, getDateInFormat, getDurationFormat} from '../utils/tim
 import AbstractView from './abstract-view.js';
 
 const createLiTemplate = (pointData) => {
-  const {type, typeImg, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
+  const {type, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
+
+  const typeImg = `img/icons/${type}.png`;
 
   const startDayjs = formDayjsFromStr(dateFrom, 'DD MM YY HH:mm');
   const endDayjs = formDayjsFromStr(dateTo, 'DD MM YY HH:mm');
@@ -34,10 +36,10 @@ const createLiTemplate = (pointData) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${offers.offers.map((currentOffer) => `<li class="event__offer">
+          ${offers.map((currentOffer) => `<li class="event__offer">
           <span class="event__offer-title">${currentOffer.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${currentOffer.offerPrice}</span>
+          <span class="event__offer-price">${currentOffer.price}</span>
         </li>`).join('')}
         </ul>
         <button class="event__favorite-btn ${addFavoriteClass}" type="button">

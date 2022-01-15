@@ -78,7 +78,9 @@ class FilterPresenter {
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
 
-
+  hide = () => {
+    this.#filterComponent.element.classList.add('visually-hidden');
+  }
 }
 
 export default FilterPresenter;
