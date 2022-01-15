@@ -1,3 +1,5 @@
+import {ERRORS} from './constants';
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -21,12 +23,15 @@ class ApiService {
 
   get allPossisbleOffers() {
     return this.#load({url: 'offers'})
-      .then(ApiService.parseResponse);
+      .then(ApiService.parseResponse)
+      .catch(ApiService.offersError);
   }
 
   get allDestinations() {
     return this.#load({url: 'destinations'})
-      .then(ApiService.parseResponse);
+      .then(ApiService.parseResponse)
+      .catch(ApiService.destintaionsError);
+
   }
 
   addPoint = async (point) => {
@@ -111,6 +116,14 @@ class ApiService {
 
   static catchError = (err) => {
     throw err;
+  }
+
+  static offersError = () => {
+    throw ERRORS.NO_OFFERS;
+  }
+
+  static destintaionsError = () => {
+    throw ERRORS.NO_DESTINATIONS;
   }
 }
 

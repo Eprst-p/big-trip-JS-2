@@ -47,6 +47,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
 };
 
 const FilterType = {
@@ -65,5 +66,15 @@ const FORM_TYPES = {
   NEW_FORM: 'newForm'
 };
 
+const ERRORS = {
+  NO_OFFERS: 'NO_OFFERS',
+  NO_DESTINATIONS: 'NO_DESTINATIONS'
+};
 
-export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES};
+const MESSAGES = {
+  LOADING: 'Loading...',
+  ERROR: 'Something is going wrong'
+};
+
+
+export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES};

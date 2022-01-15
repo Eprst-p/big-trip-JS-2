@@ -7,11 +7,11 @@ import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view.js';
 import StatsView from '../view/stats-view.js';
-import LoadingView from '../view/loading-view.js';
+import MessageView from '../view/message-view.js';
 import PointPresenter, {State as PointPresenterViewState} from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
-import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes} from '../utils/constants.js';
+import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes, MESSAGES} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
@@ -31,7 +31,8 @@ class TripPresenter {
   #filterPresenter = null;
   #tripInfoComponent = null;
   #statsComponent = null;
-  #loadingComponent = new LoadingView();
+  #loadingComponent = new MessageView(MESSAGES.LOADING);
+  #errorComponent = new MessageView(MESSAGES.ERROR);
 
   #pointsStorage = new Map();
   #currentSortType = SortType.DAY;
@@ -125,6 +126,11 @@ class TripPresenter {
   #renderLoading = () => {
     renderElement(this.#listSection, this.#loadingComponent, RenderPositions.AFTERBEGIN);
   }
+
+  #renderError = () => {
+    renderElement(this.#listSection, this.#errorComponent, RenderPositions.AFTERBEGIN);
+  }
+
 
   //общий рендер
   #renderBoard = () => {
@@ -253,6 +259,12 @@ class TripPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderBoard();
+        break;
+      case UpdateType.ERROR:
+        this.destroy();
+        remove(this.#loadingComponent);
+        this.#filterPresenter.hide();
+        this.#renderError();
         break;
     }
   }

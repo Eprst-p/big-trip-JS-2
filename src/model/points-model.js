@@ -1,5 +1,5 @@
 import AbstractObservable from '../utils/abstract-observable.js';
-import {UpdateType} from '../utils/constants.js';
+import {UpdateType, ERRORS} from '../utils/constants.js';
 
 class PointsModel  extends AbstractObservable {
   #points = [];
@@ -34,6 +34,14 @@ class PointsModel  extends AbstractObservable {
       this.#points = [];
       this.#allPossisbleOffers = [];
       this.#allDestinations = [];
+      if (err === ERRORS.NO_OFFERS) {
+        this._notify(UpdateType.ERROR);
+        return;
+      }
+      if (err === ERRORS.NO_DESTINATIONS) {
+        this._notify(UpdateType.ERROR);
+        return;
+      }
     }
 
     this._notify(UpdateType.INIT);
