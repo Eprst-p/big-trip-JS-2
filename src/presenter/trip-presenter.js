@@ -207,19 +207,31 @@ class TripPresenter {
   }
 
   //смена данных
-  #onViewAction = (actionType, updateType, update) => {
+  #onViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.SAVING);
-        this.#pointsModel.updatePoint(updateType, update);
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+        }
         break;
       case UserAction.ADD_POINT:
         this.#newFormPresenter.setSaving();
-        this.#pointsModel.addPoint(updateType, update);
+        try {
+          await this.#pointsModel.addTask(updateType, update);
+        } catch(err) {
+          this.#pointsStorage.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
         this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.DELETING);
-        this.#pointsModel.deletePoint(updateType, update);
+        try {
+          await this.#pointsModel.deleteTask(updateType, update);
+        } catch(err) {
+          this.#pointsStorage.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+        }
         break;
     }
   }

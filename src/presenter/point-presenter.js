@@ -11,6 +11,7 @@ const Mode = {
 export const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
 };
 
 class PointPresenter {
@@ -129,6 +130,14 @@ class PointPresenter {
       return;
     }
 
+    const resetFormState = () => {
+      this.#pointEditForm.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
     switch (state) {
       case State.SAVING:
         this.#pointEditForm.updateData({
@@ -141,6 +150,10 @@ class PointPresenter {
           isDisabled: true,
           isDeleting: true,
         });
+        break;
+      case State.ABORTING:
+        this.#pointElement.shake(resetFormState);
+        this.#pointEditForm.shake(resetFormState);
         break;
     }
   }
