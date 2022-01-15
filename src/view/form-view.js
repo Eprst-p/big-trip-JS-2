@@ -139,7 +139,6 @@ class FormView extends SmartView {
   #allPossisbleOffers = null;
   #allDestinations = null;
   #allCities = null;
-  #cityInput = null;
 
   constructor(formType, pointData, allPossisbleOffers, allDestinations) {
     super();
@@ -148,7 +147,6 @@ class FormView extends SmartView {
     this.#allDestinations = allDestinations;
     this.#allCities = this.#allDestinations.map((element) => element.name);
     this._data = FormView.parsePointToData(pointData);
-    this.#cityInput = this.element.querySelector('.event__input--destination');
 
 
     this.#setInnerListeners();
@@ -281,15 +279,16 @@ class FormView extends SmartView {
   #onCityChange =(evt) => {
     evt.preventDefault();
     const chosenCity = evt.target.value;
-    this.#cityInput.value = chosenCity;
+    const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCityDestination = this.#allDestinations.find((element) => element.name === chosenCity);
 
     if (!this.#allCities.includes(chosenCity)) {
-      this.#cityInput.setCustomValidity('Выберите город из представленных');
-      this.#cityInput.reportValidity();
+      cityInput.setCustomValidity('Выберите город из представленных');
+      cityInput.reportValidity();
     } else {
-      this.#cityInput.setCustomValidity('');
-      this.#cityInput.reportValidity();
+      cityInput.setCustomValidity('');
+      cityInput.reportValidity();
+
       this.updateData({
         destination: {
           description: chosenCityDestination.description,
@@ -359,7 +358,7 @@ class FormView extends SmartView {
     );
   }
 
-  #checkDateDifference = () => {//валидация времени, пока работает криво - после фикса проблем перестает показываться любая другая валидация (это характерно для всей валидации на форме)
+  #checkDateDifference = () => {
     const startDate = new Date(this._data.dateFrom);
     const endDate = new Date(this._data.dateTo);
     const dateDifference = endDate - startDate;
@@ -378,13 +377,17 @@ class FormView extends SmartView {
   }
 
   #checkCity = () => {
-    if (this.#cityInput.value === '') { //работает кривовато, если поменять некоторые данные - то перестает показываться сообщение валидации
-      this.#cityInput.setCustomValidity('Выберите город из представленных');
-      this.#cityInput.reportValidity();
+    const cityInput = this.element.querySelector('.event__input--destination');
+    //повторный поиск элемента. Делал его через приватное свойство this.#cityInput - валидация переставала работать корректно при нескольких подряд изменениях в поле.
+    //Похоже, что теряется this. поэтому пока сделано через переменную, т.к непонятно, как сделать, чтобы валидация не билась. Аналогично и в других валидациях.
+
+    if (cityInput.value === '') {
+      cityInput.setCustomValidity('Выберите город из представленных');
+      cityInput.reportValidity();
       return false;
     } else {
-      this.#cityInput.setCustomValidity('');
-      this.#cityInput.reportValidity();
+      cityInput.setCustomValidity('');
+      cityInput.reportValidity();
       return true;
     }
   }
