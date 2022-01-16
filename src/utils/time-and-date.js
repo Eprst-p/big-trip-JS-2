@@ -8,7 +8,8 @@ const duration = require('dayjs/plugin/duration');// eslint-disable-line no-unde
 dayjs.extend(duration);
 
 const formDayjsFromStr = (someDate, string) => dayjs(someDate, string);
-const testDate = dayjs('2022-01-10', 'YYYY-MM-DD');//тестовая дата - так как от текущей будут ненаглядные фильтры
+
+const getDateInDayjs = (date) => dayjs(date);
 
 //генератор рандомного шага у даты
 const generateRandomDate = (lastDate) => {
@@ -55,4 +56,4 @@ const getDurationFormat = (endTime, startTime, someDuration) => {
   }
 };
 
-export {formDayjsFromStr, generateRandomDate, generateStartTime, generateEndTime, getDateInFormat, getDuration, getDurationInDayjs, getDurationFormat, testDate, zeroDuration};
+export {formDayjsFromStr, generateRandomDate, generateStartTime, generateEndTime, getDateInFormat, getDuration, getDurationInDayjs, getDurationFormat, zeroDuration, getDateInDayjs};

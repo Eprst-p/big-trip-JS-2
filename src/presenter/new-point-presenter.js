@@ -1,5 +1,4 @@
 import FormView from '../view/form-view.js';
-import {nanoid} from 'nanoid';
 import {RenderPositions, renderElement, remove} from '../utils/render.js';
 import {UserAction, UpdateType, FORM_TYPES} from '../utils/constants.js';
 import {defaultData} from '../utils/deafault-data.js';
@@ -46,13 +45,31 @@ class NewPointPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
+  setSaving = () => {
+    this.#newFormComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#newFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#newFormComponent.shake(resetFormState);
+  }
+
   #onFormSubmit = (point) => {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   }
 
   #onCancelClick = () => {

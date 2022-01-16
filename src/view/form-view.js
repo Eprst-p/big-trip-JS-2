@@ -4,12 +4,20 @@ import SmartView from './smart-view.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const createTypeAndCityTextTemplate = (type, city, allCities) => (
+const createTypeAndCityTextTemplate = (type, city, allCities, isDisabled) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+    <input
+      class="event__input  event__input--destination"
+      id="event-destination-1"
+      type="text"
+      name="event-destination"
+      value="${city}"
+      list="destination-list-1"
+      ${isDisabled ? 'disabled' : ''}
+    >
     <datalist id="destination-list-1">
     ${allCities.map((currentCity) => `
       <option value="${currentCity}"></option>`).join('')}
@@ -17,7 +25,7 @@ const createTypeAndCityTextTemplate = (type, city, allCities) => (
   </div>`
 );
 
-const createTimeTemplate = (startTime, endTime) => {
+const createTimeTemplate = (startTime, endTime, isDisabled) => {
 
   const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
@@ -26,26 +34,49 @@ const createTimeTemplate = (startTime, endTime) => {
   return (
     `<div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${editedStartTime}" ${smallerFontSize}>
+      <input
+        class="event__input  event__input--time"
+        id="event-start-time-1"
+        type="text"
+        name="event-start-time"
+        value="${editedStartTime}"
+        ${smallerFontSize}
+        ${isDisabled ? 'disabled' : ''}
+      >
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${editedEndTime}" ${smallerFontSize}>
+      <input
+        class="event__input  event__input--time"
+        id="event-end-time-1"
+        type="text"
+        name="event-end-time"
+        value="${editedEndTime}"
+        ${smallerFontSize}
+        ${isDisabled ? 'disabled' : ''}
+      >
     </div>`
   );
 };
 
 
-const createPriceTemplate = (price) => (
+const createPriceTemplate = (price, isDisabled) => (
   `<div class="event__field-group  event__field-group--price">
     <label class="event__label" for="event-price-1">
       <span class="visually-hidden">Price</span>
       &euro;
     </label>
-    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+    <input
+      class="event__input  event__input--price"
+      id="event-price-1"
+      type="text"
+      name="event-price"
+      value="${price}"
+      ${isDisabled ? 'disabled' : ''}
+    >
   </div>`
 );
 
-const createOffersTemplate = (offers, pointType, allPossisbleOffers) => {
+const createOffersTemplate = (offers, pointType, allPossisbleOffers, isDisabled) => {
   const offerByType = allPossisbleOffers.find((element) => element.type === pointType);
 
   const names = offerByType.offers;
@@ -62,7 +93,14 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers) => {
 
   return (
     names.map((offer) => `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${checkChosenOffer(offer.id)}>
+      <input
+        class="event__offer-checkbox  visually-hidden"
+        id="event-offer-${offer.title}-1"
+        type="checkbox"
+        name="event-offer-${offer.title}"
+        ${checkChosenOffer(offer.id)}
+        ${isDisabled ? 'disabled' : ''}
+      >
       <label class="event__offer-label" for="event-offer-${offer.title}-1">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -74,9 +112,12 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers) => {
 
 //основной темплейт
 const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) => {
-  const {type, dateFrom, dateTo, basePrice, offers, destination} = pointData;
+
+  const {type, dateFrom, dateTo, basePrice, offers, destination, isDisabled, isSaving, isDeleting} = pointData;
 
   const typeImg = `img/icons/${type.toLowerCase()}.png`;
+
+  const DeleteBtnText = isDeleting ? 'Deleting...' : 'Delete';
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -86,7 +127,12 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) 
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="${typeImg}" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input
+            class="event__type-toggle  visually-hidden"
+            id="event-type-toggle-1"
+            type="checkbox"
+            ${isDisabled ? 'disabled' : ''}
+           >
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -98,13 +144,25 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) 
             </fieldset>
           </div>
         </div>
-        ${createTypeAndCityTextTemplate(type, destination.name, allCities)}
-        ${createTimeTemplate(dateFrom, dateTo)}
-        ${createPriceTemplate(basePrice)}
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${(formType === FORM_TYPES.EDIT_FORM) ? 'Delete' : 'Cancel'}</button>
+        ${createTypeAndCityTextTemplate(type, destination.name, allCities, isDisabled)}
+        ${createTimeTemplate(dateFrom, dateTo, isDisabled)}
+        ${createPriceTemplate(basePrice, isDisabled)}
+        <button
+          class="event__save-btn  btn  btn--blue"
+          type="submit"
+          ${isDisabled ? 'disabled' : ''}
+        >
+        ${isSaving ? 'Saving...' : 'Save'}
+        </button>
+        <button
+          class="event__reset-btn"
+          type="reset"
+          ${isDisabled ? 'disabled' : ''}
+        >
+        ${(formType === FORM_TYPES.EDIT_FORM) ?  DeleteBtnText : 'Cancel'}
+        </button>
         ${(formType === FORM_TYPES.EDIT_FORM) ?
-      `<button class="event__rollup-btn" type="button">
+      `<button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
           <span class="visually-hidden">Open event</span>
         </button>` : ''}
       </header>
@@ -113,7 +171,7 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) 
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersTemplate(offers, type, allPossisbleOffers)}
+            ${createOffersTemplate(offers, type, allPossisbleOffers, isDisabled)}
           </div>
         </section>
 
@@ -139,7 +197,6 @@ class FormView extends SmartView {
   #allDestinations = null;
   #allCities = null;
 
-
   constructor(formType, pointData, allPossisbleOffers, allDestinations) {
     super();
     this.#formType = formType;
@@ -147,6 +204,7 @@ class FormView extends SmartView {
     this.#allDestinations = allDestinations;
     this.#allCities = this.#allDestinations.map((element) => element.name);
     this._data = FormView.parsePointToData(pointData);
+
 
     this.#setInnerListeners();
   }
@@ -164,6 +222,15 @@ class FormView extends SmartView {
   #onFormSubmit = (evt) => {
     evt.preventDefault();
     this.#updateOffers();
+
+    if (!this.#checkDateDifference()) {
+      return;
+    }
+
+    if (!this.#checkCity()) {
+      return;
+    }
+
     this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
   }
 
@@ -215,10 +282,18 @@ class FormView extends SmartView {
 
   //изменение данных
   static parsePointToData = (point) => (
-    {...point});
+    {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
 
   static parseDataToPoint = (data) => {
     const point = {...data};
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
 
     return point;
   }
@@ -268,8 +343,8 @@ class FormView extends SmartView {
 
   #onCityChange =(evt) => {
     evt.preventDefault();
-    const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCity = evt.target.value;
+    const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCityDestination = this.#allDestinations.find((element) => element.name === chosenCity);
 
     if (!this.#allCities.includes(chosenCity)) {
@@ -278,6 +353,7 @@ class FormView extends SmartView {
     } else {
       cityInput.setCustomValidity('');
       cityInput.reportValidity();
+
       this.updateData({
         destination: {
           description: chosenCityDestination.description,
@@ -345,6 +421,40 @@ class FormView extends SmartView {
         onClose: this.#onDateEndChange,
       },
     );
+  }
+
+  #checkDateDifference = () => {
+    const startDate = new Date(this._data.dateFrom);
+    const endDate = new Date(this._data.dateTo);
+    const dateDifference = endDate - startDate;
+
+    const saveBtn = this.element.querySelector('.event__save-btn');
+
+    if (dateDifference < 0) {
+      saveBtn.setCustomValidity('Время начала поездки позже времени окончания');
+      saveBtn.reportValidity();
+      return false;
+    } else {
+      saveBtn.setCustomValidity('');
+      saveBtn.reportValidity();
+      return true;
+    }
+  }
+
+  #checkCity = () => {
+    const cityInput = this.element.querySelector('.event__input--destination');
+    //повторный поиск элемента. Делал его через приватное свойство this.#cityInput - валидация переставала работать корректно при нескольких подряд изменениях в поле.
+    //Похоже, что теряется this. поэтому пока сделано через переменную, т.к непонятно, как сделать, чтобы валидация не билась. Аналогично и в других валидациях.
+
+    if (cityInput.value === '') {
+      cityInput.setCustomValidity('Выберите город из представленных');
+      cityInput.reportValidity();
+      return false;
+    } else {
+      cityInput.setCustomValidity('');
+      cityInput.reportValidity();
+      return true;
+    }
   }
 }
 

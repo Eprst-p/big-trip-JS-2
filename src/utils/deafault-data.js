@@ -1,13 +1,14 @@
-import {formDayjsFromStr, getDateInFormat} from './time-and-date.js';
 import {nanoid} from 'nanoid';
 import {POINT_TYPES} from './constants.js';
 
+const todayDate = new Date();
+
 const defaultData = {
-  basePrice:'300',
-  dateFrom: getDateInFormat(formDayjsFromStr(), 'DD MM YY HH:mm'),
-  dateTo: getDateInFormat(formDayjsFromStr(), 'DD MM YY HH:mm'),
-  id: nanoid(),
-  isFavorite: 0,
+  basePrice: 300,
+  dateFrom: todayDate.toISOString(),
+  dateTo: todayDate.toISOString(),
+  id: nanoid(),//непонятно, какой должен быть айди
+  isFavorite: false,
   destination: {
     description: 'In the name of the Empero',
     name: '',

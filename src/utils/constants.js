@@ -1,4 +1,4 @@
-const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'CheckIn', 'Sightseeing', 'Restaurant'];
+const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
 const BAR_HEIGHT = 85;
 
@@ -47,6 +47,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
 };
 
 const FilterType = {
@@ -65,5 +66,21 @@ const FORM_TYPES = {
   NEW_FORM: 'newForm'
 };
 
+const ERRORS = {
+  NO_OFFERS: 'NO_OFFERS',
+  NO_DESTINATIONS: 'NO_DESTINATIONS'
+};
 
-export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES};
+const MESSAGES = {
+  LOADING: 'Loading...',
+  ERROR: 'Something is going wrong'
+};
+
+const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
+
+export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State};

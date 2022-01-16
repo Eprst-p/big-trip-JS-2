@@ -1,4 +1,4 @@
-import {formDayjsFromStr, getDateInFormat, getDurationFormat} from '../utils/time-and-date.js';
+import {getDateInFormat, getDurationFormat, getDateInDayjs} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
 
 const createLiTemplate = (pointData) => {
@@ -6,8 +6,8 @@ const createLiTemplate = (pointData) => {
 
   const typeImg = `img/icons/${type}.png`;
 
-  const startDayjs = formDayjsFromStr(dateFrom, 'DD MM YY HH:mm');
-  const endDayjs = formDayjsFromStr(dateTo, 'DD MM YY HH:mm');
+  const startDayjs = getDateInDayjs(dateFrom);
+  const endDayjs = getDateInDayjs(dateTo);
 
   const editedStartTime = getDateInFormat(startDayjs, 'HH:mm');
   const editedEndTime = getDateInFormat(endDayjs, 'HH:mm');

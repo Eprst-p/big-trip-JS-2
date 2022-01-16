@@ -1,6 +1,10 @@
+import {ERRORS} from './constants';
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 class ApiService {
@@ -19,12 +23,37 @@ class ApiService {
 
   get allPossisbleOffers() {
     return this.#load({url: 'offers'})
-      .then(ApiService.parseResponse);
+      .then(ApiService.parseResponse)
+      .catch(ApiService.offersError);
   }
 
   get allDestinations() {
     return this.#load({url: 'destinations'})
-      .then(ApiService.parseResponse);
+      .then(ApiService.parseResponse)
+      .catch(ApiService.destintaionsError);
+
+  }
+
+  addPoint = async (point) => {
+    const response = await this.#load({
+      url: 'points',
+      method: Method.POST,
+      body: JSON.stringify(this.#adaptToServer(point)),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
+  deletePoint = async (point) => {
+    const response = await this.#load({
+      url: `points/${point.id}`,
+      method: Method.DELETE,
+    });
+
+    return response;
   }
 
   updatePoint = async (point) => {
@@ -87,6 +116,14 @@ class ApiService {
 
   static catchError = (err) => {
     throw err;
+  }
+
+  static offersError = () => {
+    throw ERRORS.NO_OFFERS;
+  }
+
+  static destintaionsError = () => {
+    throw ERRORS.NO_DESTINATIONS;
   }
 }
 
