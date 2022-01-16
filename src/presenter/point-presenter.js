@@ -1,17 +1,11 @@
 import {RenderPositions, renderElement, replace, remove} from '../utils/render.js';
 import PointView from '../view/point-view.js';
 import FormView from '../view/form-view.js';
-import {UserAction, UpdateType, FORM_TYPES} from '../utils/constants.js';
+import {UserAction, UpdateType, FORM_TYPES, State} from '../utils/constants.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
   OPENED_FORM: 'OPENED_FORM',
-};
-
-export const State = {
-  SAVING: 'SAVING',
-  DELETING: 'DELETING',
-  ABORTING: 'ABORTING',
 };
 
 class PointPresenter {

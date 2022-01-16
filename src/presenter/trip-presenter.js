@@ -8,10 +8,10 @@ import TripInfoView from '../view/trip-info-view.js';
 import AddPointButtonView from '../view/add-point-view.js';
 import StatsView from '../view/stats-view.js';
 import MessageView from '../view/message-view.js';
-import PointPresenter, {State as PointPresenterViewState} from './point-presenter.js';
+import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
-import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes, MESSAGES} from '../utils/constants.js';
+import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes, MESSAGES, State as PointPresenterViewState} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
@@ -227,8 +227,11 @@ class TripPresenter {
         this.#newFormPresenter.setSaving();
         try {
           await this.#pointsModel.addPoint(updateType, update);
+          if (this.#statsComponent) {
+            this.#newFormPresenter.destroy();
+          }
         } catch(err) {
-          this.#pointsStorage.setAborting();
+          this.#newFormPresenter.setAborting();
         }
         break;
       case UserAction.DELETE_POINT:
