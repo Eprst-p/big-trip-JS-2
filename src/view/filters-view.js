@@ -1,10 +1,20 @@
 import AbstractView from './abstract-view.js';
+import {FilterType} from '../utils/constants.js';
 
-const createFiltersTemplate = (filters, currentFilterType) => (
+const createFiltersTemplate = (filters, currentFilterType, amountOfFilteredPoints) => (
   `<form class="trip-filters" action="#" method="get">
     ${filters.map((filter) => `
     <div class="trip-filters__filter">
-      <input id="filter-${filter.filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.filterType}" ${filter.filterType === currentFilterType ? 'checked' : ''}>
+      <input
+        id="filter-${filter.filterType}"
+        class="trip-filters__filter-input  visually-hidden"
+        type="radio"
+        name="trip-filter"
+        value="${filter.filterType}"
+        ${filter.filterType === currentFilterType ? 'checked' : ''}
+        ${filter.filterType === FilterType.FUTURE && amountOfFilteredPoints.filteredFuture.length === 0 ? 'disabled' : ''}
+        ${filter.filterType === FilterType.PAST && amountOfFilteredPoints.filteredPast.length === 0 ? 'disabled' : ''}
+      >
       <label class="trip-filters__filter-label" for="filter-${filter.filterType}">${filter.title}</label>
     </div>
     `).join('')}
@@ -15,15 +25,17 @@ const createFiltersTemplate = (filters, currentFilterType) => (
 class FiltersView extends AbstractView  {
   #filters = null;
   #currentFilterType = null;
+  #amountOfFilteredPoints = null;
 
-  constructor(filters, currentFilterType) {
+  constructor(filters, currentFilterType, amountOfFilteredPoints) {
     super();
     this.#filters = filters;
     this.#currentFilterType = currentFilterType;
+    this.#amountOfFilteredPoints = amountOfFilteredPoints;
   }
 
   get template() {
-    return createFiltersTemplate(this.#filters, this.#currentFilterType);
+    return createFiltersTemplate(this.#filters, this.#currentFilterType, this.#amountOfFilteredPoints);
   }
 
   setOnFilterTypeChange = (callback) => {
