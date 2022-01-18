@@ -108,7 +108,6 @@ const convertDurationToString = (dataIndex) => {
   return resultDuration;
 };
 
-
 //рендер чартов
 const renderMoneyChart = (moneyElement, points) => {
   const moneyCtx = moneyElement;

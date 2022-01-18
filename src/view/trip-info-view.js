@@ -25,7 +25,6 @@ const createTipInfoTemplate = (allPoints) => {
     totalPrice += +point.basePrice + offersPrice;
   });
 
-
   const createCityWritting = () => {
     let cityCount = 0;
     cities.forEach((city) => {

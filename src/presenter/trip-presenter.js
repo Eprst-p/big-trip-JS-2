@@ -131,7 +131,6 @@ class TripPresenter {
     renderElement(this.#listSection, this.#errorComponent, RenderPositions.AFTERBEGIN);
   }
 
-
   //общий рендер
   #renderBoard = () => {
     if (this.#isLoading) {

@@ -21,5 +21,3 @@ const tripPresenter = new TripPresenter(tripMain, menuContainer, filtersContaine
 tripPresenter.init();
 
 pointsModel.init();
-
-//тут найденные баги: если нажать сейв на форме - то потом ,при нажатии Esc будет в консоли вылазить ошибка replaceChild, хотя и функциональность остается

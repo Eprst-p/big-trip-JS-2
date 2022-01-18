@@ -43,11 +43,10 @@ const UserAction = {
 };
 
 const UpdateType = {
-  PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
-  ERROR: 'ERROR'
+  ERROR: 'ERROR',
 };
 
 const FilterType = {
@@ -63,17 +62,17 @@ const TripTabsTypes = {
 
 const FORM_TYPES = {
   EDIT_FORM: 'editForm',
-  NEW_FORM: 'newForm'
+  NEW_FORM: 'newForm',
 };
 
 const ERRORS = {
   NO_OFFERS: 'NO_OFFERS',
-  NO_DESTINATIONS: 'NO_DESTINATIONS'
+  NO_DESTINATIONS: 'NO_DESTINATIONS',
 };
 
 const MESSAGES = {
   LOADING: 'Loading...',
-  ERROR: 'Something is going wrong'
+  ERROR: 'Something is going wrong',
 };
 
 const State = {

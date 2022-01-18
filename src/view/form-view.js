@@ -205,7 +205,6 @@ class FormView extends SmartView {
     this.#allCities = this.#allDestinations.map((element) => element.name);
     this._data = FormView.parsePointToData(pointData);
 
-
     this.#setInnerListeners();
   }
 
@@ -324,7 +323,7 @@ class FormView extends SmartView {
     });
   }
 
-  #onPriceChange = (evt) => {//данные меняются, но форма не перерисовывается (так и задумано)
+  #onPriceChange = (evt) => {
     evt.preventDefault();
     const priceInput = this.element.querySelector('.event__input--price');
     const price = +evt.target.value;
@@ -443,8 +442,6 @@ class FormView extends SmartView {
 
   #checkCity = () => {
     const cityInput = this.element.querySelector('.event__input--destination');
-    //повторный поиск элемента. Делал его через приватное свойство this.#cityInput - валидация переставала работать корректно при нескольких подряд изменениях в поле.
-    //Похоже, что теряется this. поэтому пока сделано через переменную, т.к непонятно, как сделать, чтобы валидация не билась. Аналогично и в других валидациях.
 
     if (cityInput.value === '') {
       cityInput.setCustomValidity('Выберите город из представленных');

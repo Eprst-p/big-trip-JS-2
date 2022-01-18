@@ -76,7 +76,6 @@ class PointPresenter {
   }
 
   #formSubmit = (update) => {
-    //тут позже можно ввести проверку на минор/патч isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH (на месте UpdateType.MINOR) - патч - это офферы
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -104,7 +103,6 @@ class PointPresenter {
       {...this.#pointData, isFavorite: !this.#pointData.isFavorite},
     );
   }
-
 
   //реплейсы и ресеты
   destroy = () => {
