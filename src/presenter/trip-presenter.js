@@ -158,59 +158,6 @@ class TripPresenter {
     this.#renderPointsList(points, allPossisbleOffers, allDestinations);
   }
 
-  //обработчики
-  #onSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearBoard();
-    this.#renderBoard();
-  }
-
-  #onAddButtonClick = () => {
-    this.#currentSortType = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newFormPresenter.init(this.allPossisbleOffers, this.allDestinations);
-  }
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.#addPointButtonComponent.element.removeAttribute('disabled');
-
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-    }
-  };
-
-  #onModeChange = () => {
-    this.#newFormPresenter.destroy();
-    this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
-  }
-
-  #onMenuTabClick = (targetTab) => {
-    switch (targetTab) {
-      case TripTabsTypes.TABLE:
-        if (this.#statsComponent) {
-          this.#clearBoard();
-          this.init();
-          this.#statsComponent = null;
-        }
-        break;
-      case TripTabsTypes.STATS:
-        if (this.#filterPresenter) {
-          this.#filterPresenter.destroy();
-          this.#filterPresenter = null;
-        }
-        this.destroy();
-        this.#renderTripInfo(this.#pointsModel.points);
-        this.#statsComponent = new StatsView(this.#pointsModel.points);
-        renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
-        break;
-    }
-  }
-
   //смена данных
   #onViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
@@ -302,6 +249,60 @@ class TripPresenter {
     this.#pointsModel.removeObserver(this.#onModelEvent);
     this.#filterModel.removeObserver(this.#onModelEvent);
   }
+
+  //обработчики
+  #onSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+    this.#clearBoard();
+    this.#renderBoard();
+  }
+
+  #onAddButtonClick = () => {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newFormPresenter.init(this.allPossisbleOffers, this.allDestinations);
+  }
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#addPointButtonComponent.element.removeAttribute('disabled');
+
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
+
+  #onModeChange = () => {
+    this.#newFormPresenter.destroy();
+    this.#pointsStorage.forEach((presenter) => presenter.resetViewToDefault());
+  }
+
+  #onMenuTabClick = (targetTab) => {
+    switch (targetTab) {
+      case TripTabsTypes.TABLE:
+        if (this.#statsComponent) {
+          this.#clearBoard();
+          this.init();
+          this.#statsComponent = null;
+        }
+        break;
+      case TripTabsTypes.STATS:
+        if (this.#filterPresenter) {
+          this.#filterPresenter.destroy();
+          this.#filterPresenter = null;
+        }
+        this.destroy();
+        this.#renderTripInfo(this.#pointsModel.points);
+        this.#statsComponent = new StatsView(this.#pointsModel.points);
+        renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
+        break;
+    }
+  }
+
 }
 
 export default TripPresenter;

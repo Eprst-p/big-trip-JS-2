@@ -27,9 +27,11 @@ const createTypeAndCityTextTemplate = (type, city, allCities, isDisabled) => (
 
 const createTimeTemplate = (startTime, endTime, isDisabled) => {
 
+  const SIZE_COEFFICIENT = 90;
+
   const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');
   const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
-  const smallerFontSize = 'style = font-size:90%';
+  const smallerFontSize = `style = font-size:${SIZE_COEFFICIENT}%`;
 
   return (
     `<div class="event__field-group  event__field-group--time">
@@ -212,25 +214,54 @@ class FormView extends SmartView {
     return createFormTemplate(this.#formType, this._data, this.#allPossisbleOffers, this.#allCities);
   }
 
+  reset = (point) => {
+    this.updateData(
+      FormView.parsePointToData(point),
+    );
+  }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerStart && this.#datepickerEnd) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+
+    }
+  }
+
+  setDatepicker = () => {
+    const startTime = this.element.querySelector('#event-start-time-1');
+    const endTime = this.element.querySelector('#event-end-time-1');
+
+    this.#datepickerStart = flatpickr(
+      startTime,
+      {
+        enableTime: true,
+        time_24hr: true,// eslint-disable-line camelcase
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateFrom,
+        onClose: this.#onDateStartChange,
+      },
+    );
+    this.#datepickerEnd = flatpickr(
+      endTime,
+      {
+        enableTime: true,
+        time_24hr: true,// eslint-disable-line camelcase
+        dateFormat: 'd/m/Y H:i',
+        defaultDate: this._data.dateTo,
+        onClose: this.#onDateEndChange,
+      },
+    );
+  }
+
   //установка обработчиков
   setOnFormSubmit = (callback) => {
     this._callbacksStorage.formSubmit = callback;
     this.element.closest('form').addEventListener('submit', this.#onFormSubmit);
-  }
-
-  #onFormSubmit = (evt) => {
-    evt.preventDefault();
-    this.#updateOffers();
-
-    if (!this.#checkDateDifference()) {
-      return;
-    }
-
-    if (!this.#checkCity()) {
-      return;
-    }
-
-    this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
   }
 
   setOnFormArrowClick = (callback) => {
@@ -240,35 +271,14 @@ class FormView extends SmartView {
     }
   }
 
-  #onFormArrowClick = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.formArrowClick();
-  }
-
   setOnDeleteBtnClick = (callback) => {
     this._callbacksStorage.deleteBtnClick = callback;
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
   }
 
-  #onDeleteBtnClick = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.deleteBtnClick(FormView.parseDataToPoint(this._data));
-  }
-
   setOnCancelBtnClick = (callback) => {
     this._callbacksStorage.cancelBtnClick = callback;
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onCancelBtnClick);
-  }
-
-  #onCancelBtnClick = (evt) => {
-    evt.preventDefault();
-    this._callbacksStorage.cancelBtnClick();
-  }
-
-  #setInnerListeners = () => {
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
   }
 
   restoreListeners = () => {
@@ -279,30 +289,7 @@ class FormView extends SmartView {
     this.setDatepicker();
   }
 
-  //изменение данных
-  static parsePointToData = (point) => (
-    {...point,
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false,
-    });
-
-  static parseDataToPoint = (data) => {
-    const point = {...data};
-
-    delete point.isDisabled;
-    delete point.isSaving;
-    delete point.isDeleting;
-
-    return point;
-  }
-
-  reset = (point) => {
-    this.updateData(
-      FormView.parsePointToData(point),
-    );
-  }
-
+  //разные приватные методы
   #onDateStartChange = ([userDate]) => {
     this.updateData({
       dateFrom: userDate,
@@ -383,44 +370,6 @@ class FormView extends SmartView {
     this._data.offers = newOffers;
   }
 
-  //другие методы
-  removeElement = () => {
-    super.removeElement();
-
-    if (this.#datepickerStart && this.#datepickerEnd) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-
-    }
-  }
-
-  setDatepicker = () => {
-    const startTime = this.element.querySelector('#event-start-time-1');
-    const endTime = this.element.querySelector('#event-end-time-1');
-
-    this.#datepickerStart = flatpickr(
-      startTime,
-      {
-        enableTime: true,
-        time_24hr: true,// eslint-disable-line camelcase
-        dateFormat: 'd/m/Y H:i',
-        defaultDate: this._data.dateFrom,
-        onClose: this.#onDateStartChange,
-      },
-    );
-    this.#datepickerEnd = flatpickr(
-      endTime,
-      {
-        enableTime: true,
-        time_24hr: true,// eslint-disable-line camelcase
-        dateFormat: 'd/m/Y H:i',
-        defaultDate: this._data.dateTo,
-        onClose: this.#onDateEndChange,
-      },
-    );
-  }
 
   #checkDateDifference = () => {
     const startDate = new Date(this._data.dateFrom);
@@ -452,6 +401,61 @@ class FormView extends SmartView {
       cityInput.reportValidity();
       return true;
     }
+  }
+
+  //обработчики
+  #onFormSubmit = (evt) => {
+    evt.preventDefault();
+    this.#updateOffers();
+
+    if (!this.#checkDateDifference()) {
+      return;
+    }
+
+    if (!this.#checkCity()) {
+      return;
+    }
+
+    this._callbacksStorage.formSubmit(FormView.parseDataToPoint(this._data));
+  }
+
+  #onFormArrowClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.formArrowClick();
+  }
+
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.deleteBtnClick(FormView.parseDataToPoint(this._data));
+  }
+
+  #onCancelBtnClick = (evt) => {
+    evt.preventDefault();
+    this._callbacksStorage.cancelBtnClick();
+  }
+
+  #setInnerListeners = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
+  }
+
+  //изменение данных
+  static parsePointToData = (point) => (
+    {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
   }
 }
 

@@ -62,48 +62,6 @@ class PointPresenter {
     remove(prevPointEditForm);
   }
 
-  //обработчики
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.#pointEditForm.reset(this.#pointData);
-      this.#replaceFormToPoint();
-    }
-  };
-
-  #pointArrowClick = () => {
-    this.#replacePointToForm();
-  }
-
-  #formSubmit = (update) => {
-    this.#changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      update,
-    );
-  }
-
-  #formArrowClick = () => {
-    this.#pointEditForm.reset(this.#pointData);
-    this.#replaceFormToPoint();
-  }
-
-  #deleteBtnClick = (point) => {
-    this.#changeData(
-      UserAction.DELETE_POINT,
-      UpdateType.MINOR,
-      point,
-    );
-  }
-
-  #favoriteStarClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      {...this.#pointData, isFavorite: !this.#pointData.isFavorite},
-    );
-  }
-
   //реплейсы и ресеты
   destroy = () => {
     remove(this.#pointElement);
@@ -162,6 +120,48 @@ class PointPresenter {
     replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
     document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
+  }
+
+  //обработчики
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#pointEditForm.reset(this.#pointData);
+      this.#replaceFormToPoint();
+    }
+  };
+
+  #pointArrowClick = () => {
+    this.#replacePointToForm();
+  }
+
+  #formSubmit = (update) => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      update,
+    );
+  }
+
+  #formArrowClick = () => {
+    this.#pointEditForm.reset(this.#pointData);
+    this.#replaceFormToPoint();
+  }
+
+  #deleteBtnClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  }
+
+  #favoriteStarClick = () => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#pointData, isFavorite: !this.#pointData.isFavorite},
+    );
   }
 }
 

@@ -7,7 +7,7 @@ const defaultData = {
   basePrice: 300,
   dateFrom: todayDate.toISOString(),
   dateTo: todayDate.toISOString(),
-  id: nanoid(),//непонятно, какой должен быть айди
+  id: nanoid(),
   isFavorite: false,
   destination: {
     description: 'In the name of the Empero',
