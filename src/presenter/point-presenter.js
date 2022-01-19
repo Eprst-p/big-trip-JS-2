@@ -136,6 +136,7 @@ class PointPresenter {
   }
 
   #formSubmit = (update) => {
+    document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
