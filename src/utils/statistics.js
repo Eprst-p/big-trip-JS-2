@@ -31,7 +31,7 @@ const sumPricePerType = (points) => {
 
   const labels = UPPER_CASE_TYPES.map((type, index) => ({
     TYPE: type,
-    VALUE: prices[index]
+    VALUE: prices[index],
   }));
 
   const sortedLabels = labels.sort(sortByAnyValue);
@@ -54,7 +54,7 @@ const sumTypesAmount = (points) => {
 
   const labels = UPPER_CASE_TYPES.map((type, index) => ({
     TYPE: type,
-    VALUE: typesAmount[index]
+    VALUE: typesAmount[index],
   }));
 
   const sortedLabels = labels.sort(sortByAnyValue);
@@ -81,13 +81,13 @@ const sumDurationPerType = (points) => UPPER_CASE_TYPES.map((type) => {
 const convertDurationToNumber = (points) => {
   const durations = sumDurationPerType(points).map((duration) => ({
     MILISECONDS: duration.asMilliseconds(),
-    FORMATED_TIME: getDurationFormat(null, null, duration)
+    FORMATED_TIME: getDurationFormat(null, null, duration),
   }));
 
   const labels = UPPER_CASE_TYPES.map((type, index) => ({
     TYPE: type,
     VALUE: durations[index].MILISECONDS,
-    FORMATED: durations[index].FORMATED_TIME
+    FORMATED: durations[index].FORMATED_TIME,
   }));
 
   const sortedLabels = labels.sort(sortByAnyValue);
