@@ -1,7 +1,7 @@
 import {POINT_TYPES} from './constants';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {formDayjsFromStr, getDurationFormat, getDuration, zeroDuration} from './time-and-date.js';
+import {getDurationFormat, getDuration, zeroDuration, getDateInDayjs} from './time-and-date.js';
 
 //вычисление данных
 const UPPER_CASE_TYPES = POINT_TYPES.map((type) => type.toUpperCase());
@@ -69,8 +69,8 @@ const sumDurationPerType = (points) => UPPER_CASE_TYPES.map((type) => {
   let totalDuration = zeroDuration;
   points.forEach((point) => {
     if (point.type === type.toLowerCase()) {
-      const startDayjs = formDayjsFromStr(point.dateFrom, 'DD MM YY HH:mm');
-      const endDayjs = formDayjsFromStr(point.dateTo, 'DD MM YY HH:mm');
+      const startDayjs = getDateInDayjs(point.dateFrom);
+      const endDayjs = getDateInDayjs(point.dateTo);
       currentDuration = getDuration(endDayjs, startDayjs);
       totalDuration = totalDuration.add(currentDuration);
     }

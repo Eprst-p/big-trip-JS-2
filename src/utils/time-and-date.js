@@ -1,12 +1,7 @@
 import dayjs from 'dayjs';
 
-const customParseFormat = require('dayjs/plugin/customParseFormat');// eslint-disable-line no-undef
-dayjs.extend(customParseFormat);
-
 const duration = require('dayjs/plugin/duration');// eslint-disable-line no-undef
 dayjs.extend(duration);
-
-const formDayjsFromStr = (someDate, string) => dayjs(someDate, string);
 
 const getDateInDayjs = (date) => dayjs(date);
 
@@ -21,7 +16,7 @@ const getDuration = (endTime, startTime) => dayjs.duration(endTime.diff(startTim
 const getDurationFormat = (endTime, startTime, someDuration) => {
   const currentDuration = someDuration || getDuration(endTime, startTime);
 
-  const days = currentDuration.days();
+  const days = Math.floor(currentDuration.asDays());
   const hours = currentDuration.hours();
   const minutes = currentDuration.minutes();
 
@@ -31,9 +26,13 @@ const getDurationFormat = (endTime, startTime, someDuration) => {
   if (hours > 0 && days === 0) {
     return `${currentDuration.format('HH')}H ${currentDuration.format('mm')}M`;
   }
-  if (days >= 1) {
+  if (days >= 1 && days < 10) {
     return `${currentDuration.format('DD')}D ${currentDuration.format('HH')}H ${currentDuration.format('mm')}M`;
   }
+  if (days >= 10) {
+    return `${days}D ${currentDuration.format('HH')}H ${currentDuration.format('mm')}M`;
+  }
+
 };
 
-export {formDayjsFromStr, getDateInFormat, getDuration, getDurationInDayjs, getDurationFormat, zeroDuration, getDateInDayjs};
+export {getDateInFormat, getDuration, getDurationInDayjs, getDurationFormat, zeroDuration, getDateInDayjs};
