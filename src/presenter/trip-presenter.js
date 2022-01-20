@@ -262,6 +262,7 @@ class TripPresenter {
   }
 
   #onAddButtonClick = () => {
+    this.#pointsStorage.forEach((presenter) => presenter.removeEscListener());
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newFormPresenter.init(this.allPossisbleOffers, this.allDestinations);

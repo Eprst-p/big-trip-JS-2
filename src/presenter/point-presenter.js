@@ -118,11 +118,15 @@ class PointPresenter {
 
   #replaceFormToPoint = () => {
     replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.removeEscListener();
     this.#mode = Mode.DEFAULT;
   }
 
   //обработчики
+  removeEscListener = () => {
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  }
+
   #onEscKeyDown = (evt) => {
     if (ESC_KEYS.includes(evt.key)) {
       evt.preventDefault();
@@ -136,7 +140,7 @@ class PointPresenter {
   }
 
   #formSubmit = (update) => {
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.removeEscListener();
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -150,6 +154,7 @@ class PointPresenter {
   }
 
   #deleteBtnClick = (point) => {
+    this.removeEscListener();
     this.#changeData(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
