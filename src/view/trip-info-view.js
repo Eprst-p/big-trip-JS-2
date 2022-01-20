@@ -18,7 +18,6 @@ const createTipInfoTemplate = (allPoints) => {
   };
 
   const startCity = cities[0];
-  const secondCity = cities.length > 1 ? cities[1] : '';
   const lastCity = findLastCity();
 
   const findLastDate = () => {
@@ -50,7 +49,7 @@ const createTipInfoTemplate = (allPoints) => {
       return `<h1 class="trip-info__title">${startCity} &mdash; ... &mdash; ${lastCity}</h1>`;
     }
     if (cityCount === 3) {
-      return `<h1 class="trip-info__title">${startCity} &mdash; ${secondCity} &mdash; ${lastCity}</h1>`;
+      return `<h1 class="trip-info__title">${startCity} &mdash; ${cities[1]} &mdash; ${lastCity}</h1>`;
     }
     if (cityCount === 2) {
       return `<h1 class="trip-info__title">${startCity} &mdash; ${lastCity}</h1>`;
