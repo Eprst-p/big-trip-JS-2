@@ -1,5 +1,5 @@
 import {POINT_TYPES, FORM_TYPES} from '../utils/constants.js';
-import {getDateInFormat} from '../utils/time-and-date.js';
+import {getDateInFormat, getDateInDayjs} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -29,8 +29,8 @@ const createTimeTemplate = (startTime, endTime, isDisabled) => {
 
   const SIZE_COEFFICIENT = 90;
 
-  const editedStartTime = getDateInFormat(startTime, 'DD MM YY HH:mm');
-  const editedEndTime = getDateInFormat(endTime, 'DD MM YY HH:mm');
+  const editedStartTime = getDateInDayjs(startTime);
+  const editedEndTime = getDateInDayjs(endTime);
   const smallerFontSize = `style = font-size:${SIZE_COEFFICIENT}%`;
 
   return (
@@ -60,7 +60,6 @@ const createTimeTemplate = (startTime, endTime, isDisabled) => {
   );
 };
 
-
 const createPriceTemplate = (price, isDisabled) => (
   `<div class="event__field-group  event__field-group--price">
     <label class="event__label" for="event-price-1">
@@ -83,6 +82,10 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers, isDisabled)
 
   const names = offerByType.offers;
 
+  if (names.length === 0) {
+    return '';
+  }
+
   const checkChosenOffer = (offerId) => {
     let check = '';
     offers.forEach((currentOffer) => {
@@ -94,21 +97,40 @@ const createOffersTemplate = (offers, pointType, allPossisbleOffers, isDisabled)
   };
 
   return (
-    names.map((offer) => `<div class="event__offer-selector">
-      <input
-        class="event__offer-checkbox  visually-hidden"
-        id="event-offer-${offer.title}-1"
-        type="checkbox"
-        name="event-offer-${offer.title}"
-        ${checkChosenOffer(offer.id)}
-        ${isDisabled ? 'disabled' : ''}
-      >
-      <label class="event__offer-label" for="event-offer-${offer.title}-1">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>`).join('')
+    `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+          ${names.map((offer) =>`<div class="event__offer-selector">
+            <input
+              class="event__offer-checkbox  visually-hidden"
+              id="event-offer-${offer.title}-1"
+              type="checkbox"
+              name="event-offer-${offer.title}"
+              ${checkChosenOffer(offer.id)}
+              ${isDisabled ? 'disabled' : ''}
+            >
+            <label class="event__offer-label" for="event-offer-${offer.title}-1">
+              <span class="event__offer-title">${offer.title}</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">${offer.price}</span>
+            </label>
+          </div>`).join('')}
+      </div>`
+  );
+};
+
+const createDestinationTemplate = (destination) => {
+  if (destination.description === '') {
+    return '';
+  }
+
+  return (
+    `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destination.description}</p>
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${destination.pictures.map((currentPicture) => `<img class="event__photo" src="${currentPicture.src}" alt="${currentPicture.description}">`).join('')}
+        </div>
+      </div>`
   );
 };
 
@@ -170,21 +192,10 @@ const createFormTemplate = (formType, pointData, allPossisbleOffers, allCities) 
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
             ${createOffersTemplate(offers, type, allPossisbleOffers, isDisabled)}
-          </div>
         </section>
-
         <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-            ${destination.pictures.map((currentPicture) => `<img class="event__photo" src="${currentPicture.src}" alt="${currentPicture.description}">`).join('')}
-            </div>
-          </div>
+        ${createDestinationTemplate(destination)}
         </section>
       </section>
     </form>`

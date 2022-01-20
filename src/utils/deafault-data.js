@@ -10,7 +10,7 @@ const defaultData = {
   id: nanoid(),
   isFavorite: false,
   destination: {
-    description: 'In the name of the Empero',
+    description: '',
     name: '',
     pictures: [],
   },
