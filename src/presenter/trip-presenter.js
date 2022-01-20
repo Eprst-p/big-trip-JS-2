@@ -74,6 +74,12 @@ class TripPresenter {
     return this.#pointsModel.allDestinations;
   }
 
+  get notChangedPoints() {
+    const points = this.#pointsModel.points;
+    const notFilteredPoints = filterFunctional[FilterType.EVERYTHING](points);
+    return notFilteredPoints.sort(sortItemsByDay);
+  }
+
   init = () => {
     this.#filterPresenter = new FilterPresenter(this.#filterContainer, this.#filterModel, this.#pointsModel);
     this.#filterPresenter.init();
@@ -153,7 +159,7 @@ class TripPresenter {
       return;
     }
 
-    this.#renderTripInfo(this.#pointsModel.points);
+    this.#renderTripInfo(this.notChangedPoints);
     this.#renderSort();
     this.#renderPointsList(points, allPossisbleOffers, allDestinations);
   }
