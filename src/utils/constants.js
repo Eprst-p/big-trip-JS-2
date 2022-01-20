@@ -2,6 +2,8 @@ const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-i
 
 const BAR_HEIGHT = 85;
 
+const ESC_KEYS = ['Escape', 'Esc'];
+
 const SortType = {
   DAY: 'sort-day',
   TIME: 'sort-time',
@@ -82,4 +84,4 @@ const State = {
 };
 
 
-export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State};
+export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State, ESC_KEYS};

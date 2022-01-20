@@ -1,6 +1,6 @@
 import FormView from '../view/form-view.js';
 import {RenderPositions, renderElement, remove} from '../utils/render.js';
-import {UserAction, UpdateType, FORM_TYPES} from '../utils/constants.js';
+import {UserAction, UpdateType, FORM_TYPES, ESC_KEYS} from '../utils/constants.js';
 import {defaultData} from '../utils/deafault-data.js';
 
 class NewPointPresenter {
@@ -77,7 +77,7 @@ class NewPointPresenter {
   }
 
   #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (ESC_KEYS.includes(evt.key)) {
       evt.preventDefault();
       this.destroy();
     }

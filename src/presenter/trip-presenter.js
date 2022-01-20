@@ -11,7 +11,7 @@ import MessageView from '../view/message-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
-import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes, MESSAGES, State as PointPresenterViewState} from '../utils/constants.js';
+import {SortType, UserAction, UpdateType, FilterType, TripTabsTypes, MESSAGES, State as PointPresenterViewState, ESC_KEYS} from '../utils/constants.js';
 import {filterFunctional} from '../utils/filter.js';
 
 class TripPresenter {
@@ -268,7 +268,7 @@ class TripPresenter {
   }
 
   #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (ESC_KEYS.includes(evt.key)) {
       evt.preventDefault();
       this.#addPointButtonComponent.element.removeAttribute('disabled');
 
