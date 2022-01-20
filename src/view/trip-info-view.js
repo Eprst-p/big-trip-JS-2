@@ -2,17 +2,36 @@ import AbstractView from './abstract-view.js';
 import {getDateInDayjs, getDateInFormat} from '../utils/time-and-date.js';
 
 const createTipInfoTemplate = (allPoints) => {
-  const cities = allPoints.map((point) => point.destination.name);
+  const allCities = allPoints.map((point) => point.destination.name);
+  const uniqueCities = new Set(allCities);
+  const cities = Array.from(uniqueCities);
+  const cityCount = uniqueCities.size;
+
+  const findLastCity = () => {
+    for (let i = allPoints.length - 1; i >= 0; i-- ) {
+      const currentCity = allPoints[i].destination.name;
+
+      if (uniqueCities.has(currentCity)) {
+        return currentCity;
+      }
+    }
+  };
 
   const startCity = cities[0];
-  const findSecondCity = () => {
-    const secondCity = cities.length >= 2 ? cities[1] : '';
-    return secondCity;
+  const secondCity = cities.length > 1 ? cities[1] : '';
+  const lastCity = findLastCity();
+
+  const findLastDate = () => {
+    for (let i = allPoints.length - 1; i >= 0; i-- ) {
+      if (allPoints[i].destination.name === lastCity) {
+        return allPoints[i].dateTo;
+      }
+    }
   };
-  const lastCity = cities[cities.length - 1];
+
   const startDayjs = getDateInDayjs(allPoints[0].dateFrom);
   const startDate = getDateInFormat(startDayjs, 'DD MMM');
-  const lastDayjs = getDateInDayjs(allPoints[cities.length - 1].dateTo);
+  const lastDayjs = getDateInDayjs(findLastDate());
   const lastDate = getDateInFormat(lastDayjs, 'DD MMM');
 
   let totalPrice = 0;
@@ -26,22 +45,17 @@ const createTipInfoTemplate = (allPoints) => {
   });
 
   const createCityWritting = () => {
-    let cityCount = 0;
-    cities.forEach((city) => {
-      if (city !== null) {
-        cityCount++;
-      }
-    });
+
     if (cityCount > 3) {
       return `<h1 class="trip-info__title">${startCity} &mdash; ... &mdash; ${lastCity}</h1>`;
     }
-    else  if (cityCount === 3) {
-      return `<h1 class="trip-info__title">${startCity} &mdash; ${findSecondCity()} &mdash; ${lastCity}</h1>`;
+    if (cityCount === 3) {
+      return `<h1 class="trip-info__title">${startCity} &mdash; ${secondCity} &mdash; ${lastCity}</h1>`;
     }
-    else  if (cityCount === 2) {
+    if (cityCount === 2) {
       return `<h1 class="trip-info__title">${startCity} &mdash; ${lastCity}</h1>`;
     }
-    else  if (cityCount === 1) {
+    if (cityCount === 1) {
       return `<h1 class="trip-info__title">${startCity}</h1>`;
     }
   };
