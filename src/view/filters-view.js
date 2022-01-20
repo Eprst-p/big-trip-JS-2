@@ -1,5 +1,4 @@
 import AbstractView from './abstract-view.js';
-import {FilterType} from '../utils/constants.js';
 
 const createFiltersTemplate = (filters, currentFilterType, amountOfFilteredPoints) => (
   `<form class="trip-filters" action="#" method="get">
@@ -12,8 +11,7 @@ const createFiltersTemplate = (filters, currentFilterType, amountOfFilteredPoint
         name="trip-filter"
         value="${filter.filterType}"
         ${filter.filterType === currentFilterType ? 'checked' : ''}
-        ${filter.filterType === FilterType.FUTURE && amountOfFilteredPoints.filteredFuture.length === 0 ? 'disabled' : ''}
-        ${filter.filterType === FilterType.PAST && amountOfFilteredPoints.filteredPast.length === 0 ? 'disabled' : ''}
+        ${amountOfFilteredPoints[filter.filterType].length === 0 ? 'disabled' : ''}
       >
       <label class="trip-filters__filter-label" for="filter-${filter.filterType}">${filter.title}</label>
     </div>

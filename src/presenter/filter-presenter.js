@@ -50,8 +50,9 @@ class FilterPresenter {
     const filteredPast = filterFunctional[FilterType.PAST](points);
 
     const amountOfFilteredPoints = {
-      filteredFuture: filteredFuture,
-      filteredPast: filteredPast
+      [FilterType.FUTURE]: filteredFuture,
+      [FilterType.PAST]: filteredPast,
+      [FilterType.EVERYTHING]: points,
     };
 
     this.#filterComponent = new FiltersView(filters, this.#filterModel.filter, amountOfFilteredPoints);
