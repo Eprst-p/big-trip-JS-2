@@ -1,5 +1,5 @@
 import {POINT_TYPES, FORM_TYPES} from '../utils/constants.js';
-import {getDateInFormat, getDateInDayjs} from '../utils/time-and-date.js';
+import {getDateInDayjs} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';

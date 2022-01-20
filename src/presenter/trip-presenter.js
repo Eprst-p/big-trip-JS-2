@@ -5,7 +5,7 @@ import NoPointsView from '../view/no-points-view.js';
 import SortView from '../view/sort-view.js';
 import EventsList from '../view/events-list-view.js';
 import TripInfoView from '../view/trip-info-view.js';
-import AddPointButtonView from '../view/add-point-view.js';
+import AddPointButtonView from '../view/add-point-button-view.js';
 import StatsView from '../view/stats-view.js';
 import MessageView from '../view/message-view.js';
 import PointPresenter from './point-presenter.js';

@@ -83,5 +83,13 @@ const State = {
   ABORTING: 'ABORTING',
 };
 
+const CHART_COLORS = {
+  BACKGROUND_COLOR: '#ffffff',
+  HOVER_BACKGROUND_COLOR: '#ffffff',
+  LABELS_COLOR: '#000000',
+  TITLE_COLOR: '#000000',
+  SCALES_COLOR: '#000000',
+};
 
-export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State, ESC_KEYS};
+
+export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State, ESC_KEYS, CHART_COLORS};
