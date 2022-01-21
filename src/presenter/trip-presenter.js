@@ -74,10 +74,12 @@ class TripPresenter {
     return this.#pointsModel.allDestinations;
   }
 
-  get notChangedPoints() {
+  get defaultSortedPoints() {
     const points = this.#pointsModel.points;
-    const notFilteredPoints = filterFunctional[FilterType.EVERYTHING](points);
-    return notFilteredPoints.sort(sortItemsByDay);
+    const pointsCopy = points.slice();
+    const defaultFilterdPoints = filterFunctional[FilterType.EVERYTHING](pointsCopy);
+
+    return defaultFilterdPoints.sort(sortItemsByDay);
   }
 
   init = () => {
@@ -159,7 +161,7 @@ class TripPresenter {
       return;
     }
 
-    this.#renderTripInfo(this.notChangedPoints);
+    this.#renderTripInfo(this.defaultSortedPoints);
     this.#renderSort();
     this.#renderPointsList(points, allPossisbleOffers, allDestinations);
   }
@@ -197,11 +199,8 @@ class TripPresenter {
     }
   }
 
-  #onModelEvent = (updateType, data) => {
+  #onModelEvent = (updateType) => {
     switch (updateType) {
-      case UpdateType.PATCH:
-        this.#pointsStorage.get(data.id).init(data);
-        break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
@@ -303,7 +302,7 @@ class TripPresenter {
           this.#filterPresenter = null;
         }
         this.destroy();
-        this.#renderTripInfo(this.#pointsModel.points);
+        this.#renderTripInfo(this.defaultSortedPoints);
         this.#statsComponent = new StatsView(this.#pointsModel.points);
         renderElement(this.#eventsContainer.element, this.#statsComponent, RenderPositions.AFTERBEGIN);
         break;
