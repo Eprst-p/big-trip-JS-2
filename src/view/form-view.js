@@ -233,14 +233,7 @@ class FormView extends SmartView {
 
   removeElement = () => {
     super.removeElement();
-
-    if (this.#datepickerStart && this.#datepickerEnd) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-
-    }
+    this.destroyDatepicker();
   }
 
   setDatepicker = () => {
@@ -267,6 +260,15 @@ class FormView extends SmartView {
         onClose: this.#onDateEndChange,
       },
     );
+  }
+
+  destroyDatepicker = () => {
+    if (this.#datepickerStart && this.#datepickerEnd) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
   }
 
   //установка обработчиков

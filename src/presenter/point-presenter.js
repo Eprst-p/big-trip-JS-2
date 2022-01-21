@@ -119,6 +119,7 @@ class PointPresenter {
   #replaceFormToPoint = () => {
     replace(this.#pointContainer, this.#pointElement, this.#pointEditForm);
     this.removeEscListener();
+    this.#pointEditForm.destroyDatepicker();
     this.#mode = Mode.DEFAULT;
   }
 
