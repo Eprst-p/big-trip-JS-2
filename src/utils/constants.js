@@ -83,7 +83,7 @@ const State = {
   ABORTING: 'ABORTING',
 };
 
-const CHART_COLORS = {
+const ChartColors = {
   BACKGROUND_COLOR: '#ffffff',
   HOVER_BACKGROUND_COLOR: '#ffffff',
   LABELS_COLOR: '#000000',
@@ -92,4 +92,4 @@ const CHART_COLORS = {
 };
 
 
-export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State, ESC_KEYS, CHART_COLORS};
+export {POINT_TYPES, SORT_ITEMS, SortType, UserAction, UpdateType, FilterType, TripTabsTypes, BAR_HEIGHT, FORM_TYPES, ERRORS, MESSAGES, State, ESC_KEYS, ChartColors};

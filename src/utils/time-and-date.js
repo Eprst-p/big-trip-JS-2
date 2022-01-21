@@ -1,13 +1,11 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
-const duration = require('dayjs/plugin/duration');// eslint-disable-line no-undef
 dayjs.extend(duration);
 
 const getDateInDayjs = (date) => dayjs(date);
 
 const getDateInFormat = (date, format) => dayjs(date).format(format);
-
-const getDurationInDayjs = (endTime, startTime) => dayjs(endTime - startTime);//для сортировки только
 
 const zeroDuration = dayjs.duration(0);
 
@@ -35,4 +33,4 @@ const getDurationFormat = (endTime, startTime, someDuration) => {
 
 };
 
-export {getDateInFormat, getDuration, getDurationInDayjs, getDurationFormat, zeroDuration, getDateInDayjs};
+export {getDateInFormat, getDuration, getDurationFormat, zeroDuration, getDateInDayjs};

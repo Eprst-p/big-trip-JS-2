@@ -1,4 +1,4 @@
-import {POINT_TYPES, CHART_COLORS} from './constants';
+import {POINT_TYPES, ChartColors} from './constants';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getDurationFormat, getDuration, zeroDuration, getDateInDayjs} from './time-and-date.js';
@@ -118,8 +118,8 @@ const renderMoneyChart = (moneyElement, points) => {
     data: {
       datasets: [{
         data: sumPricePerType(points),
-        backgroundColor: CHART_COLORS.BACKGROUND_COLOR,
-        hoverBackgroundColor: CHART_COLORS.HOVER_BACKGROUND_COLOR,
+        backgroundColor: ChartColors.BACKGROUND_COLOR,
+        hoverBackgroundColor: ChartColors.HOVER_BACKGROUND_COLOR,
         anchor: 'start',
         barThickness: 30,
         minBarLength: 50,
@@ -133,7 +133,7 @@ const renderMoneyChart = (moneyElement, points) => {
           font: {
             size: 13,
           },
-          color: CHART_COLORS.LABELS_COLOR,
+          color: ChartColors.LABELS_COLOR,
           anchor: 'end',
           align: 'start',
           formatter: (val) => `€ ${val}`,
@@ -142,14 +142,14 @@ const renderMoneyChart = (moneyElement, points) => {
       title: {
         display: true,
         text: 'MONEY',
-        fontColor: CHART_COLORS.TITLE_COLOR,
+        fontColor: ChartColors.TITLE_COLOR,
         fontSize: 23,
         position: 'left',
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: CHART_COLORS.SCALES_COLOR,
+            fontColor: ChartColors.SCALES_COLOR,
             padding: 5,
             fontSize: 13,
           },
@@ -188,8 +188,8 @@ const renderTypeChart = (typeElement, points) => {
     data: {
       datasets: [{
         data: sumTypesAmount(points),
-        backgroundColor: CHART_COLORS.BACKGROUND_COLOR,
-        hoverBackgroundColor: CHART_COLORS.HOVER_BACKGROUND_COLOR,
+        backgroundColor: ChartColors.BACKGROUND_COLOR,
+        hoverBackgroundColor: ChartColors.HOVER_BACKGROUND_COLOR,
         anchor: 'start',
         barThickness: 30,
         minBarLength: 50,
@@ -203,7 +203,7 @@ const renderTypeChart = (typeElement, points) => {
           font: {
             size: 13,
           },
-          color: CHART_COLORS.LABELS_COLOR,
+          color: ChartColors.LABELS_COLOR,
           anchor: 'end',
           align: 'start',
           formatter: (val) => `${val}x`,
@@ -212,14 +212,14 @@ const renderTypeChart = (typeElement, points) => {
       title: {
         display: true,
         text: 'TYPE',
-        fontColor: CHART_COLORS.TITLE_COLOR,
+        fontColor: ChartColors.TITLE_COLOR,
         fontSize: 23,
         position: 'left',
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: CHART_COLORS.SCALES_COLOR,
+            fontColor: ChartColors.SCALES_COLOR,
             padding: 5,
             fontSize: 13,
           },
@@ -258,8 +258,8 @@ const renderTimeChart = (timeElement, points) => {
     data: {
       datasets: [{
         data: convertDurationToNumber(points),
-        backgroundColor: CHART_COLORS.BACKGROUND_COLOR,
-        hoverBackgroundColor: CHART_COLORS.HOVER_BACKGROUND_COLOR,
+        backgroundColor: ChartColors.BACKGROUND_COLOR,
+        hoverBackgroundColor: ChartColors.HOVER_BACKGROUND_COLOR,
         anchor: 'start',
         barThickness: 30,
         minBarLength: 100,
@@ -273,7 +273,7 @@ const renderTimeChart = (timeElement, points) => {
           font: {
             size: 13,
           },
-          color: CHART_COLORS.LABELS_COLOR,
+          color: ChartColors.LABELS_COLOR,
           anchor: 'end',
           align: 'start',
           formatter: (value, context) => convertDurationToString(context.dataIndex),
@@ -282,14 +282,14 @@ const renderTimeChart = (timeElement, points) => {
       title: {
         display: true,
         text: 'TIME',
-        fontColor: CHART_COLORS.TITLE_COLOR,
+        fontColor: ChartColors.TITLE_COLOR,
         fontSize: 23,
         position: 'left',
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: CHART_COLORS.SCALES_COLOR,
+            fontColor: ChartColors.SCALES_COLOR,
             padding: 5,
             fontSize: 13,
           },
