@@ -2,6 +2,7 @@ import {POINT_TYPES, FORM_TYPES} from '../utils/constants.js';
 import {getDateInDayjs} from '../utils/time-and-date.js';
 import SmartView from './smart-view.js';
 import flatpickr from 'flatpickr';
+import he from 'he';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const createTypeAndCityTextTemplate = (type, city, allCities, isDisabled) => (
@@ -326,7 +327,7 @@ class FormView extends SmartView {
   #onPriceChange = (evt) => {
     evt.preventDefault();
     const priceInput = this.element.querySelector('.event__input--price');
-    const price = +evt.target.value;
+    const price = +he.encode(evt.target.value);
 
     if (!Number.isInteger(price)) {
       priceInput.setCustomValidity('Введите положительное число');
@@ -342,7 +343,7 @@ class FormView extends SmartView {
 
   #onCityChange =(evt) => {
     evt.preventDefault();
-    const chosenCity = evt.target.value;
+    const chosenCity = he.encode(evt.target.value);
     const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCityDestination = this.#allDestinations.find((element) => element.name === chosenCity);
 
