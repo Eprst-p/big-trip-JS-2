@@ -1,5 +1,6 @@
 import {getDateInFormat, getDurationFormat, getDateInDayjs} from '../utils/time-and-date.js';
 import AbstractView from './abstract-view.js';
+import he from 'he';
 
 const createLiTemplate = (pointData) => {
   const {type, dateFrom, dateTo, basePrice, offers, isFavorite, destination} = pointData;
@@ -22,7 +23,7 @@ const createLiTemplate = (pointData) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="${typeImg}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destination.name}</h3>
+        <h3 class="event__title">${type} ${he.encode(destination.name)}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime=${dateFrom}>${editedStartTime}</time>
@@ -32,7 +33,7 @@ const createLiTemplate = (pointData) => {
           <p class="event__duration">${getDurationFormat(endDayjs, startDayjs)}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${+basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">

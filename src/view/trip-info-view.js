@@ -1,5 +1,6 @@
 import AbstractView from './abstract-view.js';
 import {getDateInDayjs, getDateInFormat} from '../utils/time-and-date.js';
+import he from 'he';
 
 const createTipInfoTemplate = (allPoints) => {
   const allCities = allPoints.map((point) => point.destination.name);
@@ -46,16 +47,16 @@ const createTipInfoTemplate = (allPoints) => {
   const createCityWritting = () => {
 
     if (cityCount > 3) {
-      return `<h1 class="trip-info__title">${startCity} &mdash; ... &mdash; ${lastCity}</h1>`;
+      return `<h1 class="trip-info__title">${he.encode(startCity)} &mdash; ... &mdash; ${he.encode(lastCity)}</h1>`;
     }
     if (cityCount === 3) {
-      return `<h1 class="trip-info__title">${startCity} &mdash; ${cities[1]} &mdash; ${lastCity}</h1>`;
+      return `<h1 class="trip-info__title">${he.encode(startCity)} &mdash; ${he.encode(cities[1])} &mdash; ${he.encode(lastCity)}</h1>`;
     }
     if (cityCount === 2) {
-      return `<h1 class="trip-info__title">${startCity} &mdash; ${lastCity}</h1>`;
+      return `<h1 class="trip-info__title">${he.encode(startCity)} &mdash; ${he.encode(lastCity)}</h1>`;
     }
     if (cityCount === 1) {
-      return `<h1 class="trip-info__title">${startCity}</h1>`;
+      return `<h1 class="trip-info__title">${he.encode(startCity)}</h1>`;
     }
   };
 
@@ -68,7 +69,7 @@ const createTipInfoTemplate = (allPoints) => {
       </div>
 
       <p class="trip-info__cost">
-        Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${+totalPrice}</span>
       </p>
     </section>`
   );

@@ -129,7 +129,7 @@ const createDestinationTemplate = (destination) => {
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${destination.description}</p>
+        <p class="event__destination-description">${he.encode(destination.description)}</p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
           ${destination.pictures.map((currentPicture) => `<img class="event__photo" src="${currentPicture.src}" alt="${currentPicture.description}">`).join('')}
@@ -327,7 +327,7 @@ class FormView extends SmartView {
   #onPriceChange = (evt) => {
     evt.preventDefault();
     const priceInput = this.element.querySelector('.event__input--price');
-    const price = +he.encode(evt.target.value);
+    const price = +evt.target.value;
 
     if (!Number.isInteger(price)) {
       priceInput.setCustomValidity('Введите положительное число');
@@ -343,7 +343,7 @@ class FormView extends SmartView {
 
   #onCityChange =(evt) => {
     evt.preventDefault();
-    const chosenCity = he.encode(evt.target.value);
+    const chosenCity = evt.target.value;
     const cityInput = this.element.querySelector('.event__input--destination');
     const chosenCityDestination = this.#allDestinations.find((element) => element.name === chosenCity);
 
